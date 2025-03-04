@@ -1,21 +1,22 @@
-import { Component, AfterViewInit, ViewChild, ElementRef } from "@angular/core";
-import { createPopper } from "@popperjs/core";
+import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { createPopper } from '@popperjs/core';
+import { UserService } from 'src/app/core/service/user.service';
 
 @Component({
-  selector: "app-user-dropdown",
-  templateUrl: "./user-dropdown.component.html",
+  selector: 'app-user-dropdown',
+  templateUrl: './user-dropdown.component.html',
 })
 export class UserDropdownComponent implements AfterViewInit {
   dropdownPopoverShow = false;
-  @ViewChild("btnDropdownRef", { static: false }) btnDropdownRef: ElementRef;
-  @ViewChild("popoverDropdownRef", { static: false })
+  @ViewChild('btnDropdownRef', { static: false }) btnDropdownRef: ElementRef;
+  @ViewChild('popoverDropdownRef', { static: false })
   popoverDropdownRef: ElementRef;
   ngAfterViewInit() {
     createPopper(
       this.btnDropdownRef.nativeElement,
       this.popoverDropdownRef.nativeElement,
       {
-        placement: "bottom-start",
+        placement: 'bottom-start',
       }
     );
   }
@@ -26,5 +27,13 @@ export class UserDropdownComponent implements AfterViewInit {
     } else {
       this.dropdownPopoverShow = true;
     }
+  }
+
+  constructor(private authService: UserService) {}
+
+  logout() {
+    
+    this.authService.logout();
+
   }
 }

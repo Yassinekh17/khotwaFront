@@ -1,11 +1,13 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: "app-dashboard",
-  templateUrl: "./dashboard.component.html",
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent implements OnInit {
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(localStorage.getItem('token'));
+  }
 }
