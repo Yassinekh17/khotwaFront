@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 
+
 // layouts
 import { AdminComponent } from "./layouts/admin/admin.component";
 import { AuthComponent } from "./layouts/auth/auth.component";
@@ -19,6 +20,9 @@ import { RegisterComponent } from "./views/auth/register/register.component";
 import { IndexComponent } from "./views/index/index.component";
 import { LandingComponent } from "./views/landing/landing.component";
 import { ProfileComponent } from "./views/profile/profile.component";
+import { AbonnementComponent } from "./abonnement/abonnement.component";
+import { AbonnementFormComponent } from "./abonnement-form/abonnement-form.component";
+import { PaymentComponent } from "./payment/payment.component";
 
 const routes: Routes = [
   // admin views
@@ -29,6 +33,9 @@ const routes: Routes = [
       { path: "dashboard", component: DashboardComponent },
       { path: "settings", component: SettingsComponent },
       { path: "tables", component: TablesComponent },
+      { path: "Abonnements", component: AbonnementComponent },
+      { path: "AjouterAbonnement", component: AbonnementFormComponent },
+      { path: "payer", component: PaymentComponent },
       { path: "maps", component: MapsComponent },
       { path: "", redirectTo: "dashboard", pathMatch: "full" },
     ],

@@ -1,5 +1,10 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
+import { HttpClientModule } from '@angular/common/http';
+import { NgxStripeModule } from 'ngx-stripe';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ToastrModule } from 'ngx-toastr';
+import { NgChartsModule } from 'ng2-charts';
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -47,6 +52,14 @@ import { PagesDropdownComponent } from "./components/dropdowns/pages-dropdown/pa
 import { NotificationDropdownComponent } from "./components/dropdowns/notification-dropdown/notification-dropdown.component";
 import { SidebarComponent } from "./components/sidebar/sidebar.component";
 import { UserDropdownComponent } from "./components/dropdowns/user-dropdown/user-dropdown.component";
+import { AbonnementComponent } from './abonnement/abonnement.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AbonnementFormComponent } from './abonnement-form/abonnement-form.component';
+import { PaymentComponent } from './payment/payment.component';
+import { FormsModule } from '@angular/forms';
+
+
+
 
 @NgModule({
   declarations: [
@@ -84,8 +97,22 @@ import { UserDropdownComponent } from "./components/dropdowns/user-dropdown/user
     IndexComponent,
     LandingComponent,
     ProfileComponent,
+    AbonnementComponent,
+    AbonnementFormComponent,
+    PaymentComponent,
+    
+    
   ],
-  imports: [BrowserModule, AppRoutingModule],
+  imports: [BrowserModule, 
+    AppRoutingModule, 
+    HttpClientModule,  
+    BrowserModule,
+    BrowserAnimationsModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ToastrModule.forRoot(),
+    NgChartsModule, ]
+  ,
   providers: [],
   bootstrap: [AppComponent],
 })

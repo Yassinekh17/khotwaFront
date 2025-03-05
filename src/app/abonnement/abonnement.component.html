@@ -1,0 +1,138 @@
+<div class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded"
+  [ngClass]="color === 'light' ? 'bg-white' : 'bg-red-900 text-white'">
+  <div class="rounded-t mb-0 px-4 py-3 border-0">
+    <div class="flex flex-wrap items-center">
+      <div class="relative w-full px-4 max-w-full flex-grow flex-1">
+        <h3 class="font-semibold text-lg" [ngClass]="color === 'light' ? 'text-blueGray-700' : 'text-white'">
+          Abonnements
+        </h3>
+      </div>
+    </div>
+  </div>
+  <div class="flex flex-wrap mb-4">
+    <!-- Section pour le filtrage et le tri alignés horizontalement -->
+    <div class="w-full sm:w-6/12 md:w-6/12 px-4 flex items-center justify-between">
+      <div class="relative inline-flex align-middle w-full">
+        <button 
+          class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+          type="button"
+          (click)="toggleDropdown($event)"
+          #btnDropdownRef>
+          Filtrer par type d'abonnement
+        </button>
+        <div *ngIf="dropdownPopoverShow" class="bg-red-600 text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-1 min-w-48" #popoverDropdownRef>
+          <a href="javascript:void(0)" (click)="onSelectPlan('')"
+             class="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white">
+            Tous
+          </a>
+          <a href="javascript:void(0)" (click)="onSelectPlan('MENSUEL')"
+             class="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white">
+            Mensuel
+          </a>
+          <a href="javascript:void(0)" (click)="onSelectPlan('TRIMESTRIEL')"
+             class="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white">
+            Trimestriel
+          </a>
+          <a href="javascript:void(0)" (click)="onSelectPlan('ANNUEL')"
+             class="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white">
+            Annuel
+          </a>
+        </div>
+      </div>
+  
+      <!-- Bouton pour trier par prix -->
+      <button  class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+      type="button"
+      (click)="toggleSortDirection()">Trier par Prix ({{ sortDirection === 'asc' ? 'Ascendant' : 'Descendant' }})</button>
+  
+      <!-- Bouton pour télécharger en PDF -->
+      <button  class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+      type="button"
+      (click)="downloadPDF()">Télécharger en PDF</button>
+    </div>
+  </div>
+
+  <div class="block w-full overflow-x-auto">
+    <table class="items-center w-full bg-transparent border-collapse">
+      <thead>
+        <tr>
+          <th class="px-6 py-3 text-xs uppercase font-semibold text-left"
+            [ngClass]="color === 'light' ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100' : 'bg-red-800 text-red-300 border-red-700'">
+            Date Début
+          </th>
+          <th class="px-6 py-3 text-xs uppercase font-semibold text-left"
+            [ngClass]="color === 'light' ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100' : 'bg-red-800 text-red-300 border-red-700'">
+            Date Fin
+          </th>
+          <th class="px-6 py-3 text-xs uppercase font-semibold text-left"
+            [ngClass]="color === 'light' ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100' : 'bg-red-800 text-red-300 border-red-700'">
+            Plan
+          </th>
+          <th class="px-6 py-3 text-xs uppercase font-semibold text-left"
+            [ngClass]="color === 'light' ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100' : 'bg-red-800 text-red-300 border-red-700'">
+            Prix
+          </th>
+          <th class="px-6 py-3 text-xs uppercase font-semibold text-left"
+            [ngClass]="color === 'light' ? 'bg-blueGray-50 text-blueGray-500 border-blueGray-100' : 'bg-red-800 text-red-300 border-red-700'">
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let abonnement of abonnements">
+          <td class="border-t-0 px-6 py-4 text-xs whitespace-nowrap text-left">
+            {{ abonnement.date_debut | date: 'dd/MM/yyyy' }}
+          </td>
+          <td class="border-t-0 px-6 py-4 text-xs whitespace-nowrap text-left">
+            {{ abonnement.date_fin | date: 'dd/MM/yyyy' }}
+          </td>
+          <td class="border-t-0 px-6 py-4 text-xs whitespace-nowrap text-left">
+            {{ abonnement.plan }}
+          </td>
+          <td class="border-t-0 px-6 py-4 text-xs whitespace-nowrap text-left">
+            {{ abonnement.prix | currency: 'EUR' }}
+          </td>
+          <td class="border-t-0 px-6 py-4 text-xs whitespace-nowrap text-left">
+            <button
+              class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+              (click)="deleteAbonnement(abonnement.id_abonnement)">
+              Supprimer
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+<!-- Section pour les statistiques -->
+<div class="flex flex-wrap mt-6 statistics-section">
+  <div class="w-full px-4">
+    <div class="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 shadow-lg">
+      <div class="rounded-t mb-0 px-4 py-3 border-0">
+        <div class="flex flex-wrap items-center">
+          <div class="relative w-full px-4 max-w-full flex-grow flex-1">
+            <h3 class="font-semibold text-lg text-blueGray-700">
+              Statistiques des Abonnements
+            </h3>
+          </div>
+        </div>
+      </div>
+      <!-- Graphique en secteurs -->
+      <div class="chart-container">
+        <canvas baseChart
+                [data]="pieChartData"
+                [type]="pieChartType"
+                [options]="pieChartOptions">
+        </canvas>
+      </div>
+      <!-- Graphique en barres -->
+      <div class="chart-container">
+        <canvas baseChart
+                [data]="barChartData"
+                [type]="barChartType"
+                [options]="barChartOptions">
+        </canvas>
+      </div>
+    </div>
+  </div>
+</div>

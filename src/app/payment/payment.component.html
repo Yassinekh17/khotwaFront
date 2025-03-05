@@ -1,0 +1,26 @@
+<div class="rounded-t mb-0 px-10 py-10 border-0">
+    <div class="flex flex-wrap items-center">
+      <div class="relative w-full px-10 max-w-full flex-grow flex-1">
+        <h3 class="font-semibold text-lg" [ngClass]="color === 'light' ? 'text-blueGray-700' : 'text-white'">
+          Abonnements
+        </h3>
+      </div>
+    </div>
+  </div>
+  <div class="container mt-5">
+    <h2>Stripe Checkout</h2>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <button (click)="pay(20)" class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150">Payer</button>
+      </div>
+      <!-- <div class="col-md-4">
+        <button (click)="pay(30)" class="btn btn-success btn-block">Pay $30</button>
+      </div>
+      <div class="col-md-4">
+        <button (click)="pay(50)" class="btn btn-info btn-block">Pay $50</button>
+      </div>     -->
+    </div>
+    <p class="mt-5">
+        Try it out using the test card number <b>4242 4242 4242 4242</b>, a random three-digit CVC number, any expiration date in the future, and a random five-digit U.S. ZIP code.
+    </p>
+  </div>

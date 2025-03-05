@@ -112,5 +112,8 @@
       }
     }
   },
-  "defaultProject": "notus-angular"
+  "defaultProject": "notus-angular",
+  "cli": {
+    "analytics": "bde97f30-d305-4729-af70-9d98e063f982"
+  }
 }
