@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Message } from "src/app/core/models/Message";
 import { MessageService } from "src/app/core/service/message.service";
+import { SummaryService } from "src/app/services/summary.service";
 
 @Component({
   selector: "app-profile",
@@ -11,7 +12,7 @@ export class ProfileComponent implements OnInit {
   messages: Message[] = [];
   MessageForm: FormGroup;
   
-  constructor(private service: MessageService, private fb: FormBuilder) {}
+  constructor(private service: MessageService, private fb: FormBuilder, private summaryService: SummaryService) {}
 
   ngOnInit(): void {
     this.loadMessages();
@@ -72,5 +73,32 @@ export class ProfileComponent implements OnInit {
     return this.MessageForm.get(controlName)?.hasError('required')
       ? 'Ce champ est obligatoire'
       : '';
+  } // Texte saisi par l'utilisateur
+  summary: string = '';   // Résumé généré par l'API
+  errorMessage: string = ''; // Message d'erreur
+  showSummary(inputText: String) {
+   
+    if (inputText.trim() === '') {
+      this.errorMessage = 'Veuillez saisir un texte à résumer.';
+      return;
+    }
+
+    this.errorMessage = ''; // Réinitialiser le message d'erreur
+
+    // Appeler le service pour obtenir le résumé
+    this.summaryService.getSummary(inputText).subscribe(
+      (response: any) => {  // Now, we assume the response is an object with the "summary" property
+        if (response && response.summary) {
+          alert(response.summary);  // Show only the summary text
+        } else {
+          this.errorMessage = 'No summary available.';
+        }
+      },
+      (error) => {
+        this.errorMessage = 'Une erreur s\'est produite lors de la génération du résumé.';
+        console.error(error);
+      }
+    );
+  
   }
 }

@@ -19,6 +19,7 @@ import { RegisterComponent } from "./views/auth/register/register.component";
 import { IndexComponent } from "./views/index/index.component";
 import { LandingComponent } from "./views/landing/landing.component";
 import { ProfileComponent } from "./views/profile/profile.component";
+import { ChatComponent } from "./components/chat/chat.component";
 
 const routes: Routes = [
   // admin views
@@ -44,6 +45,7 @@ const routes: Routes = [
     ],
   },
   // no layout views
+  { path: "chat", component: ChatComponent },
   { path: "profile", component: ProfileComponent },
   { path: "landing", component: LandingComponent },
   { path: "", component: IndexComponent },

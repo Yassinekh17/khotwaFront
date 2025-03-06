@@ -151,7 +151,7 @@
                   <p class="mb-4 text-lg leading-relaxed text-blueGray-700">
                     {{ message.contenu || 'An artist of considerable range, Jenna the name taken by Melbourne-raised, Brooklyn-based Nick Murphy writes, performs and records all of his own music, giving it a warm, intimate feel with a solid groove structure.' }}
                   </p>
-                  <a href="javascript:void(0)" class="font-normal text-red-600">Show more</a>
+                  <a href="javascript:void(0)" class="font-normal text-red-600" (click)="showSummary(message.contenu)">Summary</a>
                 </div>
               </div>
             </div>

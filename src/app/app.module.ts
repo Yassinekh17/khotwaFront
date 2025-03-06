@@ -48,7 +48,9 @@ import { NotificationDropdownComponent } from "./components/dropdowns/notificati
 import { SidebarComponent } from "./components/sidebar/sidebar.component";
 import { UserDropdownComponent } from "./components/dropdowns/user-dropdown/user-dropdown.component";
 import { HttpClientModule } from "@angular/common/http";
-import { ReactiveFormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { ChatComponent } from './components/chat/chat.component';
+import { SummaryComponent } from './summary/summary.component';
 
 @NgModule({
   declarations: [
@@ -86,8 +88,10 @@ import { ReactiveFormsModule } from "@angular/forms";
     IndexComponent,
     LandingComponent,
     ProfileComponent,
+    ChatComponent,
+    SummaryComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule,  HttpClientModule,ReactiveFormsModule],
+  imports: [BrowserModule, AppRoutingModule,  HttpClientModule,ReactiveFormsModule,FormsModule],
   providers: [],
   bootstrap: [AppComponent],
 })

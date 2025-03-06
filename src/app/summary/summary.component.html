@@ -1,0 +1,19 @@
+<div class="summary-container">
+  <h2>Résumé automatique de texte</h2>
+
+  <!-- Champ de texte pour saisir le texte à résumer -->
+  <textarea [(ngModel)]="inputText" placeholder="Entrez votre texte ici"></textarea>
+
+  <!-- Bouton pour déclencher la génération du résumé -->
+  <button (click)="summarize()">Résumer</button>
+
+  <!-- Zone pour afficher le résumé ou les messages d'erreur -->
+  <div *ngIf="summary" class="summary-result">
+    <h3>Résumé :</h3>
+    <p>{{ summary }}</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    <p>{{ errorMessage }}</p>
+  </div>
+</div>
