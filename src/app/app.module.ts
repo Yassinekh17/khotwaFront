@@ -1,8 +1,9 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
-
+import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
+import { FormsModule } from '@angular/forms';
 
 // layouts
 import { AdminComponent } from "./layouts/admin/admin.component";
@@ -13,6 +14,7 @@ import { DashboardComponent } from "./views/admin/dashboard/dashboard.component"
 import { MapsComponent } from "./views/admin/maps/maps.component";
 import { SettingsComponent } from "./views/admin/settings/settings.component";
 import { TablesComponent } from "./views/admin/tables/tables.component";
+import { CoursComponent } from "./views/admin/cours/cours.component";
 
 // auth views
 import { LoginComponent } from "./views/auth/login/login.component";
@@ -22,7 +24,7 @@ import { RegisterComponent } from "./views/auth/register/register.component";
 import { IndexComponent } from "./views/index/index.component";
 import { LandingComponent } from "./views/landing/landing.component";
 import { ProfileComponent } from "./views/profile/profile.component";
-
+import { ListCourComponent } from "./views/courList/listCour.component";
 // components for views and layouts
 
 import { AdminNavbarComponent } from "./components/navbars/admin-navbar/admin-navbar.component";
@@ -35,6 +37,7 @@ import { CardSettingsComponent } from "./components/cards/card-settings/card-set
 import { CardSocialTrafficComponent } from "./components/cards/card-social-traffic/card-social-traffic.component";
 import { CardStatsComponent } from "./components/cards/card-stats/card-stats.component";
 import { CardTableComponent } from "./components/cards/card-table/card-table.component";
+import { CardCourComponent } from "./components/cards/card-cour/card-cour.component";
 import { FooterAdminComponent } from "./components/footers/footer-admin/footer-admin.component";
 import { FooterComponent } from "./components/footers/footer/footer.component";
 import { FooterSmallComponent } from "./components/footers/footer-small/footer-small.component";
@@ -43,20 +46,30 @@ import { IndexNavbarComponent } from "./components/navbars/index-navbar/index-na
 import { MapExampleComponent } from "./components/maps/map-example/map-example.component";
 import { IndexDropdownComponent } from "./components/dropdowns/index-dropdown/index-dropdown.component";
 import { TableDropdownComponent } from "./components/dropdowns/table-dropdown/table-dropdown.component";
+import { CourTableDropdownComponent } from "./components/dropdowns/cour-table-dropdown/cour-table-dropdown.component";
 import { PagesDropdownComponent } from "./components/dropdowns/pages-dropdown/pages-dropdown.component";
 import { NotificationDropdownComponent } from "./components/dropdowns/notification-dropdown/notification-dropdown.component";
 import { SidebarComponent } from "./components/sidebar/sidebar.component";
 import { UserDropdownComponent } from "./components/dropdowns/user-dropdown/user-dropdown.component";
+import { CourseDetailsComponent } from "./components/course-details/course-details.component";
+import { CourseLessonComponent } from "./components/course-lesson/course-lesson.component";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NotificationComponent } from "./components/notification/notification.component";
+import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ChatBotComponent } from './chat-bot/chat-bot.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    
     DashboardComponent,
     CardBarChartComponent,
     CardLineChartComponent,
     IndexDropdownComponent,
     PagesDropdownComponent,
     TableDropdownComponent,
+    CourTableDropdownComponent,
     NotificationDropdownComponent,
     UserDropdownComponent,
     SidebarComponent,
@@ -69,6 +82,11 @@ import { UserDropdownComponent } from "./components/dropdowns/user-dropdown/user
     CardSocialTrafficComponent,
     CardStatsComponent,
     CardTableComponent,
+    CardCourComponent,
+    ListCourComponent,
+    CourseDetailsComponent,
+    CourseLessonComponent,
+    NotificationComponent,
     HeaderStatsComponent,
     MapExampleComponent,
     AuthNavbarComponent,
@@ -83,9 +101,13 @@ import { UserDropdownComponent } from "./components/dropdowns/user-dropdown/user
     RegisterComponent,
     IndexComponent,
     LandingComponent,
+    ChatBotComponent,
     ProfileComponent,
+    CoursComponent,
+    
   ],
-  imports: [BrowserModule, AppRoutingModule],
+  imports: [BrowserModule, AppRoutingModule,HttpClientModule,FormsModule, BrowserAnimationsModule,MatIconModule,
+    MatSnackBarModule],
   providers: [],
   bootstrap: [AppComponent],
 })

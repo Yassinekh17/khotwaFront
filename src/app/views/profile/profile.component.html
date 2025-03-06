@@ -1,5 +1,7 @@
+
 <app-auth-navbar></app-auth-navbar>
 <main class="profile-page">
+  
   <section class="relative block h-500-px">
     <div
       class="absolute top-0 w-full h-full bg-center bg-cover"
@@ -55,9 +57,11 @@
                 <button
                   class="bg-red-600 active:bg-red-700 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150"
                   type="button"
+                  (click)="openChatBot()"
                 >
                   Connect
                 </button>
+                <app-chat-bot></app-chat-bot>
               </div>
             </div>
             <div class="w-full lg:w-4/12 px-4 lg:order-1">
@@ -125,6 +129,8 @@
                 <a href="javascript:void(0)" class="font-normal text-red-600">
                   Show more
                 </a>
+                
+
               </div>
             </div>
           </div>
@@ -134,3 +140,4 @@
   </section>
 </main>
 <app-footer></app-footer>
+

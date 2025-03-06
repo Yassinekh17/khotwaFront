@@ -1,0 +1,138 @@
+<app-auth-navbar></app-auth-navbar>
+<main class="profile-page">
+  <section class="relative block h-500-px">
+    <div
+      class="absolute top-0 w-full h-full bg-center bg-cover"
+      style="
+        background-image: url('https://envisionitagency.com/uploads/2018/04/frameworks.png');
+      "
+    >
+      <span
+        id="blackOverlay"
+        class="w-full h-full absolute opacity-50 bg-black"
+      ></span>
+    </div>
+    <div
+      class="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden h-70-px"
+      style="transform: translateZ(0)"
+    >
+      <svg
+        class="absolute bottom-0 overflow-hidden"
+        xmlns="http://www.w3.org/2000/svg"
+        preserveAspectRatio="none"
+        version="1.1"
+        viewBox="0 0 2560 100"
+        x="0"
+        y="0"
+      >
+        <polygon
+          class="text-blueGray-200 fill-current"
+          points="2560 0 2560 100 0 100"
+        ></polygon>
+      </svg>
+    </div>
+  </section>
+  <section class="relative py-16 bg-blueGray-200">
+    <div class="container mx-auto px-4">
+      <div
+        class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64"
+      >
+        <div class="px-6">
+          <div class="flex flex-wrap justify-center">
+            <div class="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
+              
+            </div>
+            
+          <app-chat-bot></app-chat-bot>
+            <!-- app.component.html -->
+                        <div class="container">
+                            <!-- Filter Section -->
+                            <div class="filter-section">
+                            <div class="filter-tags">
+                              <span
+                              *ngFor="let category of categories"
+                              class="filter-tag"
+                              (click)="filterByCategory(category)"
+                            >
+                              {{ category }}
+                            </span>
+                            </div>
+                           
+                            <div class="search-bar">
+                              <span
+                              class="z-10 h-full leading-snug font-normal absolute text-center text-blueGray-300 absolute bg-transparent rounded text-base items-center justify-center w-8 pl-3 py-3"
+                              ><i class="fas fa-search"></i
+                            ></span>
+                              <input
+                              type="text"
+                              placeholder="      Search courses..."
+                              [(ngModel)]="searchQuery"
+                              (keyup.enter)="searchCours()"
+                              (input)="searchCours()"
+                            />
+                            </div>
+                            
+                            </div>
+                            <div class="courses-container">
+                              <div *ngFor="let cours of filteredCourses" class="card">
+                                <img [src]="cours.image || 'https://via.placeholder.com/300'" alt="Course Image" class="card-img">
+                                <div class="card-content">
+                                  <h2 class="card-title">{{ cours.titre }}</h2>
+                                  <p class="card-text">{{ cours.description }}</p>
+                                  <p class="card-price"><strong>Price:</strong> ${{ cours.prix }}</p>
+                                  <p class="card-rating"><strong>Rating:</strong> ⭐{{ cours.rating }}</p>
+                                  <button class="card-btn" (click)="goToCourseDetails(cours.id_cours)">View Course</button>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- Course List -->
+                            <div class="course-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <!-- Course Card Component -->
+                            <div *ngFor="let course of courses" class="course-card" [ngClass]="{'warning-card': course.warning}">
+                                <div class="course-header" [ngClass]="getCategoryClass(course.category)">
+                                {{ course.category }}
+                                </div>
+                                <div class="course-body">
+                                <h3 class="course-title">{{ course.title }}</h3>
+                                <div class="course-rating">
+                                    <span class="rating">{{ course.rating }}</span>
+                                    <div class="stars">
+                                    <span *ngFor="let star of [1,2,3,4,5]" class="star">★</span>
+                                    </div>
+                                </div>
+                                <div class="course-students">
+                                    {{ course.students | number }} students
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                           
+                            <!-- Pagination Component -->
+                            <div class="pagination">
+                            <button *ngFor="let page of pages" 
+                                    [class.active]="page === currentPage"
+                                    (click)="changePage(page)">
+                                {{ page }}
+                            </button>
+                            </div>
+                        </div>
+            <div
+              class="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center"
+            >
+            
+            </div>
+            
+          </div>
+          
+          <div class="mt-10 py-10 border-t border-blueGray-200 text-center">
+            <div class="flex flex-wrap justify-center">
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+<app-footer></app-footer>
