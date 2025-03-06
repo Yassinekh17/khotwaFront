@@ -6,6 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { NgChartsModule } from 'ng2-charts';
 
+
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 
@@ -114,6 +115,7 @@ import { FormsModule } from '@angular/forms';
     NgChartsModule, ]
   ,
   providers: [],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent] 
+  
 })
 export class AppModule {}

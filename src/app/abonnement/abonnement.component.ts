@@ -17,6 +17,9 @@ export class AbonnementComponent implements OnInit {
   color: string = 'light'; // Pour le thème du tableau
   sortDirection: string = 'asc'; // Ordre de tri : 'asc' ou 'desc'
   dropdownPopoverShow = false;
+  suggestedPlan: PlanAbonnement | null = null; // Plan suggéré
+  
+ 
 
   // Données pour le graphique en secteurs
   public pieChartData: ChartData<'pie', number[], string | string[]> = {
@@ -60,7 +63,11 @@ export class AbonnementComponent implements OnInit {
   constructor(
     private abonnementService: AbonnementService,
     private toastr: ToastrService
-  ) {}
+  ) { this.abonnements = [
+    { id_abonnement: 1, date_debut: new Date(), date_fin: new Date(), plan: PlanAbonnement.MENSUEL, prix: 30 },
+    { id_abonnement: 2, date_debut: new Date(), date_fin: new Date(), plan: PlanAbonnement.TRIMESTRIEL, prix: 80 },
+    { id_abonnement: 3, date_debut: new Date(), date_fin: new Date(), plan: PlanAbonnement.ANNUEL, prix: 300 },
+  ];}
 
   ngOnInit(): void {
     this.getAbonnements();
@@ -205,4 +212,41 @@ export class AbonnementComponent implements OnInit {
     // Télécharger le PDF
     doc.save('liste_abonnements.pdf');
   }
+  // Méthode pour récupérer les abonnements triés par prix
+getSortedAbonnements(sortDirection: string): void {
+  this.abonnementService.getAbonnementsSortedByPrice(sortDirection).subscribe(data => {
+    this.abonnements = data;
+  });
+}
+
+// Méthode pour récupérer les statistiques
+getStatistics(): void {
+  this.abonnementService.getAbonnementStatistics().subscribe(data => {
+    this.pieChartData.datasets[0].data = [
+      data.counts.MENSUEL || 0,
+      data.counts.TRIMESTRIEL || 0,
+      data.counts.ANNUEL || 0,
+    ];
+    this.barChartData.datasets[0].data = [
+      data.averagePrices.MENSUEL || 0,
+      data.averagePrices.TRIMESTRIEL || 0,
+      data.averagePrices.ANNUEL || 0,
+    ];
+  });
+}
+ // Fonction pour suggérer un plan
+ suggestPlan(): void {
+  const totalDepense = this.abonnements.reduce((sum, abonnement) => sum + abonnement.prix, 0);
+
+  if (totalDepense >= 300) {
+    this.suggestedPlan = PlanAbonnement.ANNUEL; // Si la dépense totale est élevée, suggérer un plan annuel
+  } else if (totalDepense >= 100) {
+    this.suggestedPlan = PlanAbonnement.TRIMESTRIEL; // Si la dépense est modérée, suggérer un plan trimestriel
+  } else {
+    this.suggestedPlan = PlanAbonnement.MENSUEL; // Sinon, suggérer un plan mensuel
+  }
+}
+
+
+
 }

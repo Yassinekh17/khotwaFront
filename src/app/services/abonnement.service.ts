@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient ,HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Abonnement } from '../models/abonnement.model';
 
@@ -39,5 +39,16 @@ export class AbonnementService {
   deleteAbonnement(id_abonnement: number) {
     return this.http.delete<Abonnement>(`${this.apiUrl}/delete/${id_abonnement}`);
   }
+  // Méthode pour récupérer les abonnements triés par prix
+  getAbonnementsSortedByPrice(sortDirection: string): Observable<Abonnement[]> {
+    return this.http.get<Abonnement[]>(`${this.apiUrl}/sorted?sortDirection=${sortDirection}`);
+  }
+
+  // Méthode pour récupérer les statistiques
+  getAbonnementStatistics(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/statistics`);
+  }
+ 
+
   
 }
