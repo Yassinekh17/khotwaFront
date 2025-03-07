@@ -53,11 +53,52 @@ export class UserService {
   }
 
   // ✅ UPDATE user with token authentication
-  updateUser(user: User): Observable<User> {
-    return this.httpservice.put<User>(`${this.apiUrl}/updateUser`, user, {
-      headers: this.getAuthHeaders(),
+  updateUser(
+    userId: string,
+    nom: string,
+    prenom: string,
+    email: string,
+    password: string,
+    role: string,
+    image: File | null
+  ): Observable<any> {
+    console.log('nom in service', nom);
+
+    // Create FormData and append regular form fields
+    const formData = new FormData();
+    formData.append('userId', userId);
+    formData.append('nom', nom);
+    formData.append('prenom', prenom);
+    formData.append('email', email);
+    formData.append('mdp', password); // Password field (mdp)
+    formData.append('role', role);
+
+    // If an image is provided, append it to the FormData
+    if (image) {
+      console.log('Appending image:', image.name); // Debugging
+      formData.append('image', image, image.name);
+    } else {
+      console.warn('No image provided');
+    }
+
+    // Get the token from local storage
+    const token = localStorage.getItem('token');
+    console.log('Token:', token); // Log the token to verify it
+
+    // Set the authorization header (no need for 'Content-Type' here)
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      // No need to explicitly set 'Content-Type' for FormData, it will be set automatically
     });
+
+    // Define the API endpoint for the update request
+    const url = 'http://localhost:8050/updateUser';
+    console.log('formdata in user service', formData);
+
+    // Send the PUT request with FormData and headers
+    return this.httpservice.put(url, formData, { headers: headers });
   }
+
   addUser(user: User) {
     return this.httpservice.post('http://localhost:8050/addUser', user);
   }

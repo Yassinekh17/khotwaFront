@@ -9,6 +9,10 @@ import { UserService } from 'src/app/core/service/user.service';
 })
 export class CardTableComponent implements OnInit {
   users: User[] = [];
+  filteredUsers: User[] = []; // ✅ Initialize filteredUsers
+
+  searchQuery: string = '';
+
   @Input()
   get color(): string {
     return this._color;
@@ -26,6 +30,7 @@ export class CardTableComponent implements OnInit {
   ngOnInit(): void {
     this.loadUsers();
   }
+
   deleteUser(id: number) {
     this.service.deleteUser(id).subscribe({
       next: () => {
@@ -36,10 +41,12 @@ export class CardTableComponent implements OnInit {
       },
     });
   }
+
   loadUsers() {
     this.service.getUserList().subscribe({
       next: (data) => {
         this.users = data;
+        this.filteredUsers = [...data]; // ✅ Keep filteredUsers updated
         console.log('Users Loaded:', this.users);
 
         // Predict satisfaction for each user
@@ -57,8 +64,15 @@ export class CardTableComponent implements OnInit {
     this.userActivityService.predictSatisfaction(email).subscribe({
       next: (response) => {
         console.log(`Satisfaction Prediction for ${email}:`, response);
-        // You can store the result inside the user object if needed
+
+        // ✅ Update both users and filteredUsers
         this.users = this.users.map((user: any) =>
+          user.email === email
+            ? { ...user, satisfactionPrediction: response }
+            : user
+        );
+
+        this.filteredUsers = this.filteredUsers.map((user: any) =>
           user.email === email
             ? { ...user, satisfactionPrediction: response }
             : user
@@ -68,5 +82,20 @@ export class CardTableComponent implements OnInit {
         console.error(`Error predicting satisfaction for ${email}:`, error);
       },
     });
+  }
+
+  filterUsers() {
+    console.log('Search Query:', this.searchQuery); // ✅ Debug if searchQuery is updating
+
+    if (!this.searchQuery || this.searchQuery.trim() === '') {
+      this.filteredUsers = this.users; // ✅ If empty, reset the list
+    } else {
+      this.filteredUsers = this.users.filter((user) => {
+        console.log('Checking User:', user.nom); // ✅ Debug if user.nom exists
+        return user.nom?.toLowerCase().includes(this.searchQuery.toLowerCase());
+      });
+    }
+
+    console.log('Filtered Users:', this.filteredUsers);
   }
 }

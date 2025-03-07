@@ -1,16 +1,18 @@
-import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
-import { User } from "src/app/core/models/User";
-import { UserService } from "src/app/core/service/user.service";
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { User } from 'src/app/core/models/User';
+import { UserService } from 'src/app/core/service/user.service';
 
 @Component({
-  selector: "app-card-table-update",
-  templateUrl: "./card-table-update.component.html",
+  selector: 'app-card-table-update',
+  templateUrl: './card-table-update.component.html',
 })
 export class CardTableUpdateComponent implements OnInit {
   id!: number;
   updateUserForm: FormGroup;
+  imagePreview: string | ArrayBuffer | null = null;
+
   constructor(
     private act: ActivatedRoute,
     private fb: FormBuilder,
@@ -19,65 +21,84 @@ export class CardTableUpdateComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.id = Number(this.act.snapshot.params["id"]);
+    this.id = Number(this.act.snapshot.params['id']);
     console.log(this.id);
+
+    // Initialize the form with validation
     this.updateUserForm = this.fb.group({
       id_user: [this.id],
-      nom: ["", [Validators.required]],
-      prenom: ["", [Validators.required]],
-      email: ["", Validators.required],
-      mdp: ["", [Validators.required]],
-      role: ["", Validators.required],
+      nom: ['', [Validators.required]],
+      prenom: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      mdp: ['', [Validators.required]],
+      role: ['', Validators.required],
     });
 
+    // Fetch user data by ID and update the form
     this.service.getUserById(this.id).subscribe((user: User) => {
-      // Update the form with the fetched data
       this.updateUserForm.patchValue({
         prenom: user.prenom,
         nom: user.nom,
-        mdp: user.mdp, // You may want to omit this or encrypt it before updating
+        mdp: user.mdp, // You may want to handle password securely
         email: user.email,
         role: user.role,
       });
     });
   }
-  imageFile: File | null = null;
-  onImageSelected(event: any): void {
-    if (event.target.files && event.target.files[0]) {
-      this.imageFile = event.target.files[0];
+
+  // Handle file selection for image
+  onImageUpload(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result;
+      };
+      reader.readAsDataURL(file);
+      this.updateUserForm.patchValue({ image: file }); // Adding the file to the form control
     }
   }
 
+  // Get error message for required fields
   getErrorMessage(controlName: string): string {
     const control = this.updateUserForm.get(controlName);
-    if (control?.hasError("required")) {
-      return "Ce champ est obligatoire";
+    if (control?.hasError('required')) {
+      return 'Ce champ est obligatoire';
     }
-    return "";
+    if (control?.hasError('email')) {
+      return 'Email invalide';
+    }
+    return '';
   }
+
+  // Handle form submission
   onSubmit(): void {
-    const formData = new FormData();
-    const user = this.updateUserForm.value;
-    formData.append("user", JSON.stringify(user));
-
-    if (this.imageFile) {
-      formData.append("image", this.imageFile, this.imageFile.name);
+    if (this.updateUserForm.invalid) {
+      return;
     }
-
-    this.service.updateUser(user).subscribe({
-      next: (response) => {
-        console.log("User updated successfully", response);
-      },
-      error: (error) => {
-        console.error("Error updating user", error);
-      },
-      complete: () => {
-        console.log("Request completed");
-      },
-    });
+    const id_user = this.id.toString();
+    const nom = this.updateUserForm.value.nom; // You might want to use nom instead of username
+    const prenom = this.updateUserForm.value.prenom; // Ensure this matches the backend 'prenom'
+    const email = this.updateUserForm.value.email;
+    const password = this.updateUserForm.value.password;
+    const role = this.updateUserForm.value.role;
+    const image = this.updateUserForm.value.image;
+    console.log('id_user in update component', id_user);
+    // Calling the register method from the service with the form values
+    this.service
+      .updateUser(id_user, nom, prenom, email, password, role, image)
+      .subscribe(
+        (response) => {
+          this.router.navigate(['/admin/tables']);
+          console.log('update successful:', response);
+        },
+        (error) => {
+          console.error('update failed:', error);
+        }
+      );
   }
 
-  // Vérifier si un champ est invalide
+  // Check if a field is invalid
   isFieldInvalid(fieldName: string): boolean {
     const field = this.updateUserForm.get(fieldName);
     return field ? field.invalid && field.touched : false;

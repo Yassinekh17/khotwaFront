@@ -48,7 +48,7 @@ import { NotificationDropdownComponent } from './components/dropdowns/notificati
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { UserDropdownComponent } from './components/dropdowns/user-dropdown/user-dropdown.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CardTableUpdateComponent } from './components/cards/card-table-update/card-table-update.component';
 import { AuthInterceptor } from './core/service/auth-interceptor.service';
 
@@ -95,6 +95,7 @@ import { AuthInterceptor } from './core/service/auth-interceptor.service';
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
+    FormsModule,
   ],
   providers: [
     {
