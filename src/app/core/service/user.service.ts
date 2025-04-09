@@ -194,4 +194,11 @@ export class UserService {
     this.router.navigate(['/auth/login']);
     // 🗑️ Step 1: Remove tokens from localStorage
   }
+
+    
+  forgotpw(username: string, newPassword: string) {
+    const url = `${this.apiUrl}/update-password?username=${encodeURIComponent(username)}&newPassword=${encodeURIComponent(newPassword)}`;
+
+    return this.httpservice.put(url, null); 
+  }
 }

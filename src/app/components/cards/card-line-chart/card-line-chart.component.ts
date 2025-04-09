@@ -1,5 +1,16 @@
 import { Component, OnInit, AfterViewInit } from "@angular/core";
-import { Chart, ChartConfiguration } from "chart.js"; // Use named imports
+import {
+  Chart,
+  ChartConfiguration,
+  LineController,
+  LineElement,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+  Title,
+} from "chart.js";
 
 @Component({
   selector: "app-card-line-chart",
@@ -11,8 +22,20 @@ export class CardLineChartComponent implements OnInit, AfterViewInit {
   ngOnInit() {}
 
   ngAfterViewInit() {
+    // ✅ Register required components
+    Chart.register(
+      LineController,
+      LineElement,
+      PointElement,
+      CategoryScale,
+      LinearScale,
+      Tooltip,
+      Legend,
+      Title
+    );
+
     const config: ChartConfiguration<"line", number[], string> = {
-      type: "line", // Explicitly set the type as "line"
+      type: "line",
       data: {
         labels: [
           "January",
@@ -45,11 +68,11 @@ export class CardLineChartComponent implements OnInit, AfterViewInit {
           title: {
             display: false,
             text: "Sales Charts",
-            color: "white", // Use 'color' instead of 'fontColor'
+            color: "white",
           },
           legend: {
             labels: {
-              color: "white", // Use 'color' instead of 'fontColor'
+              color: "white",
             },
             align: "end",
             position: "bottom",
@@ -69,13 +92,13 @@ export class CardLineChartComponent implements OnInit, AfterViewInit {
             title: {
               display: false,
               text: "Month",
-              color: "white", // Use 'color' instead of 'fontColor'
+              color: "white",
             },
             ticks: {
-              color: "rgba(255,255,255,.7)", // Use 'color' instead of 'fontColor'
+              color: "rgba(255,255,255,.7)",
             },
             grid: {
-              display: false, // Hide grid lines for the x-axis
+              display: false,
             },
           },
           y: {
@@ -83,13 +106,13 @@ export class CardLineChartComponent implements OnInit, AfterViewInit {
             title: {
               display: false,
               text: "Value",
-              color: "white", // Use 'color' instead of 'fontColor'
+              color: "white",
             },
             ticks: {
-              color: "rgba(255,255,255,.7)", // Use 'color' instead of 'fontColor'
+              color: "rgba(255,255,255,.7)",
             },
             grid: {
-              color: "rgba(255, 255, 255, 0.15)", // Use 'color' instead of 'gridLines.color'
+              color: "rgba(255, 255, 255, 0.15)",
               lineWidth: 1,
             },
           },
