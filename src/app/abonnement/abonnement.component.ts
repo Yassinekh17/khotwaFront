@@ -2,9 +2,9 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AbonnementService } from 'src/app/services/abonnement.service';
 import { PlanAbonnement } from '../models/abonnement.model';
 import { ToastrService } from 'ngx-toastr';
-import { ChartConfiguration, ChartData, ChartType } from 'chart.js'; // Importer Chart.js
+import { ChartConfiguration, ChartData, ChartType } from 'chart.js'; 
 import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable'; // Pour générer des tableaux dans le PDF
+import autoTable from 'jspdf-autotable'; 
 
 @Component({
   selector: 'app-abonnement',
@@ -234,18 +234,7 @@ getStatistics(): void {
     ];
   });
 }
- // Fonction pour suggérer un plan
- suggestPlan(): void {
-  const totalDepense = this.abonnements.reduce((sum, abonnement) => sum + abonnement.prix, 0);
 
-  if (totalDepense >= 300) {
-    this.suggestedPlan = PlanAbonnement.ANNUEL; // Si la dépense totale est élevée, suggérer un plan annuel
-  } else if (totalDepense >= 100) {
-    this.suggestedPlan = PlanAbonnement.TRIMESTRIEL; // Si la dépense est modérée, suggérer un plan trimestriel
-  } else {
-    this.suggestedPlan = PlanAbonnement.MENSUEL; // Sinon, suggérer un plan mensuel
-  }
-}
 
 
 

@@ -1,0 +1,34 @@
+<div class="chat-container">
+    <!-- Messages -->
+    <div class="messages">
+      <div *ngFor="let msg of messages" [class.user]="msg.isUser" [class.bot]="!msg.isUser">
+        <div class="message-content">
+          {{ msg.content }}
+        </div>
+      </div>
+      
+      <!-- Indicateur de chargement -->
+      <div *ngIf="isLoading" class="loading">
+        <div class="typing-animation">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Message d'erreur -->
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+  
+    <!-- Input -->
+    <div class="input-area">
+      <input [(ngModel)]="userInput" 
+             (keyup.enter)="sendMessage()"
+             placeholder="Posez votre question..."
+             [disabled]="isLoading">
+      <button (click)="sendMessage()" [disabled]="isLoading || !userInput.trim()">
+        <span *ngIf="!isLoading">Envoyer</span>
+        <span *ngIf="isLoading">...</span>
+      </button>
+    </div>
+  </div>

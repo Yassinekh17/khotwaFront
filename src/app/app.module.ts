@@ -58,6 +58,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AbonnementFormComponent } from './abonnement-form/abonnement-form.component';
 import { PaymentComponent } from './payment/payment.component';
 import { FormsModule } from '@angular/forms';
+import { ChatbotComponent } from './chatbot/chatbot.component';
 
 
 
@@ -101,6 +102,7 @@ import { FormsModule } from '@angular/forms';
     AbonnementComponent,
     AbonnementFormComponent,
     PaymentComponent,
+    ChatbotComponent,
     
     
   ],

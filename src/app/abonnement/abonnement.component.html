@@ -146,18 +146,4 @@
     </div>
   </div>
 </div>
-<div class="p-4">
-  <h2 class="text-xl font-bold mb-4">Suggestion de plan d'abonnement</h2>
-
-  <!-- Bouton pour obtenir une suggestion -->
-  <button 
-    class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-    (click)="suggestPlan()">
-    Obtenir une suggestion
-  </button>
-
-  <!-- Afficher la suggestion -->
-  <div *ngIf="suggestedPlan" class="mt-4 p-4 bg-green-100 rounded">
-    <p class="text-green-800">Nous vous recommandons le plan <strong>{{ suggestedPlan }}</strong> !</p>
-  </div>
-</div>
+<app-chatbot></app-chatbot>
