@@ -22,12 +22,16 @@ export class LoginComponent implements OnInit {
     this.authForm = this.fb.group({
       email: ['', Validators.required],
       mdp: ['', [Validators.required]],
+      recaptcha: ['', Validators.required],
     });
   }
   errorMessage: string | null = null; // Add this property in your component
   submit() {
+    console.log("submit");
+    console.log(this.authForm.value);
     if (this.authForm.valid) {
-      const { email, mdp } = this.authForm.value;
+      console.log("form valid");
+      const { email, mdp, recaptcha } = this.authForm.value;
       const authValues = { username: email, password: mdp }; // Use correct field names
 
       this.authService.authenticate(authValues).subscribe({
@@ -79,6 +83,8 @@ export class LoginComponent implements OnInit {
             error.error?.error || 'Authentication failed. Please try again.';
         },
       });
+    }else{
+      console.log("form invalid");
     }
   }
 
@@ -99,8 +105,20 @@ export class LoginComponent implements OnInit {
   getErrorMessage(controlName: string): string {
     const control = this.authForm.get(controlName);
     if (control?.hasError('required')) {
+      if (controlName === 'recaptcha') {
+        return 'Veuillez valider le CAPTCHA';
+      }
       return 'Ce champ est obligatoire';
     }
     return '';
   }
+  
+  onCaptchaResolved(token: string) {
+    console.log('Captcha resolved with token:', token);
+    this.authForm.get('recaptcha')?.setValue(token);
+  
+ 
+
+  }
+  
 }

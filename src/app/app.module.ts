@@ -51,6 +51,7 @@ import { AuthInterceptor } from './core/service/auth-interceptor.service';
 import { DashboardUserComponent } from './views/admin/dashboardUser/dashboardUser.component';
 import { ForgotpwComponent } from './views/auth/forgotpw/forgotpw.component';
 import { CardRoleChartComponent } from './components/cards/card-role-chart/card-role-chart.component';
+import { RecaptchaModule } from 'ng-recaptcha';
 
 @NgModule({
   declarations: [
@@ -97,6 +98,7 @@ import { CardRoleChartComponent } from './components/cards/card-role-chart/card-
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
+    RecaptchaModule
   ],
   providers: [
     {

@@ -80,6 +80,16 @@
                 </span>
               </label>
             </div>
+            <div class="relative w-full mb-3">
+              <re-captcha
+                formControlName="recaptcha"
+                siteKey="6LdcKBcrAAAAAKlbQnx0CYKU4DaUorY6KcqlCqeT"
+                (resolved)="onCaptchaResolved($event)">
+              </re-captcha>
+              <div *ngIf="isFieldInvalid('recaptcha')">
+                <small>{{ getErrorMessage('recaptcha') }}</small>
+              </div>
+            </div>
             <div class="text-center mt-6">
             <div *ngIf="errorMessage" class="text-red-500 text-sm mt-2">
               {{ errorMessage }}
@@ -94,6 +104,7 @@
               </button>
             </div>
           </form>
+         
         </div>
       </div>
       <div class="flex flex-wrap mt-6 relative">
