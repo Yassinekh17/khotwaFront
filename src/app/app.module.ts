@@ -25,7 +25,6 @@ import { ProfileComponent } from './views/profile/profile.component';
 
 import { AdminNavbarComponent } from './components/navbars/admin-navbar/admin-navbar.component';
 import { AuthNavbarComponent } from './components/navbars/auth-navbar/auth-navbar.component';
-import { CardBarChartComponent } from './components/cards/card-bar-chart/card-bar-chart.component';
 import { CardLineChartComponent } from './components/cards/card-line-chart/card-line-chart.component';
 import { CardPageVisitsComponent } from './components/cards/card-page-visits/card-page-visits.component';
 import { CardProfileComponent } from './components/cards/card-profile/card-profile.component';
@@ -51,12 +50,13 @@ import { CardTableUpdateComponent } from './components/cards/card-table-update/c
 import { AuthInterceptor } from './core/service/auth-interceptor.service';
 import { DashboardUserComponent } from './views/admin/dashboardUser/dashboardUser.component';
 import { ForgotpwComponent } from './views/auth/forgotpw/forgotpw.component';
+import { CardRoleChartComponent } from './components/cards/card-role-chart/card-role-chart.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DashboardUserComponent,
-    CardBarChartComponent,
+    CardRoleChartComponent,
     CardLineChartComponent,
     IndexDropdownComponent,
     PagesDropdownComponent,

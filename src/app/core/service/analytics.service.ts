@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient , HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -7,11 +7,50 @@ import { Observable } from 'rxjs';
 })
 export class AnalyticsService {
 
-  private apiUrl = 'http://localhost:8050/api/analytics';
+  private baseUrl = 'http://localhost:8090/api/statistics';
 
   constructor(private http: HttpClient) { }
 
-  getActionsBetween(start: string, end: string): Observable<number> {
-    return this.http.get<number>(`${this.apiUrl}/actions-between?start=${start}&end=${end}`);
+
+  private getAuthHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+  }
+
+  getTotalUsers(): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/users/total`, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+  getTotalUsersByRole(role: string): Observable<number> {
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${localStorage.getItem('token')}`
+    );
+    return this.http.get<number>(`${this.baseUrl}/users/role/${role}`, { headers });
+  }
+  
+
+  getTotalUserActions(): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/activities/total`, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+  getUserActionsLastMonth(): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/activities/last-month`, {
+      headers: this.getAuthHeaders()
+    });
   }
 }
+
+
+
+
+
+
+
+
+

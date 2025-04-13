@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import {
   Chart,
   ChartConfiguration,
@@ -11,18 +11,59 @@ import {
   Legend,
   Title,
 } from "chart.js";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-card-line-chart",
   templateUrl: "./card-line-chart.component.html",
 })
-export class CardLineChartComponent implements OnInit, AfterViewInit {
-  constructor() {}
+export class CardLineChartComponent implements OnInit {
+  constructor(private http: HttpClient) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.fetchMonthlyActivity();
+  }
 
-  ngAfterViewInit() {
-    // ✅ Register required components
+  fetchMonthlyActivity() {
+    const token = localStorage.getItem("token");
+  
+    this.http
+      .get<[number, number][]>("http://localhost:8090/api/analytics/monthly-activity", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .subscribe(
+        (data) => {
+          const monthNames = [
+            "",
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+          ];
+  
+          const labels = data.map(([monthNumber]) => monthNames[monthNumber]);
+          const values = data.map(([_, count]) => count);
+  
+          this.renderChart(labels, values);
+        },
+        (error) => {
+          console.error("Error fetching activity data", error);
+        }
+      );
+  }
+  
+
+  renderChart(labels: string[], values: number[]) {
     Chart.register(
       LineController,
       LineElement,
@@ -37,27 +78,15 @@ export class CardLineChartComponent implements OnInit, AfterViewInit {
     const config: ChartConfiguration<"line", number[], string> = {
       type: "line",
       data: {
-        labels: [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-        ],
+        labels,
         datasets: [
           {
-            label: new Date().getFullYear().toString(),
+            label: "Monthly User Activity",
             backgroundColor: "#4c51bf",
             borderColor: "#4c51bf",
-            data: [65, 78, 66, 44, 56, 67, 75],
-          },
-          {
-            label: (new Date().getFullYear() - 1).toString(),
-            backgroundColor: "#fff",
-            borderColor: "#fff",
-            data: [40, 68, 86, 74, 56, 60, 87],
+            data: values,
+            fill: false,
+            tension: 0.3,
           },
         ],
       },
@@ -66,8 +95,8 @@ export class CardLineChartComponent implements OnInit, AfterViewInit {
         responsive: true,
         plugins: {
           title: {
-            display: false,
-            text: "Sales Charts",
+            display: true,
+            text: "Monthly Activity (User Actions)",
             color: "white",
           },
           legend: {
@@ -77,52 +106,31 @@ export class CardLineChartComponent implements OnInit, AfterViewInit {
             align: "end",
             position: "bottom",
           },
-          tooltip: {
-            mode: "index",
-            intersect: false,
-          },
-        },
-        hover: {
-          mode: "nearest",
-          intersect: true,
         },
         scales: {
           x: {
-            display: true,
-            title: {
-              display: false,
-              text: "Month",
-              color: "white",
-            },
             ticks: {
-              color: "rgba(255,255,255,.7)",
+              color: "white",
             },
             grid: {
               display: false,
             },
           },
           y: {
-            display: true,
-            title: {
-              display: false,
-              text: "Value",
+            ticks: {
               color: "white",
             },
-            ticks: {
-              color: "rgba(255,255,255,.7)",
-            },
             grid: {
-              color: "rgba(255, 255, 255, 0.15)",
-              lineWidth: 1,
+              color: "rgba(255,255,255,0.2)",
             },
           },
         },
       },
     };
 
-    const ctx = document.getElementById("line-chart") as HTMLCanvasElement;
-    if (ctx) {
-      new Chart(ctx, config);
+    const canvas = document.getElementById("line-chart") as HTMLCanvasElement;
+    if (canvas) {
+      new Chart(canvas, config);
     }
   }
 }

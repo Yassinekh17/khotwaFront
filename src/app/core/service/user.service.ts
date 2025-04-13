@@ -15,7 +15,7 @@ import { jwtDecode } from 'jwt-decode';
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = 'http://localhost:8050';
+  private apiUrl = 'http://localhost:8090';
 
   private keycloakLogoutUrl =
     'http://localhost:8081/realms/Khotwa/protocol/openid-connect/logout';
@@ -92,7 +92,7 @@ export class UserService {
     });
 
     // Define the API endpoint for the update request
-    const url = 'http://localhost:8050/updateUser';
+    const url = 'http://localhost:8090/updateUser';
     console.log('formdata in user service', formData);
 
     // Send the PUT request with FormData and headers
@@ -100,7 +100,7 @@ export class UserService {
   }
 
   addUser(user: User) {
-    return this.httpservice.post('http://localhost:8050/addUser', user);
+    return this.httpservice.post('http://localhost:8090/addUser', user);
   }
 
   authenticate(authvalues: { username: string; password: string }) {
@@ -153,7 +153,7 @@ export class UserService {
     }
 
     // Adjust the URL according to your backend API
-    const url = 'http://localhost:8050/registerUser';
+    const url = 'http://localhost:8090/registerUser';
 
     return this.httpservice.post(url, formData);
   }
@@ -163,7 +163,7 @@ export class UserService {
       `Bearer ${localStorage.getItem('token')}`
     );
     return this.httpservice.get<any>(
-      `http://localhost:8050/getUserByEmail/${email}`,
+      `http://localhost:8090/getUserByEmail/${email}`,
       { headers }
     );
   }
