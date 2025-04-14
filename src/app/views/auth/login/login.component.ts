@@ -61,14 +61,9 @@ export class LoginComponent implements OnInit {
               // You can now check the user's role and navigate accordingly
               if (userData.role == 'ADMINISTRATEUR') {
                 this.router.navigate(['/admin/dashboard']);
-              } else if (
-                roles.includes('ETUDIANT') ||
-                roles.includes('FORMATEUR')
-              ) {
+              } else  {
                 window.location.href = 'http://localhost:4200/';
-              } else {
-                console.error('Unknown role:', roles);
-              }
+              } 
             },
             error: (error) => {
               console.error('Failed to fetch user by email:', error);

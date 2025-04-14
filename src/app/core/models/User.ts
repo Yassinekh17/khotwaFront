@@ -5,5 +5,5 @@ export class User{
   email !: String;
   mdp!: String;
   role!: String;
-  
+  image!:String;
 }
