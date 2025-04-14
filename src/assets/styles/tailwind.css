@@ -1392,6 +1392,10 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgba(127, 29, 29, var(--tw-bg-opacity));
 }
+.bg-green-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgba(16, 185, 129, var(--tw-bg-opacity));
+}
 
 .bg-gray-100 {
   --tw-bg-opacity: 1;
@@ -1401,6 +1405,14 @@ select {
 .bg-gray-200 {
   --tw-bg-opacity: 1;
   background-color: rgba(228, 228, 231, var(--tw-bg-opacity));
+}
+.bg-gray-800 {
+  --tw-bg-opacity: 1;
+  background-color: rgba(31, 41, 55, var(--tw-bg-opacity));
+}
+.bg-blue-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgba(37, 99, 235, var(--tw-bg-opacity));
 }
 
 .bg-blueGray-50 {
@@ -2700,7 +2712,18 @@ select {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
 }
+.font-medium {
+  font-weight: 500;
+}
+.bg-gray-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgba(75, 85, 99, var(--tw-bg-opacity));
+}
 
+.hover\:bg-gray-700:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgba(55, 65, 81, var(--tw-bg-opacity));
+}
 .px-2 {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
@@ -3235,6 +3258,10 @@ select {
 .text-red-600 {
   --tw-text-opacity: 1;
   color: rgba(220, 38, 38, var(--tw-text-opacity));
+}
+.text-green-600 {
+  --tw-text-opacity: 1;
+  color: rgba(16, 185, 129, var(--tw-text-opacity));
 }
 
 .text-gray-500 {
@@ -4126,4 +4153,70 @@ select {
 }
 
 @media (min-width: 1536px) {
+}
+.border-blue-500 {
+  border-color: #3b82f6;
+  border-width: 2px;
+}
+
+.bg-blue-50 {
+  background-color: #eff6ff;
+}
+
+.border-green-500 {
+  border-color: #10b981;
+  border-width: 2px;
+}
+
+.bg-green-50 {
+  background-color: #ecfdf5;
+}
+
+.border-red-500 {
+  border-color: #ef4444;
+  border-width: 2px;
+}
+
+.bg-red-50 {
+  background-color: #fef2f2;
+}
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .quiz-container {
+    padding: 1rem;
+  }
+  
+  .question-text {
+    font-size: 1.1rem;
+  }
+  
+  .answer-option {
+    padding: 0.75rem;
+  }
+}
+.transition-colors {
+  transition-property: color, background-color, border-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.duration-200 {
+  transition-duration: 200ms;
 }

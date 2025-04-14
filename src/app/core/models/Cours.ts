@@ -14,4 +14,24 @@ export interface Cours {
     image: string;
     video: string;
   }
+
+  export interface Quizz {
+    idQuizz?: number;
+    nomQuizz: string;
+    cours: Cours;
+    questions?: Question[];
+  }
+
+  export interface Question {
+    id_question?: number;
+    ennonce: string;
+    bonneReponse: string;
+    quizz?: Quizz;
+    reponses?: Reponse[];
+  }
   
+  export interface Reponse {
+    id_reponse?: number;
+    contenu: string;
+    question?: Question;
+  }

@@ -9,7 +9,7 @@ import { Cours } from '../models/Cours';
 })
 export class CoursService {
   private apiUrl = 'http://localhost:8089/retrieveAllCours';
-  private addUrl = 'http://localhost:8089/addCours';
+  private addUrl = 'http://localhost:8090/addCours';
   private searchUrl = 'http://localhost:8089';
   private getUrl = 'http://localhost:8089/retrieveCours'; 
 

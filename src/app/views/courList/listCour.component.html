@@ -42,7 +42,13 @@
             <div class="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
               
             </div>
-            
+            <button
+            class="bg-white text-blueGray-700 active:bg-blueGray-50 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3 ease-linear transition-all duration-150"
+            type="button"
+            (click)="goToQuiz()"
+          >
+            <i class="fas fa-arrow-alt-circle-down"></i> Check Quiz
+          </button>
           <app-chat-bot></app-chat-bot>
             <!-- app.component.html -->
                         <div class="container">
@@ -88,21 +94,9 @@
                             <!-- Course List -->
                             <div class="course-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             <!-- Course Card Component -->
-                            <div *ngFor="let course of courses" class="course-card" [ngClass]="{'warning-card': course.warning}">
-                                <div class="course-header" [ngClass]="getCategoryClass(course.category)">
-                                {{ course.category }}
+                            
                                 </div>
-                                <div class="course-body">
-                                <h3 class="course-title">{{ course.title }}</h3>
-                                <div class="course-rating">
-                                    <span class="rating">{{ course.rating }}</span>
-                                    <div class="stars">
-                                    <span *ngFor="let star of [1,2,3,4,5]" class="star">★</span>
-                                    </div>
-                                </div>
-                                <div class="course-students">
-                                    {{ course.students | number }} students
-                                </div>
+                                
                                 </div>
                             </div>
                             </div>
@@ -129,9 +123,7 @@
               
             </div>
           </div>
-        </div>
-      </div>
-    </div>
+       
   </section>
 
 </main>

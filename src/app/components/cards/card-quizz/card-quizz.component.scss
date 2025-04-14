@@ -1,0 +1,45 @@
+
+.quiz-form-transition {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .answer-input-group {
+    margin-bottom: 1rem;
+    animation: slideIn 0.3s ease-out;
+  }
+  
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .correct-answer-input {
+    border-left: 4px solid #48bb78 !important;
+  }
+  .quiz-table {
+    margin-top: 2rem;
+    border-collapse: separate;
+    border-spacing: 0 0.5rem;
+  }
+  
+  .quiz-table th {
+    background-color: #f7fafc;
+    padding: 1rem;
+  }
+  
+  .quiz-table td {
+    background-color: white;
+    padding: 1rem;
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .quiz-table tr:hover td {
+    background-color: #f8fafc;
+  }

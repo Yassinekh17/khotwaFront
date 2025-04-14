@@ -23,28 +23,7 @@ export class ListCourComponent implements OnInit {
 
   constructor(private coursService: CoursService,private router: Router) {}
 
-  courses: Course[] = [
-    {
-      category: 'IT & SOFTWARE',
-      title: 'Learn Python Programming Masterclass',
-      rating: 4.0,
-      students: 21434
-    },
-    {
-      category: 'DESIGN',
-      title: 'Complete Blender Creator: Learn 3D Modelling for Beginners',
-      rating: 4.9,
-      students: 197837
-    },
-    // Add other courses from your list here...
-    {
-      category: 'WARNING',
-      title: 'How to get Diamond in solo! | League of Legends | Season 11',
-      rating: 4.7,
-      students: 435671,
-      warning: true
-    }
-  ];
+  
 
   pages = [1, 2, 3, 4, 5];
   currentPage = 1;
@@ -58,7 +37,12 @@ export class ListCourComponent implements OnInit {
       default: return 'default';
     }
   }
-
+  goToQuiz(): void {
+    this.router.navigate(['/listQuizz']);
+  }
+  /*  goToQuiz(): void {
+    this.router.navigate(['/quiz']);
+  }*/
   changePage(page: number): void {
     this.currentPage = page;
     // Add your pagination logic here

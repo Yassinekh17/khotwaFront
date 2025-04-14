@@ -15,6 +15,7 @@ import { MapsComponent } from "./views/admin/maps/maps.component";
 import { SettingsComponent } from "./views/admin/settings/settings.component";
 import { TablesComponent } from "./views/admin/tables/tables.component";
 import { CoursComponent } from "./views/admin/cours/cours.component";
+import { QuizzComponent } from "./views/admin/quizz/quizz.component";
 
 // auth views
 import { LoginComponent } from "./views/auth/login/login.component";
@@ -25,6 +26,7 @@ import { IndexComponent } from "./views/index/index.component";
 import { LandingComponent } from "./views/landing/landing.component";
 import { ProfileComponent } from "./views/profile/profile.component";
 import { ListCourComponent } from "./views/courList/listCour.component";
+import { ListQuizzComponent } from "./views/quizzList/listQuizz.component";
 // components for views and layouts
 
 import { AdminNavbarComponent } from "./components/navbars/admin-navbar/admin-navbar.component";
@@ -38,6 +40,7 @@ import { CardSocialTrafficComponent } from "./components/cards/card-social-traff
 import { CardStatsComponent } from "./components/cards/card-stats/card-stats.component";
 import { CardTableComponent } from "./components/cards/card-table/card-table.component";
 import { CardCourComponent } from "./components/cards/card-cour/card-cour.component";
+import { CardquizzComponent } from "./components/cards/card-quizz/card-quizz.component";
 import { FooterAdminComponent } from "./components/footers/footer-admin/footer-admin.component";
 import { FooterComponent } from "./components/footers/footer/footer.component";
 import { FooterSmallComponent } from "./components/footers/footer-small/footer-small.component";
@@ -58,6 +61,9 @@ import { NotificationComponent } from "./components/notification/notification.co
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ChatBotComponent } from './chat-bot/chat-bot.component';
+import { CourseStatsComponent } from './course-stats/course-stats.component';
+import { NgChartsModule } from 'ng2-charts';
+import { QuizComponent } from "./components/quiz/quiz.component";
 
 @NgModule({
   declarations: [
@@ -83,7 +89,9 @@ import { ChatBotComponent } from './chat-bot/chat-bot.component';
     CardStatsComponent,
     CardTableComponent,
     CardCourComponent,
+    CardquizzComponent,
     ListCourComponent,
+    ListQuizzComponent,
     CourseDetailsComponent,
     CourseLessonComponent,
     NotificationComponent,
@@ -104,10 +112,13 @@ import { ChatBotComponent } from './chat-bot/chat-bot.component';
     ChatBotComponent,
     ProfileComponent,
     CoursComponent,
+    QuizzComponent,
+    CourseStatsComponent,
+  
     
   ],
   imports: [BrowserModule, AppRoutingModule,HttpClientModule,FormsModule, BrowserAnimationsModule,MatIconModule,
-    MatSnackBarModule],
+    MatSnackBarModule,NgChartsModule],
   providers: [],
   bootstrap: [AppComponent],
 })
