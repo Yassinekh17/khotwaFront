@@ -12,6 +12,8 @@ import {
   Title,
 } from "chart.js";
 import { HttpClient } from "@angular/common/http";
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: "app-card-line-chart",
@@ -133,4 +135,38 @@ export class CardLineChartComponent implements OnInit {
       new Chart(canvas, config);
     }
   }
+
+  downloadChartAsPDF() {
+    const chartContainer = document.getElementById('chart-wrapper');
+    if (chartContainer) {
+      html2canvas(chartContainer, { scale: 2 }).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('landscape');
+  
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+  
+        // 🔥 Add Title
+        pdf.setFontSize(18);
+        pdf.setTextColor(40);
+        pdf.text('Monthly User Activity Report', pdfWidth / 2, 20, { align: 'center' });
+  
+        // Add chart image below title
+        pdf.addImage(imgData, 'PNG', 10, 30, pdfWidth - 20, pdfHeight);
+  
+        // 🔥 Add logo
+        const logo = new Image();
+        logo.src = 'assets/logo.png';
+  
+        logo.onload = () => {
+          pdf.addImage(logo, 'PNG', 10, 10, 40, 20);
+          pdf.save('monthly-user-activity.pdf');
+        };
+      });
+    }
+  }
+  
+  
+  
 }

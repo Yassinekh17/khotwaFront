@@ -1,3 +1,4 @@
+<div id="role-wrapper">
 <div class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded">
   <div class="rounded-t mb-0 px-4 py-3 bg-transparent">
     <div class="flex flex-wrap items-center">
@@ -6,12 +7,23 @@
           Users
         </h6>
         <h2 class="text-blueGray-700 text-xl font-semibold">Users by Role</h2>
+
+        <div class="flex justify-end mb-4">
+          <button
+            (click)="downloadChartAsPDF()"
+            class="bg-blue-500 text-black px-4 py-2 rounded hover:bg-blue-600"
+          >
+            Download as PDF
+          </button>
+        </div>
       </div>
     </div>
   </div>
   <div class="p-4 flex-auto">
-    <div class="relative" style="height: 350px">
-      <canvas id="role-chart"></canvas>
+    <div class="relative" style="height: 350px; width: 100%;">
+      <canvas id="role-chart" width="800" height="350"></canvas>
     </div>
+    
   </div>
+</div>
 </div>

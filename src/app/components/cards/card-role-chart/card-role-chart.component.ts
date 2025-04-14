@@ -2,6 +2,8 @@ import { Component, OnInit, AfterViewInit } from "@angular/core";
 import { Chart, ChartConfiguration, BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend, Title } from "chart.js";
 
 import { AnalyticsService } from "src/app/core/service/analytics.service";
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: "app-card-role-chart",
@@ -88,4 +90,42 @@ export class CardRoleChartComponent implements OnInit, AfterViewInit {
       new Chart(ctx, config);
     }
   }
+
+  downloadChartAsPDF() {
+    const chartCanvas = document.getElementById('role-chart') as HTMLCanvasElement;
+    if (!chartCanvas) return;
+  
+    const imgData = chartCanvas.toDataURL('image/png', 1.0); // Maximum quality
+    const pdf = new jsPDF('landscape', 'mm', 'a4');
+  
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+  
+    const imgProps = {
+      width: chartCanvas.width,
+      height: chartCanvas.height,
+    };
+  
+    const aspectRatio = imgProps.height / imgProps.width;
+    const imgWidth = pdfWidth - 20;
+    const imgHeight = imgWidth * aspectRatio;
+  
+    // Title
+    pdf.setFontSize(14);
+    pdf.text('Monthly User Activity Report', pdfWidth / 2, 15, { align: 'center' });
+  
+    // Chart image
+    pdf.addImage(imgData, 'PNG', 10, 25, imgWidth, imgHeight);
+  
+    // Logo (optional)
+    const logo = new Image();
+    logo.src = 'assets/logo.png';
+  
+    logo.onload = () => {
+      pdf.addImage(logo, 'PNG', 10, 5, 30, 15);
+      pdf.save('users-by-role.pdf');
+    };
+  }
+  
+  
 }
