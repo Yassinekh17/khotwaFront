@@ -23,6 +23,7 @@ import { LandingComponent } from "./views/landing/landing.component";
 import { ProfileComponent } from "./views/profile/profile.component";
 import { ListCourComponent } from "./views/courList/listCour.component";
 import { ListQuizzComponent } from "./views/quizzList/listQuizz.component";
+import { predictionresultComponent } from "./views/quizzList/predictionresult.component";
 import { CourseDetailsComponent } from "./components/course-details/course-details.component";
 import { CourseLessonComponent } from "./components/course-lesson/course-lesson.component";
 import { QuizComponent } from "./components/quiz/quiz.component";
@@ -57,6 +58,7 @@ const routes: Routes = [
   { path: "profile", component: ProfileComponent },
   { path: "listCour", component: ListCourComponent},
   { path: "listQuizz", component: ListQuizzComponent},
+  { path: "prediction", component: predictionresultComponent},
   { path: "quiz/:id", component: QuizComponent },
   { path: "landing", component: LandingComponent },
   { path: 'course/:id', component: CourseDetailsComponent },

@@ -27,6 +27,7 @@ import { LandingComponent } from "./views/landing/landing.component";
 import { ProfileComponent } from "./views/profile/profile.component";
 import { ListCourComponent } from "./views/courList/listCour.component";
 import { ListQuizzComponent } from "./views/quizzList/listQuizz.component";
+import { predictionresultComponent } from "./views/quizzList/predictionresult.component";
 // components for views and layouts
 
 import { AdminNavbarComponent } from "./components/navbars/admin-navbar/admin-navbar.component";
@@ -114,7 +115,7 @@ import { QuizComponent } from "./components/quiz/quiz.component";
     CoursComponent,
     QuizzComponent,
     CourseStatsComponent,
-  
+  predictionresultComponent,
     
   ],
   imports: [BrowserModule, AppRoutingModule,HttpClientModule,FormsModule, BrowserAnimationsModule,MatIconModule,

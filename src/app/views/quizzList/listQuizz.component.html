@@ -37,12 +37,18 @@
       <div
         class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64"
       >
+      
         <div class="px-6 py-6">
           <div class="text-center mb-6">
             <h2 class="text-3xl font-bold text-blueGray-700">Available Quizzes</h2>
+            <div class="text-center mb-4">
+              <button (click)="goToPrediction()" class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 transition">
+                Prediction 
+              </button>
+            </div>
             <p class="text-blueGray-500">Test your knowledge with these quizzes</p>
           </div>
-          
+
           <div class="quizzes-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div *ngFor="let quiz of quizzes" class="quiz-card bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105">
               <img src="https://img.freepik.com/free-vector/quiz-neon-sign_1262-19629.jpg" alt="Quiz Image" class="w-full h-48 object-cover">
@@ -64,6 +70,8 @@
         </div>
       </div>
     </div>
+    
   </section>
+  
 </main>
 <app-footer></app-footer>
