@@ -30,7 +30,7 @@ export class CardLineChartComponent implements OnInit {
     const token = localStorage.getItem("token");
   
     this.http
-      .get<[number, number][]>("http://localhost:8090/api/analytics/monthly-activity", {
+      .get<[number, number][]>("http://localhost:8090/user/api/analytics/monthly-activity", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

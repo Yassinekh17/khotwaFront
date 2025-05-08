@@ -11,11 +11,12 @@ import { Router } from '@angular/router';
 import { UserActivityService } from './user-activity.service';
 import { jwtDecode } from 'jwt-decode';
 
+
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = 'http://localhost:8090';
+  private apiUrl = 'http://localhost:8090/user';
 
   private keycloakLogoutUrl =
     'http://localhost:8081/realms/Khotwa/protocol/openid-connect/logout';
@@ -92,7 +93,7 @@ export class UserService {
     });
 
     // Define the API endpoint for the update request
-    const url = 'http://localhost:8090/updateUser';
+    const url = 'http://localhost:8090/user/updateUser';
     console.log('formdata in user service', formData);
 
     // Send the PUT request with FormData and headers
@@ -138,7 +139,10 @@ export class UserService {
     email: string,
     password: string,
     role: string,
-    image: File | null
+    image: File | null,
+    age:string,
+    gender: string,
+    country: string
   ): Observable<any> {
     const formData = new FormData();
     formData.append('nom', nom); // Align with backend 'nom'
@@ -146,14 +150,14 @@ export class UserService {
     formData.append('email', email);
     formData.append('mdp', password); // Make sure to send 'mdp' for the password
     formData.append('role', role);
-
+    formData.append('age', age);formData.append('gender', gender);formData.append('country', country);
     // If an image is provided, add it to the form data
     if (image) {
       formData.append('image', image);
     }
 
     // Adjust the URL according to your backend API
-    const url = 'http://localhost:8090/registerUser';
+    const url = 'http://localhost:8090/user/registerUser';
 
     return this.httpservice.post(url, formData);
   }
@@ -163,7 +167,7 @@ export class UserService {
       `Bearer ${localStorage.getItem('token')}`
     );
     return this.httpservice.get<any>(
-      `http://localhost:8090/getUserByEmail/${email}`,
+      `http://localhost:8090/user/getUserByEmail/${email}`,
       { headers }
     );
   }
@@ -192,13 +196,72 @@ export class UserService {
     localStorage.removeItem('token');
     localStorage.removeItem('refresh_token');
     this.router.navigate(['/auth/login']);
-    // 🗑️ Step 1: Remove tokens from localStorage
+
   }
 
-    
+
   forgotpw(username: string, newPassword: string) {
     const url = `${this.apiUrl}/update-password?username=${encodeURIComponent(username)}&newPassword=${encodeURIComponent(newPassword)}`;
 
-    return this.httpservice.put(url, null); 
+    return this.httpservice.put(url, null);
   }
+
+// user.service.ts or wherever the request is made
+updateRating(email: string, rating: number): Observable<any> {
+  const token = localStorage.getItem('token'); // or sessionStorage, wherever you store the JWT
+  const headers = new HttpHeaders({
+    'Authorization': `Bearer ${token}`
+  });
+
+  return this.httpservice.put(`${this.apiUrl}/update-rating?email=${email}&siteRating=${rating}`, null, { headers });
+}
+
+// Complete user update method that includes age, gender, and country
+updateUserComplete(
+  userId: string,
+  nom: string,
+  prenom: string,
+  email: string,
+  password: string,
+  role: string,
+  age: string,
+  gender: string,
+  country: string,
+  image: File | null
+): Observable<any> {
+  // Create FormData and append regular form fields
+  const formData = new FormData();
+  formData.append('userId', userId);
+  formData.append('nom', nom);
+  formData.append('prenom', prenom);
+  formData.append('email', email);
+  formData.append('mdp', password); // Password field (mdp)
+  formData.append('role', role);
+
+  // Add the new fields
+  if (age) formData.append('age', age);
+  if (gender) formData.append('gender', gender);
+  if (country) formData.append('country', country);
+
+  // If an image is provided, append it to the FormData
+  if (image) {
+    console.log('Appending image:', image.name);
+    formData.append('image', image, image.name);
+  }
+
+  // Get the token from local storage
+  const token = localStorage.getItem('token');
+
+  // Set the authorization header
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+  });
+
+  // Define the API endpoint for the update request
+  const url = 'http://localhost:8090/user/updateUser';
+
+  // Send the PUT request with FormData and headers
+  return this.httpservice.put(url, formData, { headers: headers });
+}
+
 }

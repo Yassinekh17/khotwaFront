@@ -41,6 +41,7 @@ export class LoginComponent implements OnInit {
           // Store the token
           localStorage.setItem('token', data.access_token);
           localStorage.setItem('refresh_token', data.refresh_token);
+          
           this.userActivityService.addUserActivity(email, 'LOGIN').subscribe({
             next: () => console.log('User activity logged: LOGIN'),
             error: (err) => console.error('Failed to log user activity:', err),

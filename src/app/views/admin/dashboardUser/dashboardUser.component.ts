@@ -7,11 +7,11 @@ import { AnalyticsService } from 'src/app/core/service/analytics.service';
 })
 export class DashboardUserComponent implements OnInit {
  
-  constructor(private analyticsService: AnalyticsService) {}
+  constructor() {}
 
   ngOnInit() {
-    console.log(localStorage.getItem('token'));
+   
   }
 
-  
+
 }

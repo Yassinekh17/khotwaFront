@@ -16,6 +16,9 @@ export class RegisterComponent implements OnInit {
       prenom: ['', Validators.required],
       nom: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
+      gender: ['', [Validators.required]],
+      country: ['', [Validators.required]],
+      age: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       role: ['ETUDIANT', Validators.required],
       image: [null], // Image will be handled separately
@@ -41,13 +44,16 @@ export class RegisterComponent implements OnInit {
     const nom = this.registerForm.value.prenom; // You might want to use nom instead of username
     const prenom = this.registerForm.value.nom; // Ensure this matches the backend 'prenom'
     const email = this.registerForm.value.email;
+    const age = this.registerForm.value.age;
+    const gender = this.registerForm.value.gender;
+    const country = this.registerForm.value.country;
     const password = this.registerForm.value.password;
     const role = this.registerForm.value.role;
     const image = this.registerForm.value.image;
 
     // Calling the register method from the service with the form values
     this.userService
-      .register(nom, prenom, email, password, role, image)
+      .register(nom, prenom, email, password, role, image, age, gender, country)
       .subscribe(
         (response) => {
           this.showMessage('Registration successful!', 'success');

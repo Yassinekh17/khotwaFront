@@ -1,0 +1,91 @@
+<!-- Main Feedback Popup -->
+<div
+  *ngIf="showPopup && !showThankYouPopup"
+  class="fixed inset-0 z-50 flex items-center justify-center"
+  style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.2);"
+>
+  <div
+    class="bg-white rounded-3xl shadow-2xl w-[95%] max-w-md p-8 transform transition-all duration-300 ease-in-out animate-fadeIn"
+    style="z-index: 9999;"
+  >
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-3xl font-bold text-blueGray-800">
+        Your Feedback
+      </h2>
+      <button
+        (click)="closePopup()"
+        class="text-red-500 hover:text-red-700 transition rounded-full hover:bg-red-100 p-2"
+      >
+        <i class="fas fa-times text-xl"></i>
+      </button>
+    </div>
+
+    <div class="mb-8">
+      <p class="text-lg text-blueGray-600 mb-6">
+        How would you rate your experience with our service?
+      </p>
+
+      <div class="flex justify-center space-x-3 mb-8">
+        <ng-container *ngFor="let star of [1,2,3,4,5,6,7,8,9,10]">
+          <button
+            (click)="userRating = star"
+            class="text-3xl focus:outline-none transition-all duration-200 transform hover:scale-125"
+            [ngClass]="star <= userRating ? 'text-yellow-500' : 'text-blueGray-300'"
+          >
+            <i class="fas fa-star"></i>
+          </button>
+        </ng-container>
+      </div>
+
+      <div class="text-center mb-6">
+        <div class="inline-block bg-red-100 rounded-full px-6 py-2">
+          <span class="font-bold text-2xl text-blueGray-800">{{userRating}}</span>
+          <span class="text-blueGray-600">/10</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-center">
+      <button
+        (click)="submitRating()"
+        class="bg-red-600 text-white px-8 py-3 rounded-xl text-lg font-medium hover:bg-red-700 transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 shadow-lg"
+      >
+        Submit Feedback
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Thank You Popup -->
+<div
+  *ngIf="showThankYouPopup"
+  class="fixed inset-0 z-50 flex items-center justify-center"
+  style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.2);"
+>
+  <div
+    class="bg-white rounded-3xl shadow-2xl w-[95%] max-w-md p-8 transform transition-all duration-300 ease-in-out animate-fadeIn text-center"
+    style="z-index: 9999;"
+  >
+    <div class="text-center mb-6">
+      <div class="inline-flex items-center justify-center w-20 h-20 bg-red-100 rounded-full mb-6">
+        <i class="fas fa-check text-4xl text-red-600"></i>
+      </div>
+      <h2 class="text-3xl font-bold text-blueGray-800 mb-4">
+        Thank You!
+      </h2>
+      <p class="text-lg text-blueGray-600">
+        We appreciate your feedback. It helps us improve our service.
+      </p>
+    </div>
+
+    <div class="flex justify-center mt-6">
+      <button
+        (click)="closeThankYouPopup()"
+        class="bg-red-500 text-white px-8 py-3 rounded-xl text-lg font-medium hover:bg-red-600 transition transform hover:scale-105 focus:outline-none"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+

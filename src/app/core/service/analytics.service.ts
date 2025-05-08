@@ -7,11 +7,14 @@ import { Observable } from 'rxjs';
 })
 export class AnalyticsService {
 
-  private baseUrl = 'http://localhost:8090/api/statistics';
+  private baseUrl = 'http://localhost:8090/user/api/statistics';
 
   constructor(private http: HttpClient) { }
 
-
+  submitServiceQualityRating(rating: number) {
+    return this.http.post('/api/ratings/service-quality', { rating });
+  }
+  
   private getAuthHeaders(): HttpHeaders {
     return new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem('token')}`

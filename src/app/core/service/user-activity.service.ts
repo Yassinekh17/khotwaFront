@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class UserActivityService {
-  private apiUrl = 'http://localhost:8090';
+  private apiUrl = 'http://localhost:8090/user';
 
   constructor(private http: HttpClient) {}
 
@@ -26,14 +26,14 @@ export class UserActivityService {
   }
   predictSatisfaction(email: string): Observable<string> {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${localStorage.getItem('token')}`, // Add token
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
       'Content-Type': 'application/json',
     });
-
-    return this.http.post<string>(
-      `${this.apiUrl}/predict-satisfaction/${email}`,
-      {}, // Empty body
-      { headers }
+  
+    return this.http.get<string>(
+      `${this.apiUrl}/prediction/predict-satisfaction?email=${email}`,
+      { headers } // Pass headers as the second (and only) argument
     );
   }
+  
 }

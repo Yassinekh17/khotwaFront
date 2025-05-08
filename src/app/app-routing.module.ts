@@ -22,14 +22,16 @@ import { ProfileComponent } from './views/profile/profile.component';
 import { CardTableUpdateComponent } from './components/cards/card-table-update/card-table-update.component';
 import { DashboardUserComponent } from './views/admin/dashboardUser/dashboardUser.component';
 import { ForgotpwComponent } from './views/auth/forgotpw/forgotpw.component';
-
+import { UserProfileUpdatePageComponent } from './views/user-profile-update/user-profile-update-page.component';
+import { authGuard } from './auth.guard';
 const routes: Routes = [
-  // admin views
+  // admin views (protected)
   {
     path: 'admin',
     component: AdminComponent,
+    canActivate: [authGuard],
     children: [
-      { path: 'dashboard', component: DashboardUserComponent},
+      { path: 'dashboard', component: DashboardUserComponent },
       { path: 'settings', component: SettingsComponent },
       { path: 'tables', component: TablesComponent },
       { path: 'user/update/:id', component: CardTableUpdateComponent },
@@ -37,7 +39,8 @@ const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },
-  // auth views
+
+  // auth views (public)
   {
     path: 'auth',
     component: AuthComponent,
@@ -48,10 +51,12 @@ const routes: Routes = [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
     ],
   },
+
   // no layout views
-  { path: 'profile', component: ProfileComponent },
-  { path: 'landing', component: LandingComponent },
-  { path: '', component: IndexComponent },
+  { path: 'profile', component: ProfileComponent }, // original profile page
+  { path: 'profile/edit', component: UserProfileUpdatePageComponent, canActivate: [authGuard] }, // new protected profile update page
+  { path: 'landing', component: LandingComponent , canActivate: [authGuard]},
+  { path: '', component: IndexComponent , canActivate: [authGuard] },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 

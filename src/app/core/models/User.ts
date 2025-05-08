@@ -5,5 +5,8 @@ export class User{
   email !: String;
   mdp!: String;
   role!: String;
-  image!:String;
+  image!: String;
+  age?: String;
+  gender?: String;
+  country?: String;
 }

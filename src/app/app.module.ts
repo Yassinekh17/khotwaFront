@@ -46,12 +46,18 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { UserDropdownComponent } from './components/dropdowns/user-dropdown/user-dropdown.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { CardTableUpdateComponent } from './components/cards/card-table-update/card-table-update.component';
 import { AuthInterceptor } from './core/service/auth-interceptor.service';
 import { DashboardUserComponent } from './views/admin/dashboardUser/dashboardUser.component';
 import { ForgotpwComponent } from './views/auth/forgotpw/forgotpw.component';
 import { CardRoleChartComponent } from './components/cards/card-role-chart/card-role-chart.component';
 import { RecaptchaModule } from 'ng-recaptcha';
+import { RatingpopupComponent } from './components/ratingpopup/ratingpopup.component';
+import { UserProfileUpdateComponent } from './components/user-profile-update/user-profile-update.component';
+import { UserProfileUpdatePageComponent } from './views/user-profile-update/user-profile-update-page.component';
+import { UserProfileNavbarComponent } from './views/user-profile-update/user-profile-navbar.component';
+import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.component';
 
 @NgModule({
   declarations: [
@@ -90,7 +96,12 @@ import { RecaptchaModule } from 'ng-recaptcha';
     LandingComponent,
     ProfileComponent,
     CardTableUpdateComponent,
-    ForgotpwComponent
+    ForgotpwComponent,
+    RatingpopupComponent,
+    UserProfileUpdateComponent,
+    UserProfileUpdatePageComponent,
+    UserProfileNavbarComponent,
+    ThemeToggleComponent
   ],
   imports: [
     BrowserModule,
@@ -98,6 +109,7 @@ import { RecaptchaModule } from 'ng-recaptcha';
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
+    CommonModule,
     RecaptchaModule
   ],
   providers: [

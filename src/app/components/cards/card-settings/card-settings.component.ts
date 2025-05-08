@@ -13,8 +13,11 @@ export class CardSettingsComponent implements OnInit {
   email = '';
   password = '';
   role = '';
+  age = '';
+  gender = '';
+  country = '';
   image: File | null = null;
-  imagePreview: string | ArrayBuffer | null = null; // 👈 Add this
+  imagePreview: string | ArrayBuffer | null = null;
 
   constructor(private userService: UserService) {}
 
@@ -32,8 +35,11 @@ export class CardSettingsComponent implements OnInit {
             this.prenom = user.prenom;
             this.email = user.email;
             this.role = user.role;
-            this.imagePreview = user.image; 
-            console.log("image in card-settings", user.imageUrl);// Optional: if you want to load existing profile photo
+            this.age = user.age || '';
+            this.gender = user.gender || '';
+            this.country = user.country || '';
+            this.imagePreview = user.image;
+            console.log("image in card-settings", user.imageUrl);
           },
           error: (err) => console.error('Error getting user:', err),
         });
@@ -65,7 +71,18 @@ export class CardSettingsComponent implements OnInit {
 
   update(): void {
     this.userService
-      .updateUser(this.userId, this.nom, this.prenom, this.email, this.password, this.role, this.image)
+      .updateUserComplete(
+        this.userId,
+        this.nom,
+        this.prenom,
+        this.email,
+        this.password,
+        this.role,
+        this.age,
+        this.gender,
+        this.country,
+        this.image
+      )
       .subscribe({
         next: () => alert('Profile updated successfully!'),
         error: (err) => console.error('Update failed', err),

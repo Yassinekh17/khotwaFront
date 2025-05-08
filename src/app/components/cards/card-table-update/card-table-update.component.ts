@@ -32,6 +32,9 @@ export class CardTableUpdateComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       mdp: ['', [Validators.required]],
       role: ['', Validators.required],
+      age: [''],
+      gender: [''],
+      country: [''],
     });
 
     // Fetch user data by ID and update the form
@@ -42,6 +45,9 @@ export class CardTableUpdateComponent implements OnInit {
         mdp: user.mdp, // You may want to handle password securely
         email: user.email,
         role: user.role,
+        age: user.age || '',
+        gender: user.gender || '',
+        country: user.country || '',
       });
     });
   }
@@ -77,16 +83,32 @@ export class CardTableUpdateComponent implements OnInit {
       return;
     }
     const id_user = this.id.toString();
-    const nom = this.updateUserForm.value.nom; // You might want to use nom instead of username
-    const prenom = this.updateUserForm.value.prenom; // Ensure this matches the backend 'prenom'
+    const nom = this.updateUserForm.value.nom;
+    const prenom = this.updateUserForm.value.prenom;
     const email = this.updateUserForm.value.email;
-    const password = this.updateUserForm.value.password;
+    const password = this.updateUserForm.value.mdp;
     const role = this.updateUserForm.value.role;
+    const age = this.updateUserForm.value.age;
+    const gender = this.updateUserForm.value.gender;
+    const country = this.updateUserForm.value.country;
     const image = this.updateUserForm.value.image;
+
     console.log('id_user in update component', id_user);
-    // Calling the register method from the service with the form values
+
+    // Calling the update method from the service with all the form values
     this.service
-      .updateUser(id_user, nom, prenom, email, password, role, image)
+      .updateUserComplete(
+        id_user,
+        nom,
+        prenom,
+        email,
+        password,
+        role,
+        age,
+        gender,
+        country,
+        image
+      )
       .subscribe(
         (response) => {
           this.router.navigate(['/admin/tables']);
