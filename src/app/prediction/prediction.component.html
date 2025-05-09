@@ -1,0 +1,66 @@
+<div class="prediction-container">
+  <!-- Effet de vague décoratif -->
+  <div class="wave-decoration"></div>
+
+  <!-- En-tête du chat -->
+  <div class="chat-header">
+    <div class="chat-title">
+      <i class="fas fa-chart-line"></i>
+      Assistant de Prédiction des Ventes
+    </div>
+    <button
+      class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+      type="button"
+      (click)="resetChat()"
+    >
+      Nouvelle Prédiction
+    </button>
+  </div>
+
+  <!-- Zone des messages -->
+  <div class="chat-messages" #messagesContainer>
+    <!-- Messages du bot et de l'utilisateur -->
+    <div *ngFor="let msg of messages" class="message" [ngClass]="msg.isBot ? 'bot-message' : 'user-message'">
+      {{ msg.content }}
+    </div>
+
+    <!-- Indicateur de chargement -->
+    <div *ngIf="isTyping" class="message bot-message typing-indicator">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+
+  <!-- Zone de saisie -->
+  <div class="chat-input" *ngIf="currentStep < 3 && !showResult">
+    <input
+      type="text"
+      [(ngModel)]="userInput"
+      [placeholder]="getPlaceholder()"
+      (keyup.enter)="sendMessage()"
+      [disabled]="isTyping"
+    />
+    <button
+      (click)="sendMessage()"
+      [disabled]="!userInput.trim() || isTyping"
+    >
+      <i class="fas fa-paper-plane mr-1"></i> Envoyer
+    </button>
+  </div>
+
+  <!-- Résultat de prédiction -->
+  <div class="prediction-result" [ngClass]="{'show': showResult}" *ngIf="prediction !== null">
+    <div class="prediction-label">Prédiction de ventes</div>
+    <div class="prediction-value">{{ prediction }}%</div>
+    <p>Basé sur vos informations, nous prédisons ce pourcentage de réussite pour vos ventes.</p>
+  </div>
+
+  <!-- Formulaire caché pour la soumission -->
+  <form [formGroup]="predictionForm" (ngSubmit)="onSubmit()" style="display: none;">
+    <input type="text" formControlName="category" />
+    <input type="text" formControlName="region" />
+    <input type="text" formControlName="payment" />
+    <input type="text" formControlName="prediction" readonly />
+  </form>
+</div>

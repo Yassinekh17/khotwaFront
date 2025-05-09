@@ -59,6 +59,8 @@ import { AbonnementFormComponent } from './abonnement-form/abonnement-form.compo
 import { PaymentComponent } from './payment/payment.component';
 import { FormsModule } from '@angular/forms';
 import { ChatbotComponent } from './chatbot/chatbot.component';
+import { PredictionComponent } from './prediction/prediction.component';
+import { PredictionService } from "./services/PredictionService";
 
 
 
@@ -103,6 +105,7 @@ import { ChatbotComponent } from './chatbot/chatbot.component';
     AbonnementFormComponent,
     PaymentComponent,
     ChatbotComponent,
+    PredictionComponent,
     
     
   ],
@@ -116,7 +119,7 @@ import { ChatbotComponent } from './chatbot/chatbot.component';
     ToastrModule.forRoot(),
     NgChartsModule, ]
   ,
-  providers: [],
+  providers: [PredictionService],
   bootstrap: [AppComponent] 
   
 })

@@ -23,6 +23,7 @@ import { ProfileComponent } from "./views/profile/profile.component";
 import { AbonnementComponent } from "./abonnement/abonnement.component";
 import { AbonnementFormComponent } from "./abonnement-form/abonnement-form.component";
 import { PaymentComponent } from "./payment/payment.component";
+import { PredictionComponent } from "./prediction/prediction.component";
 
 const routes: Routes = [
   // admin views
@@ -35,6 +36,7 @@ const routes: Routes = [
       { path: "tables", component: TablesComponent },
       { path: "Abonnements", component: AbonnementComponent },
       { path: "AjouterAbonnement", component: AbonnementFormComponent },
+      { path: "predict", component: PredictionComponent },
       { path: "payer", component: PaymentComponent },
       { path: "maps", component: MapsComponent },
       { path: "", redirectTo: "dashboard", pathMatch: "full" },
