@@ -1,27 +1,60 @@
-# KhotwaFront
+# E-Learning Platform
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.16.
+## Overview
+Ce projet a été développé dans le cadre du programme *Esprit School of Engineering*. Il s'agit d'une plateforme d'apprentissage en ligne intégrant des fonctionnalités avancées pour améliorer l'expérience des étudiants et des enseignants.
 
-## Development server
+## Features
+- *Gestion des utilisateurs* avec *Keycloak*
+- *Authentification sécurisée* via *JWT*
+- *Recommandation de contenu* basée sur *Machine Learning (KNN)*
+- *Suivi de progression et statistiques*
+- *Tableau de bord administrateur* pour la gestion des cours et utilisateurs
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Tech Stack
+### Frontend
+Angular 18.1.1
+Tailwind CSS
+FontAwesome
 
-## Code scaffolding
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Backend
+Spring Boot
+H2 Database
+Keycloak
+JWT Authentication
 
-## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### Other Tools
+Docker (pour Keycloak et API Gateway)
+Flask API pour Machine Learning
 
-## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Directory Structure
+E-Learning-Platform/
+│── frontend/    # Application Angular
+│── backend/     # API Spring Boot
+│── ml-api/      # API Flask pour Machine Learning
+│── docs/        # Documentation du projet
+│── README.md    # Présentation du projet
 
-## Running end-to-end tests
+## Getting Started
+1. *Cloner le projet :*
+   
+   git clone https://github.com/Sarahhamami/Khotwa.git
+   
+2. *Configurer Keycloak* et démarrer les services Docker.
+3. *Lancer le backend :*
+   
+   cd backend
+   mvn spring-boot:run
+   
+4. *Lancer le frontend :*
+   acceder à https://github.com/Yassinekh17/khotwaFront et cloner le projet front-end
+   
+   git clone https://github.com/Yassinekh17/khotwaFront
+   ng serve 
+   
+6. *Accéder à la plateforme :* http://localhost:4200
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Acknowledgments
+Ce projet a été développé sous la supervision de l'*Esprit School of Engineering* et dans le cadre du programme de PIDev 2eme année ingénieurie 4SAE.
