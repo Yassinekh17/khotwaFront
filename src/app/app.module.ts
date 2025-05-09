@@ -1,5 +1,7 @@
 import { BrowserModule } from "@angular/platform-browser";
-import { NgModule } from "@angular/core";// Ajout de CommonModule
+import { NgModule } from "@angular/core";
+import { NgxStripeModule } from 'ngx-stripe';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -76,6 +78,15 @@ import { PagesDropdownComponent } from "./components/dropdowns/pages-dropdown/pa
 import { NotificationDropdownComponent } from "./components/dropdowns/notification-dropdown/notification-dropdown.component";
 import { SidebarComponent } from "./components/sidebar/sidebar.component";
 import { UserDropdownComponent } from "./components/dropdowns/user-dropdown/user-dropdown.component";
+import { AbonnementComponent } from './abonnement/abonnement.component';
+import { AbonnementFormComponent } from './abonnement-form/abonnement-form.component';
+import { PaymentComponent } from './payment/payment.component';
+import { ChatbotComponent } from './chatbot/chatbot.component';
+import { PredictionComponent } from './prediction/prediction.component';
+import { PredictionService } from "./services/PredictionService";
+
+
+
 import { ListeventComponent } from './views/admin/listevent/listevent.component';
 import { AddeventComponent } from './views/admin/listevent/addevent/addevent.component';
 import { ListeventComponent as UserListeventComponent } from './views/event/listevent/listevent.component';
@@ -149,15 +160,24 @@ import { RecommendationComponent } from './views/event/recommendation/recommenda
     CommentaireComponent,
     RecommendationComponent,  // Ajout du composant utilisateur
 
+    AbonnementComponent,
+    AbonnementFormComponent,
+    PaymentComponent,
+    ChatbotComponent,
+    PredictionComponent,
+    
+    
   ],
   imports: [BrowserModule, AppRoutingModule,HttpClientModule,FormsModule, BrowserAnimationsModule,MatIconModule,ReactiveFormsModule,CommonModule,RecaptchaModule,
-    MatSnackBarModule,NgChartsModule,QuizComponent],
+    MatSnackBarModule,NgChartsModule,QuizComponent,ToastrModule.forRoot()],
   providers: [
+    
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true, // Allow multiple interceptors
-    },
+      
+    },PredictionService,
   ],  bootstrap: [AppComponent],
 })
 export class AppModule {}

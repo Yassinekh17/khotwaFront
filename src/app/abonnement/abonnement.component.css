@@ -1,0 +1,20 @@
+/* Centrer la section des statistiques */
+.statistics-section {
+    display: flex;
+    justify-content: center; /* Centrer horizontalement */
+    align-items: center; /* Centrer verticalement */
+    width: 100%;
+    height: 100%; /* Prendre toute la hauteur disponible */
+  }
+  
+  /* Styles pour les conteneurs des graphiques */
+  .chart-container {
+    width: 80%; /* Largeur à 80% */
+    height: 450px; /* Hauteur à 450px */
+    margin: 20px auto; /* Centrer les graphiques */
+  }
+  
+  canvas {
+    max-width: 100%;
+    height: auto !important;
+  }

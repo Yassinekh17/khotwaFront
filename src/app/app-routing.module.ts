@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+
 // layouts
 import { AdminComponent } from './layouts/admin/admin.component';
 import { AuthComponent } from './layouts/auth/auth.component';
@@ -27,6 +28,10 @@ import { ProfileComponent } from "./views/profile/profile.component";
 import { ListeventComponent as UserListeventComponent } from "./views/event/listevent/listevent.component";
 import { DetaileventComponent } from "./views/event/detailevent/detailevent.component";
 import { RecommendationComponent } from "./views/event/recommendation/recommendation.component";
+import { AbonnementComponent } from "./abonnement/abonnement.component";
+import { AbonnementFormComponent } from "./abonnement-form/abonnement-form.component";
+import { PaymentComponent } from "./payment/payment.component";
+import { PredictionComponent } from "./prediction/prediction.component";
 
 import { ListCourComponent } from "./views/courList/listCour.component";
 import { ListQuizzComponent } from "./views/quizzList/listQuizz.component";
@@ -50,8 +55,11 @@ const routes: Routes = [
       { path: "tables", component: TablesComponent },
       { path: "listevent", component: ListeventComponent },
       { path: "listevent/add", component: AddeventComponent },
+      { path: "Abonnements", component: AbonnementComponent },
+      { path: "AjouterAbonnement", component: AbonnementFormComponent },
+      { path: "predict", component: PredictionComponent },
+      { path: "payer", component: PaymentComponent },
       { path: "maps", component: MapsComponent },
-      { path: "", redirectTo: "dashboard", pathMatch: "full" },
       { path: "cours", component: CoursComponent },
       { path: "quizz", component: QuizzComponent },
       { path: 'dashboard', component: DashboardUserComponent },
