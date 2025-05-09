@@ -1,5 +1,8 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
+import { HttpClientModule } from "@angular/common/http";
+import { ReactiveFormsModule } from "@angular/forms";
+import { CommonModule } from "@angular/common";  // Ajout de CommonModule
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -47,6 +50,13 @@ import { PagesDropdownComponent } from "./components/dropdowns/pages-dropdown/pa
 import { NotificationDropdownComponent } from "./components/dropdowns/notification-dropdown/notification-dropdown.component";
 import { SidebarComponent } from "./components/sidebar/sidebar.component";
 import { UserDropdownComponent } from "./components/dropdowns/user-dropdown/user-dropdown.component";
+import { ListeventComponent } from './views/admin/listevent/listevent.component';
+import { AddeventComponent } from './views/admin/listevent/addevent/addevent.component';
+import { ListeventComponent as UserListeventComponent } from './views/event/listevent/listevent.component';
+import { DetaileventComponent } from './views/event/detailevent/detailevent.component';
+import { CommentaireComponent } from './views/event/commentaire/commentaire.component';
+import { RecommendationComponent } from './views/event/recommendation/recommendation.component'; // Ajout du composant utilisateur
+
 
 @NgModule({
   declarations: [
@@ -84,8 +94,21 @@ import { UserDropdownComponent } from "./components/dropdowns/user-dropdown/user
     IndexComponent,
     LandingComponent,
     ProfileComponent,
+    ListeventComponent,
+    AddeventComponent,
+    UserListeventComponent,
+    DetaileventComponent,
+    CommentaireComponent,
+    RecommendationComponent,  // Ajout du composant utilisateur
+
   ],
-  imports: [BrowserModule, AppRoutingModule],
+  imports: [
+    BrowserModule, 
+    AppRoutingModule, 
+    HttpClientModule, 
+    ReactiveFormsModule,
+    CommonModule  // Ajout de CommonModule
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })

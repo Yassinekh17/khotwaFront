@@ -1,0 +1,151 @@
+{
+  "venues": [
+    {
+      "name": "Théâtre Municipal de Tunis",
+      "type": "Théâtre",
+      "address": "2 Rue de Grèce, Tunis",
+      "coordinates": {"lat": 36.7992, "lng": 10.1843},
+      "capacity": 350,
+      "description": "Théâtre historique au cœur de Tunis, construit en 1902 dans un style Art nouveau.",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Municipal_Theatre_of_Tunis.jpg/800px-Municipal_Theatre_of_Tunis.jpg"
+    },
+    {
+      "name": "Cité de la Culture",
+      "type": "Centre culturel",
+      "address": "Avenue Mohamed V, Tunis",
+      "coordinates": {"lat": 36.8134, "lng": 10.1818},
+      "capacity": 1800,
+      "description": "Plus grand complexe culturel de Tunisie, inauguré en 2018, comprenant théâtres, cinémas et espaces d'exposition.",
+      "image": "https://www.webdo.tn/wp-content/uploads/2018/03/cite-culture.jpg"
+    },
+    {
+      "name": "Palais des Congrès",
+      "type": "Centre de conférences",
+      "address": "Avenue Mohamed V, Tunis",
+      "coordinates": {"lat": 36.8422, "lng": 10.2039},
+      "capacity": 1500,
+      "description": "Centre de conférences moderne accueillant des événements nationaux et internationaux.",
+      "image": "https://www.tunisietourisme.com.tn/wp-content/uploads/2022/01/palais-des-congres-tunis.jpg"
+    },
+    {
+      "name": "El Teatro",
+      "type": "Théâtre",
+      "address": "7 Rue Palestine, Tunis",
+      "coordinates": {"lat": 36.8008, "lng": 10.1841},
+      "capacity": 200,
+      "description": "Espace culturel polyvalent proposant théâtre, musique et expositions.",
+      "image": "https://www.tekiano.com/wp-content/uploads/2017/10/el-teatro-1.jpg"
+    },
+    {
+      "name": "Acropolium de Carthage",
+      "type": "Monument historique",
+      "address": "Colline de Byrsa, Carthage",
+      "coordinates": {"lat": 36.8578, "lng": 10.3253},
+      "capacity": 300,
+      "description": "Ancienne cathédrale Saint-Louis de Carthage, aujourd'hui centre culturel et salle de concert.",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Acropolium_Saint_Louis_Carthage.jpg/800px-Acropolium_Saint_Louis_Carthage.jpg"
+    },
+    {
+      "name": "Théâtre de l'Opéra de Tunis",
+      "type": "Opéra",
+      "address": "Cité de la Culture, Avenue Mohamed V, Tunis",
+      "coordinates": {"lat": 36.8134, "lng": 10.1818},
+      "capacity": 1200,
+      "description": "Salle d'opéra moderne située dans la Cité de la Culture.",
+      "image": "https://www.webdo.tn/wp-content/uploads/2018/03/opera-tunis.jpg"
+    },
+    {
+      "name": "Centre des Musiques Arabes et Méditerranéennes",
+      "type": "Centre culturel",
+      "address": "Palais Ennejma Ezzahra, Sidi Bou Said",
+      "coordinates": {"lat": 36.8698, "lng": 10.3416},
+      "capacity": 250,
+      "description": "Centre dédié à la préservation et promotion des musiques arabes et méditerranéennes.",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Palais_du_Baron_d%27Erlanger.jpg/800px-Palais_du_Baron_d%27Erlanger.jpg"
+    },
+    {
+      "name": "Amphithéâtre de Carthage",
+      "type": "Amphithéâtre",
+      "address": "Site archéologique de Carthage",
+      "coordinates": {"lat": 36.8531, "lng": 10.3261},
+      "capacity": 5000,
+      "description": "Amphithéâtre romain restauré, accueillant le Festival International de Carthage.",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Amphitheatre_of_Carthage.jpg/800px-Amphitheatre_of_Carthage.jpg"
+    },
+    {
+      "name": "Théâtre de Hammamet",
+      "type": "Théâtre en plein air",
+      "address": "Hammamet",
+      "coordinates": {"lat": 36.4022, "lng": 10.6217},
+      "capacity": 3000,
+      "description": "Théâtre en plein air accueillant le Festival International de Hammamet.",
+      "image": "https://www.tekiano.com/wp-content/uploads/2019/07/theatre-hammamet-1.jpg"
+    },
+    {
+      "name": "Dougga",
+      "type": "Site archéologique",
+      "address": "Téboursouk, Béja",
+      "coordinates": {"lat": 36.4225, "lng": 9.2181},
+      "capacity": 2000,
+      "description": "Site archéologique romain classé au patrimoine mondial de l'UNESCO.",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Dougga_BW_10.JPG/800px-Dougga_BW_10.JPG"
+    },
+    {
+      "name": "Amphithéâtre d'El Jem",
+      "type": "Amphithéâtre",
+      "address": "El Jem",
+      "coordinates": {"lat": 35.3, "lng": 10.7167},
+      "capacity": 30000,
+      "description": "L'un des plus grands amphithéâtres romains du monde, classé au patrimoine mondial de l'UNESCO.",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Coliseum_El_Djem.jpg/800px-Coliseum_El_Djem.jpg"
+    },
+    {
+      "name": "Dar Bach Hamba",
+      "type": "Centre culturel",
+      "address": "Médina de Tunis",
+      "coordinates": {"lat": 36.7986, "lng": 10.1719},
+      "capacity": 150,
+      "description": "Maison traditionnelle de la médina transformée en centre culturel.",
+      "image": "https://www.patrimoinedetunisie.com.tn/wp-content/uploads/2017/06/dar-bach-hamba.jpg"
+    },
+    {
+      "name": "Musée du Bardo",
+      "type": "Musée",
+      "address": "Rue 2 Mars 1934, Le Bardo, Tunis",
+      "coordinates": {"lat": 36.8092, "lng": 10.1344},
+      "capacity": 500,
+      "description": "L'un des plus importants musées du bassin méditerranéen, abritant la plus grande collection de mosaïques romaines au monde.",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Bardo_Museum.jpg/800px-Bardo_Museum.jpg"
+    },
+    {
+      "name": "Dar El Jeld",
+      "type": "Restaurant culturel",
+      "address": "5-10 Rue Dar El Jeld, Médina de Tunis",
+      "coordinates": {"lat": 36.7986, "lng": 10.1708},
+      "capacity": 200,
+      "description": "Restaurant traditionnel dans une maison historique, accueillant des événements culturels.",
+      "image": "https://media-cdn.tripadvisor.com/media/photo-s/0d/5a/e9/9e/dar-el-jeld.jpg"
+    },
+    {
+      "name": "Palais Ennejma Ezzahra",
+      "type": "Palais",
+      "address": "Sidi Bou Said",
+      "coordinates": {"lat": 36.8698, "lng": 10.3416},
+      "capacity": 300,
+      "description": "Palais du Baron d'Erlanger, aujourd'hui Centre des Musiques Arabes et Méditerranéennes.",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Palais_du_Baron_d%27Erlanger.jpg/800px-Palais_du_Baron_d%27Erlanger.jpg"
+    }
+  ],
+  "event_types": [
+    "Conférence",
+    "Concert",
+    "Exposition",
+    "Festival",
+    "Séminaire",
+    "Atelier",
+    "Spectacle",
+    "Projection",
+    "Débat",
+    "Rencontre littéraire"
+  ]
+}

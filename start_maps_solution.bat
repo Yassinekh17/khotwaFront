@@ -1,0 +1,20 @@
+@echo off
+echo ===================================================
+echo Demarrage de l'application avec solution Google Maps robuste
+echo ===================================================
+
+echo.
+echo Demarrage de l'application Angular...
+echo.
+echo L'application sera accessible a l'adresse http://localhost:4200
+echo.
+echo Nouvelles fonctionnalites:
+echo - Lieux reels en Tunisie
+echo - Types d'evenements adaptes a chaque lieu
+echo - Google Maps integre directement dans l'interface
+echo - Solution de secours en cas d'erreur de Google Maps
+echo - Gestion d'erreur robuste
+echo.
+echo Appuyez sur Ctrl+C pour arreter l'application.
+echo.
+ng serve --open

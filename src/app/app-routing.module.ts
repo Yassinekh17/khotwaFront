@@ -10,6 +10,8 @@ import { DashboardComponent } from "./views/admin/dashboard/dashboard.component"
 import { MapsComponent } from "./views/admin/maps/maps.component";
 import { SettingsComponent } from "./views/admin/settings/settings.component";
 import { TablesComponent } from "./views/admin/tables/tables.component";
+import { ListeventComponent } from "./views/admin/listevent/listevent.component";
+import { AddeventComponent } from "./views/admin/listevent/addevent/addevent.component";
 
 // auth views
 import { LoginComponent } from "./views/auth/login/login.component";
@@ -19,6 +21,9 @@ import { RegisterComponent } from "./views/auth/register/register.component";
 import { IndexComponent } from "./views/index/index.component";
 import { LandingComponent } from "./views/landing/landing.component";
 import { ProfileComponent } from "./views/profile/profile.component";
+import { ListeventComponent as UserListeventComponent } from "./views/event/listevent/listevent.component";
+import { DetaileventComponent } from "./views/event/detailevent/detailevent.component";
+import { RecommendationComponent } from "./views/event/recommendation/recommendation.component";
 
 const routes: Routes = [
   // admin views
@@ -29,6 +34,8 @@ const routes: Routes = [
       { path: "dashboard", component: DashboardComponent },
       { path: "settings", component: SettingsComponent },
       { path: "tables", component: TablesComponent },
+      { path: "listevent", component: ListeventComponent },
+      { path: "listevent/add", component: AddeventComponent },
       { path: "maps", component: MapsComponent },
       { path: "", redirectTo: "dashboard", pathMatch: "full" },
     ],
@@ -46,6 +53,10 @@ const routes: Routes = [
   // no layout views
   { path: "profile", component: ProfileComponent },
   { path: "landing", component: LandingComponent },
+  { path: "events", component: UserListeventComponent }, // Route pour la vue utilisateur
+  { path: "events/:id", component: DetaileventComponent }, // Route pour la vue détaillée d'un événement
+  { path: "recommendations", component: RecommendationComponent }, // Route pour les recommandations d'événements
+
   { path: "", component: IndexComponent },
   { path: "**", redirectTo: "", pathMatch: "full" },
 ];
@@ -54,4 +65,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

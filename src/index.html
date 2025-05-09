@@ -19,18 +19,65 @@
 -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>
-      Notus Angular | Free Tailwind CSS UI Kit and Admin by Creative Tim
-    </title>
-    <base href="/" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" href="./favicon.ico" />
-    <link rel="apple-touch-icon" sizes="76x76" href="./apple-icon.png" />
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE"></script>
-  </head>
-  <body class="text-blueGray-700 antialiased">
-    <app-root></app-root>
-  </body>
+
+<head>
+  <meta charset="utf-8" />
+  <title>
+    Notus Angular | Free Tailwind CSS UI Kit and Admin by Creative Tim
+  </title>
+  <base href="/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="shortcut icon" href="./favicon.ico" />
+  <link rel="apple-touch-icon" sizes="76x76" href="./apple-icon.png" />
+  <!-- Intégration de Leaflet (OpenStreetMap) comme alternative à Google Maps -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+  <!-- Make sure you put this AFTER Leaflet's CSS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <script>
+    // Variable pour suivre l'état de chargement des cartes
+    window.mapsLoaded = true; // Leaflet est chargé directement
+
+    // Dispatcher un événement pour informer l'application
+    window.addEventListener('DOMContentLoaded', function () {
+      console.log('Leaflet chargé avec succès');
+      window.dispatchEvent(new Event('maps-loaded'));
+    });
+  </script>
+
+  <style>
+    /* Style pour les cartes Leaflet */
+    .leaflet-container {
+      height: 400px;
+      width: 100%;
+      border-radius: 5px;
+    }
+
+    /* Style pour les popups Leaflet */
+    .leaflet-popup-content {
+      max-width: 300px;
+      padding: 5px;
+    }
+
+    .leaflet-popup-content h3 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .leaflet-popup-content p {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body class="text-blueGray-700 antialiased">
+  <app-root></app-root>
+</body>
+
 </html>
