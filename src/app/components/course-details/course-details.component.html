@@ -1,0 +1,65 @@
+<div class="course-container" *ngIf="course">
+  <div class="course-header">
+    <div class="container">
+      <h1>{{ course.titre }}</h1>
+      <div class="course-meta">
+        <div class="rating">
+          <span class="stars">★★★★★</span>
+          <span class="rating-number">{{ course.rating }}</span>
+          <span class="reviews">({{ course.nb_etudiantsEnrolled }} students enrolled)</span>
+        </div>
+        <div class="instructor">
+          <strong>Category:</strong> {{ course.categorie }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="course-content">
+      <div class="main-content">
+        <section class="course-description">
+          <h2>Description</h2>
+          <p>{{ course.description }}</p>
+        </section>
+
+        <section class="course-details">
+          <h2>Details</h2>
+          <p><strong>Duration:</strong> {{ course.duree }} hours</p>
+          <p><strong>Price:</strong> ${{ course.prix }}</p>
+          <p><strong>Published on:</strong> {{ course.date_publication | date }}</p>
+        </section>
+        <button 
+        class="enroll-button"
+        [routerLink]="['/course', course.id_cours, 'lesson']"
+      >
+        Check lesson
+      </button>
+      </div>
+
+      <div class="course-sidebar">
+        <div class="course-card">
+          <div class="price">Price : ${{ course.prix }}</div>
+          <button class="enroll-button">Enroll Now</button>
+          
+          <div class="course-features">
+            <div class="feature">
+              <span class="icon">📚</span>
+              <span>Full lifetime access</span>
+            </div>
+            <div class="feature">
+              <span class="icon">📱</span>
+              <span>Access on mobile and desktop</span>
+            </div>
+            <div class="feature">
+              <span class="icon">🎖</span>
+              <span>Certificate of completion</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+   
+    </div>
+  </div>
+</div>

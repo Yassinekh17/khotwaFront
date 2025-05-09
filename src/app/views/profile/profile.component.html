@@ -1,5 +1,7 @@
+
 <app-auth-navbar></app-auth-navbar>
 <main class="profile-page">
+  
   <section class="relative block h-500-px">
     <div
       class="absolute top-0 w-full h-full bg-center bg-cover"
@@ -55,8 +57,9 @@
                 <a
                   [routerLink]="['/profile/edit']"
                   class="bg-red-600 active:bg-red-700 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150"
+                  type="button"
                 >
-                  Edit Profile
+                  Connect
                 </a>
               </div>
             </div>
@@ -125,6 +128,8 @@
                 <a href="javascript:void(0)" class="font-normal text-red-600">
                   Show more
                 </a>
+                
+
               </div>
             </div>
           </div>
@@ -134,3 +139,4 @@
   </section>
 </main>
 <app-footer></app-footer>
+

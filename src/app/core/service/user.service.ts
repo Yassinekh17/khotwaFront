@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { UserActivityService } from './user-activity.service';
 import { jwtDecode } from 'jwt-decode';
+import { Useryass } from '../models/Useryass';
 
 
 @Injectable({
@@ -17,6 +18,8 @@ import { jwtDecode } from 'jwt-decode';
 })
 export class UserService {
   private apiUrl = 'http://localhost:8090/user';
+    private backendUrl = 'http://localhost:8089';
+  private modelApiUrl = 'http://localhost:5000';
 
   private keycloakLogoutUrl =
     'http://localhost:8081/realms/Khotwa/protocol/openid-connect/logout';
@@ -32,6 +35,19 @@ export class UserService {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     });
+  }
+   getAllUsers(): Observable<Useryass[]> {
+    return this.httpservice.get<Useryass[]>(`${this.backendUrl}/retrieveAllUser`);
+  }
+
+  predictUserOutcome(user: Useryass): Observable<any> {
+    const features = [
+      user.sessionDuration,
+      user.sessionsPerWeek,
+      user.courseCompletion,
+      user.userSatisfaction
+    ];
+    return this.httpservice.post(`${this.modelApiUrl}/predict`, { features });
   }
 
   // ✅ GET all users with token authentication

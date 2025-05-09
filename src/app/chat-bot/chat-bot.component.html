@@ -1,0 +1,38 @@
+<div class="chat-wrapper">
+    <!-- Floating Chat Icon -->
+    <div class="chat-icon" (click)="toggleChat()" *ngIf="!isOpen">
+        <img src="../../assets/img/aii.png" alt="Chat Icon">
+    </div>
+
+    <!-- Chat Container -->
+    <div class="chat-container" [class.active]="isOpen">
+        <div class="chat-header" (click)="toggleChat()">
+            <img src="../../assets/img/aii.png" class="chat-header-icon">
+            <span>Khotwa Course Assistant</span>
+            <button class="close-btn" (click)="toggleChat()">×</button>
+        </div>
+
+        <div class="chat-body">
+            <div class="messages" #messagesContainer>
+                <div *ngFor="let message of messages" class="message" [class.user]="message.isUser">
+                    <div class="bubble">
+                        {{ message.text }}
+                        <span class="time">{{ message.time | date:'shortTime' }}</span>
+                    </div>
+                </div>
+                <div *ngIf="isLoading" class="typing-indicator">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+
+            <div class="input-container">
+                <input [(ngModel)]="userInput" 
+                    (keyup.enter)="sendMessage()"
+                    placeholder="Ask about courses...">
+                <button (click)="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+</div>

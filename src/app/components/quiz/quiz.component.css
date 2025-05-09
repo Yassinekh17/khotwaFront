@@ -1,0 +1,60 @@
+/* src/app/quiz/quiz.component.css */
+/* Animation classes */
+.border-blue-500 {
+  border-color: #3b82f6;
+  border-width: 2px;
+}
+
+.bg-blue-50 {
+  background-color: #eff6ff;
+}
+
+.border-green-500 {
+  border-color: #10b981;
+  border-width: 2px;
+}
+
+.bg-green-50 {
+  background-color: #ecfdf5;
+}
+
+.border-red-500 {
+  border-color: #ef4444;
+  border-width: 2px;
+}
+
+.bg-red-50 {
+  background-color: #fef2f2;
+}
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .quiz-container {
+    padding: 1rem;
+  }
+  
+  .question-text {
+    font-size: 1.1rem;
+  }
+  
+  .answer-option {
+    padding: 0.75rem;
+  }
+}

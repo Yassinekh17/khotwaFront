@@ -1,0 +1,70 @@
+<div class="lesson-container" *ngIf="course">
+  <div class="lesson-sidebar">
+    <div class="course-contents">
+      <h2>Course Contents</h2>
+      <div class="section active">
+        <h3>Getting Started</h3>
+        <div class="lectures">
+          <div class="lecture active">
+            <div class="lecture-info">
+              <span class="lecture-title">{{ course.titre }}</span>
+              <span class="lecture-duration">{{ course.duree }}</span>
+            </div>
+          </div>
+          <!-- More lectures would be listed here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson-main">
+    <div class="video-container" *ngIf="course.video">
+      <video controls class="w-full">
+        <source [src]="course.video" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <div class="video-placeholder">
+        <span>Video Player</span>
+      </div>
+    </div>
+
+    <div class="lesson-content" >
+      <div class="lesson-tabs">
+        <button class="tab active">Overview</button>
+        <button class="tab">Notes</button>
+        <button class="tab">Announcements</button>
+      </div>
+
+      <div class="tab-content">
+        <h1>{{ course.titre }}</h1>
+        <p class="description">{{ course.description }}</p>
+
+        <div class="attachments">
+          <h3>Attachments</h3>
+          <div class="attachment-list">
+            <div *ngFor="let file of attachments" class="attachment-item">
+              <span class="file-icon">📄</span>
+              <div class="file-info">
+                <span class="file-name">{{ file.name }}</span>
+                <span class="file-size">{{ file.size }}</span>
+              </div>
+              <a 
+                [href]="file.url+ '?fl_attachment'" 
+                target="_blank" 
+                class="download-btn"
+                download
+              >
+                Download
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson-notes">
+          <h3>Lecture Notes</h3>
+          <p>{{ lesson.notes }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

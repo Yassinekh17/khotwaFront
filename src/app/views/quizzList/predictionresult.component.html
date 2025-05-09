@@ -1,0 +1,170 @@
+<div class="prediction-container">
+  <div class="prediction-header">
+    <h2 class="prediction-title">Prédiction de Réussite</h2>
+    <p class="prediction-subtitle">Analysez les facteurs clés pour prédire la réussite de l'utilisateur</p>
+  </div>
+
+  <div class="prediction-card">
+    <!-- Progress Indicator -->
+    <div class="progress-indicator">
+      <div class="progress-step active">
+        <div class="step-icon"><i class="fas fa-user-edit"></i></div>
+        <div class="step-label">Entrée des données</div>
+      </div>
+      <div class="progress-line"></div>
+      <div class="progress-step" [ngClass]="{'active': showResultPopup}">
+        <div class="step-icon"><i class="fas fa-brain"></i></div>
+        <div class="step-label">Analyse</div>
+      </div>
+      <div class="progress-line"></div>
+      <div class="progress-step" [ngClass]="{'active': predictionResult !== null}">
+        <div class="step-icon"><i class="fas fa-chart-line"></i></div>
+        <div class="step-label">Résultat</div>
+      </div>
+    </div>
+
+    <!-- Form Fields -->
+    <div class="prediction-form">
+      <div class="form-group">
+        <div class="form-icon">
+          <i class="fas fa-graduation-cap"></i>
+        </div>
+        <div class="form-content">
+          <label class="form-label">Progression du cours (%)</label>
+          <div class="slider-container">
+            <input type="range" min="0" max="100" [(ngModel)]="features.courseCompletion" class="range-slider" />
+            <input type="number" [(ngModel)]="features.courseCompletion" class="number-input" />
+          </div>
+          <div class="slider-labels">
+            <span>0%</span>
+            <span>50%</span>
+            <span>100%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="form-icon">
+          <i class="fas fa-clock"></i>
+        </div>
+        <div class="form-content">
+          <label class="form-label">Durée de session (min)</label>
+          <div class="slider-container">
+            <input type="range" min="0" max="180" [(ngModel)]="features.sessionDuration" class="range-slider" />
+            <input type="number" [(ngModel)]="features.sessionDuration" class="number-input" />
+          </div>
+          <div class="slider-labels">
+            <span>0</span>
+            <span>90</span>
+            <span>180</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="form-icon">
+          <i class="fas fa-calendar-week"></i>
+        </div>
+        <div class="form-content">
+          <label class="form-label">Sessions par semaine</label>
+          <div class="slider-container">
+            <input type="range" min="0" max="7" step="1" [(ngModel)]="features.sessionsPerWeek" class="range-slider" />
+            <input type="number" [(ngModel)]="features.sessionsPerWeek" class="number-input" />
+          </div>
+          <div class="slider-labels">
+            <span>0</span>
+            <span>3-4</span>
+            <span>7</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="form-icon">
+          <i class="fas fa-smile"></i>
+        </div>
+        <div class="form-content">
+          <label class="form-label">Satisfaction utilisateur (sur 5)</label>
+          <div class="rating-container">
+            <div class="star-rating">
+              <span *ngFor="let star of [1,2,3,4,5]"
+                    [ngClass]="{'active': features.userSatisfaction >= star}"
+                    (click)="features.userSatisfaction = star">
+                <i class="fas fa-star"></i>
+              </span>
+            </div>
+            <input type="number" min="0" max="5" step="1" [(ngModel)]="features.userSatisfaction" class="number-input" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button (click)="goBack()" class="btn-secondary">
+        <i class="fas fa-arrow-left"></i> Retour
+      </button>
+      <button (click)="submitPrediction()" class="btn-primary">
+        <i class="fas fa-brain"></i> Prédire
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Prediction Modal -->
+<div *ngIf="showResultPopup" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Résultat de la Prédiction</h3>
+      <button (click)="closeResultPopup()" class="modal-close">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div *ngIf="isLoading" class="loading-container">
+        <div class="spinner"></div>
+        <p class="loading-text">Analyse en cours...</p>
+      </div>
+
+      <div *ngIf="!isLoading && predictionResult !== null" class="result-container">
+        <div class="result-icon" [ngClass]="{'success': predictionResult === 1, 'failure': predictionResult === 0}">
+          <i class="fas" [ngClass]="{'fa-check-circle': predictionResult === 1, 'fa-times-circle': predictionResult === 0}"></i>
+        </div>
+
+        <div class="result-message">
+          <h4 class="result-title" [ngClass]="{'text-success': predictionResult === 1, 'text-failure': predictionResult === 0}">
+            {{ predictionResult === 1 ? 'Réussite Prévue' : 'Échec Prévu' }}
+          </h4>
+          <p class="result-description">
+            {{ predictionResult === 1 ?
+              'Selon notre analyse, cet utilisateur a de fortes chances de réussir son parcours d\'apprentissage.' :
+              'Notre analyse indique que cet utilisateur pourrait rencontrer des difficultés dans son parcours d\'apprentissage.' }}
+          </p>
+        </div>
+
+        <div class="result-factors">
+          <h5 class="factors-title">Facteurs clés</h5>
+          <div class="factor-item" [ngClass]="{'positive': features.courseCompletion > 50, 'negative': features.courseCompletion <= 50}">
+            <i class="fas" [ngClass]="{'fa-check': features.courseCompletion > 50, 'fa-exclamation-triangle': features.courseCompletion <= 50}"></i>
+            <span>Progression du cours: {{ features.courseCompletion }}%</span>
+          </div>
+          <div class="factor-item" [ngClass]="{'positive': features.sessionsPerWeek >= 3, 'negative': features.sessionsPerWeek < 3}">
+            <i class="fas" [ngClass]="{'fa-check': features.sessionsPerWeek >= 3, 'fa-exclamation-triangle': features.sessionsPerWeek < 3}"></i>
+            <span>Sessions par semaine: {{ features.sessionsPerWeek }}</span>
+          </div>
+          <div class="factor-item" [ngClass]="{'positive': features.userSatisfaction >= 3, 'negative': features.userSatisfaction < 3}">
+            <i class="fas" [ngClass]="{'fa-check': features.userSatisfaction >= 3, 'fa-exclamation-triangle': features.userSatisfaction < 3}"></i>
+            <span>Satisfaction: {{ features.userSatisfaction }}/5</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button (click)="closeResultPopup()" class="btn-primary">
+        Fermer
+      </button>
+    </div>
+  </div>
+</div>

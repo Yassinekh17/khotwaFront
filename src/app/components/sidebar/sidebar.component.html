@@ -145,8 +145,65 @@
             Users
           </a>
         </li>
+        <li class="items-center">
+          <a
+            [routerLink]="['/admin/cours']"
+            class="text-xs uppercase py-3 font-bold block"
+            routerLinkActive
+            #rla4="routerLinkActive"
+            [ngClass]="
+              rla4.isActive
+                ? 'text-red-600 hover:text-red-700'
+                : 'text-blueGray-700 hover:text-blueGray-500'
+            "
+          >
+            <i class="fa fa-graduation-cap mr-2" [ngClass]="rla4.isActive ? 'opacity-75' : 'text-blueGray-300'"></i>
+            Cours
+          </a>
+        </li>
+      
+        <!-- Quizz -->
+        <li class="items-center">
+          <a
+            [routerLink]="['/admin/quizz']"
+            class="text-xs uppercase py-3 font-bold block"
+            routerLinkActive
+            #rla5="routerLinkActive"
+            [ngClass]="
+              rla5.isActive
+                ? 'text-red-600 hover:text-red-700'
+                : 'text-blueGray-700 hover:text-blueGray-500'
+            "
+          >
+            <i class="fa fa-puzzle-piece mr-2 text-sm" [ngClass]="rla5.isActive ? 'opacity-75' : 'text-blueGray-300'"></i>
+            Quizz
+          </a>
+        </li>
+        
+       
 
 
+        <li class="items-center">
+          <a
+            [routerLink]="['/admin/maps']"
+            class="text-xs uppercase py-3 font-bold block"
+            routerLinkActive
+            #adminMaps="routerLinkActive"
+            [ngClass]="
+              adminMaps.isActive
+                ? 'text-red-600 hover:text-red-700'
+                : 'text-blueGray-700 hover:text-blueGray-500'
+            "
+          >
+            <i
+              class="fa-solid fa-user mr-2 text-sm"
+              [ngClass]="
+                adminMaps.isActive ? 'opacity-75' : 'text-blueGray-300'
+              "
+            ></i>
+            Users
+          </a>
+        </li>
       </ul>
 
       <!-- Divider -->
@@ -180,9 +237,3 @@
           </a>
         </li>
       </ul>
-
-      <!-- Divider -->
-
-    </div>
-  </div>
-</nav>

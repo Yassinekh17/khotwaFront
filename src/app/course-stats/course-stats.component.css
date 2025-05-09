@@ -1,0 +1,23 @@
+/* Chart tooltip styling */
+.chartjs-tooltip {
+    background: rgba(0, 0, 0, 0.7) !important;
+    border-radius: 0.25rem;
+    color: white;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  /* Chart legend styling */
+  .chart-legend li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+  
+  .chart-legend li span {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.5rem;
+    border-radius: 0.25rem;
+  }

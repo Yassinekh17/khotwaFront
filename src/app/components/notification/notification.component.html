@@ -1,0 +1,8 @@
+<div class="notification {{ data.type }}">
+    <div class="content">
+      <mat-icon class="icon">check_circle</mat-icon>
+      <span class="message">{{ data.message }}</span>
+    </div>
+    <mat-icon class="close" (click)="dismiss()">close</mat-icon>
+    <div class="progress-bar" [style.animation-duration]="duration + 'ms'"></div>
+  </div>
