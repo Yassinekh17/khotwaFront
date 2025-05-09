@@ -1,40 +1,94 @@
-import { Component, OnInit, AfterViewInit } from "@angular/core";
-import { Chart, ChartConfiguration } from "chart.js"; // Use named imports
+import { Component, OnInit } from "@angular/core";
+import {
+  Chart,
+  ChartConfiguration,
+  LineController,
+  LineElement,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+  Title,
+} from "chart.js";
+import { HttpClient } from "@angular/common/http";
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: "app-card-line-chart",
   templateUrl: "./card-line-chart.component.html",
 })
-export class CardLineChartComponent implements OnInit, AfterViewInit {
-  constructor() {}
+export class CardLineChartComponent implements OnInit {
+  constructor(private http: HttpClient) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.fetchMonthlyActivity();
+  }
 
-  ngAfterViewInit() {
+  fetchMonthlyActivity() {
+    const token = localStorage.getItem("token");
+  
+    this.http
+      .get<[number, number][]>("http://localhost:8090/user/api/analytics/monthly-activity", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .subscribe(
+        (data) => {
+          const monthNames = [
+            "",
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+          ];
+  
+          const labels = data.map(([monthNumber]) => monthNames[monthNumber]);
+          const values = data.map(([_, count]) => count);
+  
+          this.renderChart(labels, values);
+        },
+        (error) => {
+          console.error("Error fetching activity data", error);
+        }
+      );
+  }
+  
+
+  renderChart(labels: string[], values: number[]) {
+    Chart.register(
+      LineController,
+      LineElement,
+      PointElement,
+      CategoryScale,
+      LinearScale,
+      Tooltip,
+      Legend,
+      Title
+    );
+
     const config: ChartConfiguration<"line", number[], string> = {
-      type: "line", // Explicitly set the type as "line"
+      type: "line",
       data: {
-        labels: [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-        ],
+        labels,
         datasets: [
           {
-            label: new Date().getFullYear().toString(),
+            label: "Monthly User Activity",
             backgroundColor: "#4c51bf",
             borderColor: "#4c51bf",
-            data: [65, 78, 66, 44, 56, 67, 75],
-          },
-          {
-            label: (new Date().getFullYear() - 1).toString(),
-            backgroundColor: "#fff",
-            borderColor: "#fff",
-            data: [40, 68, 86, 74, 56, 60, 87],
+            data: values,
+            fill: false,
+            tension: 0.3,
           },
         ],
       },
@@ -43,63 +97,76 @@ export class CardLineChartComponent implements OnInit, AfterViewInit {
         responsive: true,
         plugins: {
           title: {
-            display: false,
-            text: "Sales Charts",
-            color: "white", // Use 'color' instead of 'fontColor'
+            display: true,
+            text: "Monthly Activity (User Actions)",
+            color: "white",
           },
           legend: {
             labels: {
-              color: "white", // Use 'color' instead of 'fontColor'
+              color: "white",
             },
             align: "end",
             position: "bottom",
           },
-          tooltip: {
-            mode: "index",
-            intersect: false,
-          },
-        },
-        hover: {
-          mode: "nearest",
-          intersect: true,
         },
         scales: {
           x: {
-            display: true,
-            title: {
-              display: false,
-              text: "Month",
-              color: "white", // Use 'color' instead of 'fontColor'
-            },
             ticks: {
-              color: "rgba(255,255,255,.7)", // Use 'color' instead of 'fontColor'
+              color: "white",
             },
             grid: {
-              display: false, // Hide grid lines for the x-axis
+              display: false,
             },
           },
           y: {
-            display: true,
-            title: {
-              display: false,
-              text: "Value",
-              color: "white", // Use 'color' instead of 'fontColor'
-            },
             ticks: {
-              color: "rgba(255,255,255,.7)", // Use 'color' instead of 'fontColor'
+              color: "white",
             },
             grid: {
-              color: "rgba(255, 255, 255, 0.15)", // Use 'color' instead of 'gridLines.color'
-              lineWidth: 1,
+              color: "rgba(255,255,255,0.2)",
             },
           },
         },
       },
     };
 
-    const ctx = document.getElementById("line-chart") as HTMLCanvasElement;
-    if (ctx) {
-      new Chart(ctx, config);
+    const canvas = document.getElementById("line-chart") as HTMLCanvasElement;
+    if (canvas) {
+      new Chart(canvas, config);
     }
   }
+
+  downloadChartAsPDF() {
+    const chartContainer = document.getElementById('chart-wrapper');
+    if (chartContainer) {
+      html2canvas(chartContainer, { scale: 2 }).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('landscape');
+  
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+  
+        // 🔥 Add Title
+        pdf.setFontSize(18);
+        pdf.setTextColor(40);
+        pdf.text('Monthly User Activity Report', pdfWidth / 2, 20, { align: 'center' });
+  
+        // Add chart image below title
+        pdf.addImage(imgData, 'PNG', 10, 30, pdfWidth - 20, pdfHeight);
+  
+        // 🔥 Add logo
+        const logo = new Image();
+        logo.src = 'assets/logo.png';
+  
+        logo.onload = () => {
+          pdf.addImage(logo, 'PNG', 10, 10, 40, 20);
+          pdf.save('monthly-user-activity.pdf');
+        };
+      });
+    }
+  }
+  
+  
+  
 }

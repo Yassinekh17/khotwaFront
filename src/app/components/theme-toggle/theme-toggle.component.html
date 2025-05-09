@@ -1,0 +1,9 @@
+<button 
+  (click)="toggleTheme()" 
+  class="flex items-center px-3 py-2 text-xs font-bold rounded-full transition-colors duration-200"
+  [ngClass]="currentTheme === 'light' ? 'bg-blueGray-200 text-blueGray-800 hover:bg-blueGray-300' : 'bg-blueGray-700 text-white hover:bg-blueGray-600'"
+>
+  <i *ngIf="currentTheme === 'light'" class="fas fa-moon mr-1"></i>
+  <i *ngIf="currentTheme === 'dark'" class="fas fa-sun mr-1"></i>
+  {{ currentTheme === 'light' ? 'Dark Mode' : 'Light Mode' }}
+</button>

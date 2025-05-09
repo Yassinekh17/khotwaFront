@@ -1,0 +1,104 @@
+/* Theme Variables */
+:root {
+  /* Light Theme (Default) */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc; /* blueGray-50 */
+  --bg-tertiary: #f1f5f9; /* blueGray-100 */
+  --text-primary: #1e293b; /* blueGray-800 */
+  --text-secondary: #475569; /* blueGray-600 */
+  --text-muted: #94a3b8; /* blueGray-400 */
+  --border-color: #e2e8f0; /* blueGray-200 */
+  --accent-color: #ef4444; /* red-500 */
+  --accent-hover: #dc2626; /* red-600 */
+  --card-bg: #ffffff;
+  --input-bg: #f1f5f9; /* blueGray-100 */
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Dark Theme */
+.dark-theme {
+  --bg-primary: #0f172a; /* blueGray-900 */
+  --bg-secondary: #1e293b; /* blueGray-800 */
+  --bg-tertiary: #334155; /* blueGray-700 */
+  --text-primary: #f8fafc; /* blueGray-50 */
+  --text-secondary: #e2e8f0; /* blueGray-200 */
+  --text-muted: #94a3b8; /* blueGray-400 */
+  --border-color: #475569; /* blueGray-600 */
+  --accent-color: #ef4444; /* red-500 */
+  --accent-hover: #b91c1c; /* red-700 */
+  --card-bg: #1e293b; /* blueGray-800 */
+  --input-bg: #334155; /* blueGray-700 */
+  --shadow-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Apply theme to elements */
+body {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Cards */
+.bg-white {
+  background-color: var(--card-bg) !important;
+}
+
+/* Text Colors */
+.text-blueGray-600 {
+  color: var(--text-secondary) !important;
+}
+
+.text-blueGray-700, .text-blueGray-800 {
+  color: var(--text-primary) !important;
+}
+
+.text-blueGray-400 {
+  color: var(--text-muted) !important;
+}
+
+/* Background Colors */
+.bg-blueGray-50, .bg-blueGray-100, .bg-blueGray-200 {
+  background-color: var(--bg-tertiary) !important;
+}
+
+/* Inputs */
+input, select, textarea {
+  background-color: var(--input-bg) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Borders */
+.border-blueGray-200, .border-blueGray-300 {
+  border-color: var(--border-color) !important;
+}
+
+/* Shadows */
+.shadow, .shadow-lg, .shadow-xl {
+  box-shadow: 0 4px 6px var(--shadow-color) !important;
+}
+
+/* Navbar */
+nav.bg-white {
+  background-color: var(--bg-primary) !important;
+}
+
+/* Sidebar */
+.sidebar-bg {
+  background-color: var(--bg-primary) !important;
+}
+
+/* Tables */
+table {
+  background-color: var(--card-bg) !important;
+  color: var(--text-primary) !important;
+}
+
+th, td {
+  border-color: var(--border-color) !important;
+}
+
+/* Transitions for smooth theme switching */
+*, *::before, *::after {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}

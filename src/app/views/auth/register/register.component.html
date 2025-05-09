@@ -30,49 +30,152 @@
           <div class="text-blueGray-400 text-center mb-3 font-bold">
             <small>Or sign up with credentials</small>
           </div>
-          <form>
-            <div class="relative w-full mb-3">
-              <label
-                class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                htmlFor="grid-password"
-              >
-                Name
-              </label>
-              <input
-                type="email"
-                class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                placeholder="Name"
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+            <!-- Image Upload Section -->
+            <div class="relative flex justify-center">
+              <img
+                *ngIf="imagePreview"
+                [src]="imagePreview"
+                alt="Uploaded Image"
+                id="uploadedImage"
+                class="shadow-xl rounded-full h-auto border-none max-w-150-px"
+              />
+              <img
+                *ngIf="!imagePreview"
+                src="assets/img/team-2-800x800.jpg"
+                alt="Default Image"
+                id="uploadedImage"
+                class="shadow-xl rounded-full h-auto border-none max-w-150-px"
               />
             </div>
 
+            <!-- Image Upload Button -->
+            <div class="relative flex justify-center mt-3">
+              <label for="imageUpload" class="text-blueGray-600 text-xs font-bold mb-2 cursor-pointer">
+                Upload Image
+              </label>
+              <input
+                id="imageUpload"
+                type="file"
+                class="hidden"
+                accept="image/*"
+                (change)="onImageUpload($event)"
+              />
+            </div>
+
+            <!-- First Name Input -->
             <div class="relative w-full mb-3">
-              <label
-                class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                htmlFor="grid-password"
-              >
+              <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="prenom">
+                First Name
+              </label>
+              <input
+                type="text"
+                id="prenom"
+                formControlName="prenom"
+                class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                placeholder="First Name"
+              />
+            </div>
+
+            <!-- Last Name Input -->
+            <div class="relative w-full mb-3">
+              <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="nom">
+                Last Name
+              </label>
+              <input
+                type="text"
+                id="nom"
+                formControlName="nom"
+                class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                placeholder="Last Name"
+              />
+            </div>
+
+            <!-- Email Input -->
+            <div class="relative w-full mb-3">
+              <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="email">
                 Email
               </label>
               <input
                 type="email"
+                id="email"
+                formControlName="email"
                 class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                 placeholder="Email"
               />
             </div>
-
             <div class="relative w-full mb-3">
-              <label
-                class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                htmlFor="grid-password"
+              <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="age">
+                Age
+              </label>
+              <input
+                type="text"
+                id="age"
+                formControlName="age"
+                class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                placeholder="Age"
+              />
+            </div>
+            <div class="relative w-full mb-3">
+              <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="gender">
+                Gender
+              </label>
+              <select
+                class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                formControlName="gender"
+                id="gender"
               >
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+              </select>
+            </div>
+            <div class="relative w-full mb-3">
+              <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="country">
+                Country
+              </label>
+              <select
+                class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                formControlName="country"
+                id="country"
+              >
+                <option value="USA">USA</option>
+                <option value="Canada">Canada</option>
+                <option value="UK">UK</option>
+                <option value="Germany">Germany</option>
+                <option value="France">France</option>
+              </select>
+            </div>
+            <!-- Password Input -->
+            <div class="relative w-full mb-3">
+              <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="password">
                 Password
               </label>
               <input
                 type="password"
+                id="password"
+                formControlName="password"
                 class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                 placeholder="Password"
               />
             </div>
 
+            <!-- Role Selection -->
+            <div class="relative w-full mb-3">
+              <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="role">
+                Role
+              </label>
+              <select
+                class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                formControlName="role"
+                id="role"
+              >
+                <option value="ADMINISTRATEUR">ADMINISTRATEUR</option>
+                <option value="FORMATEUR">FORMATEUR</option>
+                <option value="ETUDIANT">ETUDIANT</option>
+              </select>
+            </div>
+
+            <!-- Agreement Checkbox -->
             <div>
               <label class="inline-flex items-center cursor-pointer">
                 <input
@@ -82,22 +185,22 @@
                 />
                 <span class="ml-2 text-sm font-semibold text-blueGray-600">
                   I agree with the
-                  <a href="javascript:void(0)" class="text-red-600">
-                    Privacy Policy
-                  </a>
+                  <a href="javascript:void(0)" class="text-red-600">Privacy Policy</a>
                 </span>
               </label>
             </div>
 
+            <!-- Submit Button -->
             <div class="text-center mt-6">
               <button
                 class="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
-                type="button"
+                type="submit"
               >
                 Create Account
               </button>
             </div>
           </form>
+
         </div>
       </div>
     </div>

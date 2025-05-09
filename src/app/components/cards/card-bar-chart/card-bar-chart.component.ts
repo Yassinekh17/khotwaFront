@@ -1,5 +1,15 @@
 import { Component, OnInit, AfterViewInit } from "@angular/core";
-import { Chart, ChartConfiguration } from "chart.js"; // Import ChartConfiguration
+import {
+  Chart,
+  ChartConfiguration,
+  BarController,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+  Title,
+} from "chart.js";
 
 @Component({
   selector: "app-card-bar-chart",
@@ -11,8 +21,19 @@ export class CardBarChartComponent implements OnInit, AfterViewInit {
   ngOnInit() {}
 
   ngAfterViewInit() {
+    // ✅ Register required components before creating chart
+    Chart.register(
+      BarController,
+      BarElement,
+      CategoryScale,
+      LinearScale,
+      Tooltip,
+      Legend,
+      Title
+    );
+
     const config: ChartConfiguration<"bar", number[], string> = {
-      type: "bar", // Explicitly set the type as "bar"
+      type: "bar",
       data: {
         labels: [
           "January",
@@ -72,7 +93,7 @@ export class CardBarChartComponent implements OnInit, AfterViewInit {
               text: "Month",
             },
             grid: {
-              display: false, // Hide grid lines for the x-axis
+              display: false,
             },
           },
           y: {
@@ -82,7 +103,7 @@ export class CardBarChartComponent implements OnInit, AfterViewInit {
               text: "Value",
             },
             grid: {
-              display: true, // Show grid lines for the y-axis
+              display: true,
               color: "rgba(33, 37, 41, 0.2)",
               lineWidth: 1,
             },

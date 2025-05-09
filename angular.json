@@ -112,5 +112,9 @@
       }
     }
   },
-  "defaultProject": "notus-angular"
+  
+  "cli": {
+    "analytics": false, 
+    "defaultProject": "notus-angular"
+  }
 }
