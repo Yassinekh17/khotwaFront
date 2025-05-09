@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #4a7bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #3a6ae8;
+        }
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .connected {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        .disconnected {
+            background-color: #ffebee;
+            color: #d32f2f;
+        }
+        .log {
+            height: 200px;
+            overflow-y: auto;
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WebSocket Test</h1>
+        
+        <div class="card">
+            <h2>Native WebSocket</h2>
+            <div class="button-group">
+                <button id="connectNative">Connect</button>
+                <button id="disconnectNative">Disconnect</button>
+                <button id="sendNative">Send Test Message</button>
+            </div>
+            <div id="nativeStatus" class="status disconnected">Disconnected</div>
+            <div id="nativeLog" class="log"></div>
+        </div>
+        
+        <div class="card">
+            <h2>SockJS</h2>
+            <div class="button-group">
+                <button id="connectSockJS">Connect</button>
+                <button id="disconnectSockJS">Disconnect</button>
+                <button id="sendSockJS">Send Test Message</button>
+            </div>
+            <div id="sockJSStatus" class="status disconnected">Disconnected</div>
+            <div id="sockJSLog" class="log"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script>
+        // Native WebSocket
+        let nativeSocket = null;
+        const nativeLog = document.getElementById('nativeLog');
+        const nativeStatus = document.getElementById('nativeStatus');
+        
+        function logNative(message) {
+            const line = document.createElement('div');
+            line.textContent = `${new Date().toLocaleTimeString()} - ${message}`;
+            nativeLog.appendChild(line);
+            nativeLog.scrollTop = nativeLog.scrollHeight;
+        }
+        
+        document.getElementById('connectNative').addEventListener('click', () => {
+            try {
+                logNative('Connecting to ws://localhost:8089/ws');
+                nativeSocket = new WebSocket('ws://localhost:8089/ws');
+                
+                nativeSocket.onopen = () => {
+                    logNative('Connection opened');
+                    nativeStatus.textContent = 'Connected';
+                    nativeStatus.className = 'status connected';
+                };
+                
+                nativeSocket.onclose = (event) => {
+                    logNative(`Connection closed: ${event.code} ${event.reason}`);
+                    nativeStatus.textContent = 'Disconnected';
+                    nativeStatus.className = 'status disconnected';
+                };
+                
+                nativeSocket.onerror = (error) => {
+                    logNative(`Error: ${error}`);
+                    nativeStatus.textContent = 'Error';
+                    nativeStatus.className = 'status disconnected';
+                };
+                
+                nativeSocket.onmessage = (event) => {
+                    logNative(`Received: ${event.data}`);
+                };
+            } catch (error) {
+                logNative(`Error creating WebSocket: ${error.message}`);
+            }
+        });
+        
+        document.getElementById('disconnectNative').addEventListener('click', () => {
+            if (nativeSocket) {
+                nativeSocket.close();
+                nativeSocket = null;
+                logNative('Disconnected');
+            }
+        });
+        
+        document.getElementById('sendNative').addEventListener('click', () => {
+            if (nativeSocket && nativeSocket.readyState === WebSocket.OPEN) {
+                nativeSocket.send('Test message from native WebSocket');
+                logNative('Sent: Test message from native WebSocket');
+            } else {
+                logNative('Cannot send: WebSocket is not connected');
+            }
+        });
+        
+        // SockJS
+        let sockJSSocket = null;
+        const sockJSLog = document.getElementById('sockJSLog');
+        const sockJSStatus = document.getElementById('sockJSStatus');
+        
+        function logSockJS(message) {
+            const line = document.createElement('div');
+            line.textContent = `${new Date().toLocaleTimeString()} - ${message}`;
+            sockJSLog.appendChild(line);
+            sockJSLog.scrollTop = sockJSLog.scrollHeight;
+        }
+        
+        document.getElementById('connectSockJS').addEventListener('click', () => {
+            try {
+                logSockJS('Connecting to http://localhost:8089/ws');
+                sockJSSocket = new SockJS('http://localhost:8089/ws');
+                
+                sockJSSocket.onopen = () => {
+                    logSockJS('Connection opened');
+                    sockJSStatus.textContent = 'Connected';
+                    sockJSStatus.className = 'status connected';
+                };
+                
+                sockJSSocket.onclose = (event) => {
+                    logSockJS(`Connection closed: ${event.code} ${event.reason}`);
+                    sockJSStatus.textContent = 'Disconnected';
+                    sockJSStatus.className = 'status disconnected';
+                };
+                
+                sockJSSocket.onerror = (error) => {
+                    logSockJS(`Error: ${error}`);
+                    sockJSStatus.textContent = 'Error';
+                    sockJSStatus.className = 'status disconnected';
+                };
+                
+                sockJSSocket.onmessage = (event) => {
+                    logSockJS(`Received: ${event.data}`);
+                };
+            } catch (error) {
+                logSockJS(`Error creating SockJS: ${error.message}`);
+            }
+        });
+        
+        document.getElementById('disconnectSockJS').addEventListener('click', () => {
+            if (sockJSSocket) {
+                sockJSSocket.close();
+                sockJSSocket = null;
+                logSockJS('Disconnected');
+            }
+        });
+        
+        document.getElementById('sendSockJS').addEventListener('click', () => {
+            if (sockJSSocket && sockJSSocket.readyState === SockJS.OPEN) {
+                sockJSSocket.send('Test message from SockJS');
+                logSockJS('Sent: Test message from SockJS');
+            } else {
+                logSockJS('Cannot send: SockJS is not connected');
+            }
+        });
+    </script>
+</body>
+</html>

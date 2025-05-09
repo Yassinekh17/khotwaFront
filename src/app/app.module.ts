@@ -15,6 +15,7 @@ import { SettingsComponent } from './views/admin/settings/settings.component';
 import { TablesComponent } from './views/admin/tables/tables.component';
 import { CoursComponent } from "./views/admin/cours/cours.component";
 import { QuizzComponent } from "./views/admin/quizz/quizz.component";
+import { DashboardComponent } from "./views/admin/dashboard/dashboard.component";
 
 // auth views
 import { LoginComponent } from './views/auth/login/login.component';
@@ -93,12 +94,22 @@ import { ListeventComponent as UserListeventComponent } from './views/event/list
 import { DetaileventComponent } from './views/event/detailevent/detailevent.component';
 import { CommentaireComponent } from './views/event/commentaire/commentaire.component';
 import { RecommendationComponent } from './views/event/recommendation/recommendation.component'; // Ajout du composant utilisateur
+import { ChatComponent } from './components/chat/chat.component';
+import { SummaryComponent } from './summary/summary.component';
+import { ChatService } from "./services/chat.service";
+import { CardBarChartMessageComponent } from "./components/cards/card-bar-chart-Message/card-bar-chart.component";
+import { WebSocketService } from "./services/web-socket.service";
+import { MockChatService } from "./services/mock-chat.service";
+import { MockWebsocketService } from "./services/mock-websocket.service";
+import { WebsocketTestComponent } from './components/websocket-test/websocket-test.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     DashboardUserComponent,
+    DashboardComponent,
+    CardBarChartMessageComponent,
     CardLineChartComponent,
     IndexDropdownComponent,
     PagesDropdownComponent,
@@ -124,6 +135,9 @@ import { RecommendationComponent } from './views/event/recommendation/recommenda
     CourseDetailsComponent,
     CourseLessonComponent,
     NotificationComponent,
+    CardSocialTrafficComponent,
+    CardStatsComponent,
+    CardTableComponent,
     HeaderStatsComponent,
     MapExampleComponent,
     AuthNavbarComponent,
@@ -165,7 +179,10 @@ import { RecommendationComponent } from './views/event/recommendation/recommenda
     PaymentComponent,
     ChatbotComponent,
     PredictionComponent,
-    
+     ProfileComponent,
+    ChatComponent,
+    SummaryComponent,
+    WebsocketTestComponent,
     
   ],
   imports: [BrowserModule, AppRoutingModule,HttpClientModule,FormsModule, BrowserAnimationsModule,MatIconModule,ReactiveFormsModule,CommonModule,RecaptchaModule,
@@ -177,7 +194,8 @@ import { RecommendationComponent } from './views/event/recommendation/recommenda
       useClass: AuthInterceptor,
       multi: true, // Allow multiple interceptors
       
-    },PredictionService,
+    },PredictionService,ChatService,
+    WebSocketService
   ],  bootstrap: [AppComponent],
 })
 export class AppModule {}

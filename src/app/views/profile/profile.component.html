@@ -27,110 +27,209 @@
         x="0"
         y="0"
       >
-        <polygon
-          class="text-blueGray-200 fill-current"
-          points="2560 0 2560 100 0 100"
-        ></polygon>
+        <polygon class="text-blueGray-200 fill-current" points="2560 0 2560 100 0 100"></polygon>
       </svg>
     </div>
   </section>
-  <section class="relative py-16 bg-blueGray-200">
+
+  <section class="relative py-16 bg-gradient-to-b from-teal-50 to-gray-100">
     <div class="container mx-auto px-4">
-      <div
-        class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64"
-      >
-        <div class="px-6">
-          <div class="flex flex-wrap justify-center">
-            <div class="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
-              <div class="relative">
+      <!-- Create Post Form -->
+      <div class="py-6 px-3 mt-32 sm:mt-0 flex justify-center">
+        <div class="w-full lg:w-8/12 px-4">
+          <div class="relative flex flex-col min-w-0 break-words bg-white w-full shadow-lg rounded-lg transition-all duration-300 hover:shadow-xl border border-red-100">
+            <div class="px-6 py-6">
+              <div class="flex items-center mb-4">
+                <div class="w-12 h-12 rounded-full overflow-hidden mr-4 border-2 border-red-500">
+                  <img src="assets/img/team-2-800x800.jpg" alt="Profile" class="w-full h-full object-cover" />
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800">Partagez vos pensées</h3>
+              </div>
+              <form [formGroup]="MessageForm" class="w-full">
+                <div class="relative w-full mb-4">
+                  <textarea
+                    id="contenu"
+                    formControlName="contenu"
+                    class="border border-gray-300 px-4 py-3 placeholder-gray-400 text-gray-700 bg-white rounded-lg text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent w-full resize-none transition-all duration-200"
+                    placeholder="Qu'avez-vous en tête aujourd'hui ?"
+                    rows="3"
+                  ></textarea>
+                  <div *ngIf="isFieldInvalid('contenu')" class="text-red-500 text-xs mt-1">
+                    {{ getErrorMessage('contenu') }}
+                  </div>
+                </div>
+                <div class="flex items-center justify-between mt-4">
+                  <div class="flex space-x-2">
+                    <button type="button" class="p-2 text-gray-500 rounded-full hover:bg-gray-100 focus:outline-none" title="Ajouter une photo">
+                      <i class="fas fa-image"></i>
+                    </button>
+                    <button type="button" class="p-2 text-gray-500 rounded-full hover:bg-gray-100 focus:outline-none" title="Ajouter un document">
+                      <i class="fas fa-paperclip"></i>
+                    </button>
+                  </div>
+                  <button
+                    (click)="onSubmit()"
+                    class="px-6 py-2 bg-red-600 text-white font-medium rounded-lg shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-all duration-200"
+                    [disabled]="MessageForm.invalid"
+                    [ngClass]="{'opacity-50 cursor-not-allowed': MessageForm.invalid, 'hover:shadow-lg': !MessageForm.invalid}"
+                  >
+                    <i class="fas fa-paper-plane mr-2"></i>Publier
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Message Cards -->
+      <div *ngFor="let message of messages" class="mb-10">
+        <div class="relative flex flex-col min-w-0 break-words bg-white w-full shadow-lg rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl border border-red-100">
+          <!-- Card Header -->
+          <div class="px-6 py-4 border-b border-gray-200">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
                 <img
-                  alt="..."
-                  src="assets/img/team-2-800x800.jpg"
-                  class="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px"
+                  alt="Profile"
+                  [src]="message.profileImage || 'assets/img/team-2-800x800.jpg'"
+                  class="h-12 w-12 rounded-full border-2 border-red-500 object-cover"
                 />
               </div>
-            </div>
-            <div
-              class="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center"
-            >
-              <div class="py-6 px-3 mt-32 sm:mt-0">
-                <a
-                  [routerLink]="['/profile/edit']"
-                  class="bg-red-600 active:bg-red-700 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150"
+              <div class="ml-4 flex-1">
+                <h3 class="text-xl font-semibold text-gray-800">
+                  {{ message.name || 'Jenna Stones' }}
+                </h3>
+                <div class="text-sm text-gray-500">
+                  <i class="fas fa-clock mr-1"></i>
+                  {{ message.dateEnvoi | date: 'dd/MM/yyyy à HH:mm' }}
+                </div>
+              </div>
+              <div class="flex items-center space-x-2">
+                <button
+                  class="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors duration-200"
                   type="button"
                 >
-                  Connect
-                </a>
-              </div>
-            </div>
-            <div class="w-full lg:w-4/12 px-4 lg:order-1">
-              <div class="flex justify-center py-4 lg:pt-4 pt-8">
-                <div class="mr-4 p-3 text-center">
-                  <span
-                    class="text-xl font-bold block uppercase tracking-wide text-blueGray-600"
-                  >
-                    22
-                  </span>
-                  <span class="text-sm text-blueGray-400">Friends</span>
-                </div>
-                <div class="mr-4 p-3 text-center">
-                  <span
-                    class="text-xl font-bold block uppercase tracking-wide text-blueGray-600"
-                  >
-                    10
-                  </span>
-                  <span class="text-sm text-blueGray-400">Photos</span>
-                </div>
-                <div class="lg:mr-4 p-3 text-center">
-                  <span
-                    class="text-xl font-bold block uppercase tracking-wide text-blueGray-600"
-                  >
-                    89
-                  </span>
-                  <span class="text-sm text-blueGray-400">Comments</span>
-                </div>
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button
+                  class="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors duration-200"
+                  type="button"
+                  (click)="deleteMessage(message.id_message)"
+                >
+                  <i class="fas fa-trash"></i>
+                </button>
               </div>
             </div>
           </div>
-          <div class="text-center mt-12">
-            <h3
-              class="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2"
-            >
-              Jenna Stones
-            </h3>
-            <div
-              class="text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase"
-            >
-              <i
-                class="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"
-              ></i>
-              Los Angeles, California
-            </div>
-            <div class="mb-2 text-blueGray-600 mt-10">
-              <i class="fas fa-briefcase mr-2 text-lg text-blueGray-400"></i>
-              Solution Manager - Creative Tim Officer
-            </div>
-            <div class="mb-2 text-blueGray-600">
-              <i class="fas fa-university mr-2 text-lg text-blueGray-400"></i>
-              University of Computer Science
-            </div>
-          </div>
-          <div class="mt-10 py-10 border-t border-blueGray-200 text-center">
-            <div class="flex flex-wrap justify-center">
-              <div class="w-full lg:w-9/12 px-4">
-                <p class="mb-4 text-lg leading-relaxed text-blueGray-700">
-                  An artist of considerable range, Jenna the name taken by
-                  Melbourne-raised, Brooklyn-based Nick Murphy writes, performs
-                  and records all of his own music, giving it a warm, intimate
-                  feel with a solid groove structure. An artist of considerable
-                  range.
-                </p>
-                <a href="javascript:void(0)" class="font-normal text-red-600">
-                  Show more
-                </a>
-                
 
+          <!-- Card Content -->
+          <div class="px-6 py-6">
+            <p class="text-gray-700 text-base leading-relaxed whitespace-pre-line">
+              {{ message.contenu }}
+            </p>
+          </div>
+
+          <!-- Card Footer -->
+          <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+            <!-- Stats -->
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center space-x-4">
+                <div class="flex items-center">
+                  <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium flex items-center">
+                    <i class="fas fa-heart mr-1"></i>
+                    {{ message.likeCount || 0 }} Likes
+                  </span>
+                </div>
+                <div class="flex items-center">
+                  <span class="bg-red-50 text-red-800 px-2 py-1 rounded-full text-xs font-medium flex items-center">
+                    <i class="fas fa-comment mr-1"></i>
+                    {{ message.commentCount || 0 }} Comments
+                  </span>
+                </div>
               </div>
+              <div>
+                <button
+                  class="text-gray-500 hover:text-red-600 text-sm font-medium transition-colors duration-200"
+                  (click)="showSummary(message.contenu)"
+                >
+                  <i class="fas fa-file-alt mr-1"></i> Résumé
+                </button>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex border-t border-gray-200 pt-4">
+              <button
+                class="flex-1 flex items-center justify-center py-2 text-sm font-medium rounded-md transition-colors duration-200"
+                [ngClass]="message.likedByUser ? 'text-red-600 hover:bg-red-50' : 'text-gray-500 hover:bg-gray-100'"
+                (click)="likeMessage(message.id_message!)"
+              >
+                <i class="fa mr-2" [ngClass]="message.likedByUser ? 'fa-heart' : 'fa-heart-o'"></i>
+                {{ message.likedByUser ? 'J\'aime' : 'Aimer' }}
+              </button>
+              <button
+                class="flex-1 flex items-center justify-center py-2 text-sm font-medium text-gray-500 hover:bg-red-50 hover:text-red-600 rounded-md transition-colors duration-200"
+                (click)="toggleCommentForm(message.id_message!)"
+              >
+                <i class="fas fa-comment mr-2"></i>
+                Commenter
+              </button>
+              <button
+                class="flex-1 flex items-center justify-center py-2 text-sm font-medium text-gray-500 hover:bg-red-50 hover:text-red-600 rounded-md transition-colors duration-200"
+                (click)="toggleComments(message.id_message)"
+              >
+                <i class="fas fa-comments mr-2"></i>
+                {{ commentsVisible[message.id_message] ? 'Masquer' : 'Voir' }} les commentaires
+              </button>
+            </div>
+
+            <!-- Comment Form -->
+            <div *ngIf="commentFormVisible[message.id_message]" class="mt-4 border-t border-gray-200 pt-4">
+              <div class="flex">
+                <div class="flex-shrink-0 mr-3">
+                  <img src="assets/img/team-2-800x800.jpg" class="h-8 w-8 rounded-full" alt="User" />
+                </div>
+                <div class="flex-1">
+                  <textarea
+                    [(ngModel)]="newComments[message.id_message]"
+                    rows="2"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none transition-all duration-200"
+                    placeholder="Écrivez un commentaire..."></textarea>
+                  <div class="flex justify-end mt-2">
+                    <button
+                      (click)="publishComment(message.id_message!)"
+                      class="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-all duration-200"
+                    >
+                      <i class="fas fa-paper-plane mr-2"></i>Publier
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Comments List -->
+            <div *ngIf="commentsVisible[message.id_message]" class="mt-4 border-t border-gray-200 pt-4">
+              <h4 class="text-sm font-semibold text-gray-700 mb-3">Commentaires</h4>
+              <div *ngIf="message.commentaires?.length > 0; else noComments" class="space-y-4">
+                <div *ngFor="let comment of message.commentaires" class="flex">
+                  <div class="flex-shrink-0 mr-3">
+                    <img src="assets/img/team-2-800x800.jpg" class="h-8 w-8 rounded-full" alt="User" />
+                  </div>
+                  <div class="flex-1 bg-gray-100 rounded-lg p-3">
+                    <div class="flex items-center justify-between">
+                      <h5 class="text-sm font-medium text-gray-800">Utilisateur</h5>
+                      <span class="text-xs text-gray-500">{{ comment.dateCommentaire | date: 'dd/MM/yyyy' }}</span>
+                    </div>
+                    <p class="text-sm text-gray-700 mt-1">{{ comment.contenu }}</p>
+                  </div>
+                </div>
+              </div>
+              <ng-template #noComments>
+                <div class="text-center py-4 text-gray-500">
+                  <i class="fas fa-comment-slash text-2xl mb-2"></i>
+                  <p>Aucun commentaire pour ce message.</p>
+                </div>
+              </ng-template>
             </div>
           </div>
         </div>

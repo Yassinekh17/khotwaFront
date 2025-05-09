@@ -21,6 +21,12 @@ import { QuizzComponent } from "./views/admin/quizz/quizz.component";
 import { LoginComponent } from './views/auth/login/login.component';
 import { RegisterComponent } from './views/auth/register/register.component';
 
+
+// admin views
+import { DashboardComponent } from "./views/admin/dashboard/dashboard.component";
+
+
+
 // no layouts views
 import { IndexComponent } from "./views/index/index.component";
 import { LandingComponent } from "./views/landing/landing.component";
@@ -44,6 +50,8 @@ import { DashboardUserComponent } from './views/admin/dashboardUser/dashboardUse
 import { ForgotpwComponent } from './views/auth/forgotpw/forgotpw.component';
 import { UserProfileUpdatePageComponent } from './views/user-profile-update/user-profile-update-page.component';
 import { authGuard } from './auth.guard';
+import { ChatComponent } from './components/chat/chat.component';
+import { WebsocketTestComponent } from './components/websocket-test/websocket-test.component';
 const routes: Routes = [
   // admin views
   {
@@ -62,6 +70,7 @@ const routes: Routes = [
       { path: "maps", component: MapsComponent },
       { path: "cours", component: CoursComponent },
       { path: "quizz", component: QuizzComponent },
+      { path: "chatDashboard", component: DashboardComponent },
       { path: 'dashboard', component: DashboardUserComponent },
       { path: 'settings', component: SettingsComponent },
       { path: 'tables', component: TablesComponent },
@@ -92,6 +101,8 @@ const routes: Routes = [
   { path: "quiz/:id", component: QuizComponent },
   { path: 'course/:id', component: CourseDetailsComponent },
   { path: 'course/:id/lesson', component: CourseLessonComponent },
+   { path: "chat", component: ChatComponent },
+  { path: "websocket-test", component: WebsocketTestComponent },
   { path: 'profile', component: ProfileComponent }, // original profile page
   { path: 'profile/edit', component: UserProfileUpdatePageComponent, canActivate: [authGuard] }, // new protected profile update page
   { path: 'landing', component: LandingComponent , canActivate: [authGuard]},
