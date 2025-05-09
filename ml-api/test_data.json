@@ -1,0 +1,31 @@
+{
+  "events": [
+    {"eventId": 1, "title": "Workshop Python", "date": "2023-05-15T14:00:00", "location": "Salle A", "participants": 25},
+    {"eventId": 2, "title": "Conférence IA", "date": "2023-05-16T10:00:00", "location": "Amphithéâtre", "participants": 120},
+    {"eventId": 3, "title": "Hackathon", "date": "2023-05-17T09:00:00", "location": "Espace Co-working", "participants": 50},
+    {"eventId": 4, "title": "Meetup Angular", "date": "2023-05-18T18:00:00", "location": "Salle B", "participants": 30},
+    {"eventId": 5, "title": "Formation DevOps", "date": "2023-05-19T09:00:00", "location": "Salle C", "participants": 15},
+    {"eventId": 6, "title": "Workshop Design", "date": "2023-05-15T10:00:00", "location": "Salle A", "participants": 20},
+    {"eventId": 7, "title": "Conférence Web", "date": "2023-05-16T14:00:00", "location": "Amphithéâtre", "participants": 100},
+    {"eventId": 8, "title": "Meetup React", "date": "2023-05-17T18:00:00", "location": "Salle B", "participants": 35},
+    {"eventId": 9, "title": "Formation Cloud", "date": "2023-05-18T09:00:00", "location": "Salle C", "participants": 18},
+    {"eventId": 10, "title": "Hackathon Mobile", "date": "2023-05-19T09:00:00", "location": "Espace Co-working", "participants": 45}
+  ],
+  "locations": {
+    "Salle A": {"lat": 36.8065, "lng": 10.1815, "capacity": 30},
+    "Salle B": {"lat": 36.8068, "lng": 10.1820, "capacity": 40},
+    "Salle C": {"lat": 36.8070, "lng": 10.1825, "capacity": 25},
+    "Amphithéâtre": {"lat": 36.8075, "lng": 10.1830, "capacity": 150},
+    "Espace Co-working": {"lat": 36.8080, "lng": 10.1835, "capacity": 60},
+    "Cafétéria": {"lat": 36.8085, "lng": 10.1840, "capacity": 80},
+    "Bibliothèque": {"lat": 36.8090, "lng": 10.1845, "capacity": 50},
+    "Jardin": {"lat": 36.8095, "lng": 10.1850, "capacity": 100}
+  },
+  "user_density": {
+    "Zone Centre": {"lat": 36.8070, "lng": 10.1825, "density": 0.8},
+    "Zone Nord": {"lat": 36.8090, "lng": 10.1835, "density": 0.6},
+    "Zone Sud": {"lat": 36.8050, "lng": 10.1815, "density": 0.4},
+    "Zone Est": {"lat": 36.8075, "lng": 10.1850, "density": 0.5},
+    "Zone Ouest": {"lat": 36.8065, "lng": 10.1800, "density": 0.3}
+  }
+}

@@ -185,6 +185,28 @@
 
         <li class="items-center">
           <a
+            [routerLink]="['/admin/listevent']"
+            class="text-xs uppercase py-3 font-bold block"
+            routerLinkActive
+            #adminEvents="routerLinkActive"
+            [ngClass]="
+              adminEvents.isActive
+                ? 'text-red-600 hover:text-red-700'
+                : 'text-blueGray-700 hover:text-blueGray-500'
+            "
+          >
+            <i
+              class="fas fa-calendar-alt mr-2 text-sm"
+              [ngClass]="
+                adminEvents.isActive ? 'opacity-75' : 'text-blueGray-300'
+              "
+            ></i>
+            Events
+          </a>
+        </li>
+
+        <li class="items-center">
+          <a
             [routerLink]="['/admin/maps']"
             class="text-xs uppercase py-3 font-bold block"
             routerLinkActive

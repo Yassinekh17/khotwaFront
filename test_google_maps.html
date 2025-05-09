@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test Google Maps</title>
+  <style>
+    #map {
+      height: 400px;
+      width: 100%;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      color: #2c5282;
+    }
+    .info {
+      background-color: #ebf8ff;
+      border: 1px solid #4299e1;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+    }
+    .success {
+      background-color: #f0fff4;
+      border: 1px solid #48bb78;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      display: none;
+    }
+    .error {
+      background-color: #fff5f5;
+      border: 1px solid #f56565;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Test Google Maps</h1>
+  
+  <div class="info">
+    <p>Cette page teste si Google Maps fonctionne correctement sur votre navigateur.</p>
+    <p>Si la carte s'affiche ci-dessous, cela signifie que Google Maps fonctionne correctement.</p>
+  </div>
+  
+  <div id="success" class="success">
+    <h2>Succès!</h2>
+    <p>Google Maps fonctionne correctement sur votre navigateur.</p>
+    <p>Vous pouvez maintenant utiliser l'application de recommandation d'événements.</p>
+  </div>
+  
+  <div id="error" class="error">
+    <h2>Erreur!</h2>
+    <p>Google Maps n'a pas pu être chargé correctement.</p>
+    <p>Vérifiez votre connexion Internet et assurez-vous que vous n'avez pas de bloqueur de publicités qui pourrait bloquer Google Maps.</p>
+  </div>
+  
+  <div id="map"></div>
+  
+  <script>
+    // Fonction de callback pour Google Maps
+    function initMap() {
+      console.log('Google Maps API chargée avec succès');
+      
+      try {
+        // Créer la carte
+        const map = new google.maps.Map(document.getElementById('map'), {
+          center: { lat: 36.8070, lng: 10.1825 },
+          zoom: 13
+        });
+        
+        // Ajouter un marqueur
+        const marker = new google.maps.Marker({
+          position: { lat: 36.8070, lng: 10.1825 },
+          map: map,
+          title: 'Centre de Tunis'
+        });
+        
+        // Afficher le message de succès
+        document.getElementById('success').style.display = 'block';
+      } catch (error) {
+        console.error('Erreur lors de l\'initialisation de la carte:', error);
+        document.getElementById('error').style.display = 'block';
+      }
+    }
+    
+    // Fonction en cas d'erreur
+    function handleMapError() {
+      console.error('Erreur lors du chargement de Google Maps API');
+      document.getElementById('error').style.display = 'block';
+    }
+  </script>
+  
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8twnYs0hAjAFm8X144-oRQHMUgCJQXKw&callback=initMap" async defer onerror="handleMapError()"></script>
+</body>
+</html>
