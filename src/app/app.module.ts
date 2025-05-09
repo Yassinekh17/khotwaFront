@@ -27,7 +27,7 @@ import { ProfileComponent } from "./views/profile/profile.component";
 
 import { AdminNavbarComponent } from "./components/navbars/admin-navbar/admin-navbar.component";
 import { AuthNavbarComponent } from "./components/navbars/auth-navbar/auth-navbar.component";
-import { CardBarChartComponent } from "./components/cards/card-bar-chart/card-bar-chart.component";
+
 import { CardLineChartComponent } from "./components/cards/card-line-chart/card-line-chart.component";
 import { CardPageVisitsComponent } from "./components/cards/card-page-visits/card-page-visits.component";
 import { CardProfileComponent } from "./components/cards/card-profile/card-profile.component";
@@ -47,16 +47,22 @@ import { PagesDropdownComponent } from "./components/dropdowns/pages-dropdown/pa
 import { NotificationDropdownComponent } from "./components/dropdowns/notification-dropdown/notification-dropdown.component";
 import { SidebarComponent } from "./components/sidebar/sidebar.component";
 import { UserDropdownComponent } from "./components/dropdowns/user-dropdown/user-dropdown.component";
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ChatComponent } from './components/chat/chat.component';
 import { SummaryComponent } from './summary/summary.component';
+import { CardBarChartMessageComponent } from "./components/cards/card-bar-chart-Message/card-bar-chart.component";
+import { ChatService } from "./services/chat.service";
+import { WebSocketService } from "./services/web-socket.service";
+import { MockChatService } from "./services/mock-chat.service";
+import { MockWebsocketService } from "./services/mock-websocket.service";
+import { WebsocketTestComponent } from './components/websocket-test/websocket-test.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DashboardComponent,
-    CardBarChartComponent,
+    CardBarChartMessageComponent,
     CardLineChartComponent,
     IndexDropdownComponent,
     PagesDropdownComponent,
@@ -90,9 +96,14 @@ import { SummaryComponent } from './summary/summary.component';
     ProfileComponent,
     ChatComponent,
     SummaryComponent,
+    WebsocketTestComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule,  HttpClientModule,ReactiveFormsModule,FormsModule],
-  providers: [],
+  imports: [BrowserModule, AppRoutingModule, HttpClientModule, ReactiveFormsModule, FormsModule],
+  providers: [
+    // Use real services to connect to the backend
+    ChatService,
+    WebSocketService
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

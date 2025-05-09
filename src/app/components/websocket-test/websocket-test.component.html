@@ -1,0 +1,36 @@
+<div class="websocket-test-container">
+  <h2>Test de connexion WebSocket</h2>
+  
+  <div class="status-container">
+    <div class="status-label">Statut de connexion:</div>
+    <div class="status-value" [ngClass]="connectionClass">{{ connectionStatus }}</div>
+  </div>
+  
+  <div class="actions">
+    <button (click)="testConnection()" class="test-button">Tester la connexion</button>
+    <button (click)="reconnect()" class="reconnect-button">Reconnecter</button>
+  </div>
+  
+  <div class="message-form">
+    <h3>Envoyer un message de test</h3>
+    <div class="input-container">
+      <input type="text" [(ngModel)]="testMessage" placeholder="Entrez un message de test" 
+             (keydown.enter)="sendTestMessage()">
+      <button (click)="sendTestMessage()" [disabled]="!testMessage.trim()">Envoyer</button>
+    </div>
+  </div>
+  
+  <div class="messages-container">
+    <h3>Messages</h3>
+    <div class="messages-list">
+      <div *ngIf="receivedMessages.length === 0" class="no-messages">
+        Aucun message reçu
+      </div>
+      <div *ngFor="let msg of receivedMessages" class="message-item" 
+           [ngClass]="{'sent': msg.sent, 'error': msg.error}">
+        <div class="message-time">{{ msg.timestamp }}</div>
+        <div class="message-content">{{ msg.content }}</div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,43 +1,208 @@
 <div id="container">
     <aside>
       <header>
-        <input type="text" placeholder="Search contacts">
-      </header>
-      <ul >
-        <li *ngFor="let contact of contacts" (click)="selectContact(contact)" >
-          <div >
-            <h2>{{ contact.nom }} {{ contact.prenom }}</h2>
-            <h3>
-              <span class="status green"></span> online
-            </h3>
+        <div class="user-info">
+          <div class="current-user-avatar">
+            <div class="avatar-placeholder">{{ sender === '4' ? 'ME' : 'UN' }}</div>
+            <span class="status green"></span>
           </div>
-        </li>
-      </ul>
+          <h2 class="current-user-name">Vous</h2>
+        </div>
+        <div class="search-container">
+          <i class="fa fa-search search-icon"></i>
+          <input
+            type="text"
+            placeholder="Rechercher des contacts"
+            [(ngModel)]="searchTerm"
+            (input)="filterContacts()"
+          />
+        </div>
+      </header>
+      <div class="contacts-header">
+        <h3>Contacts ({{ filteredContacts.length }})</h3>
+        <div class="contacts-actions">
+          <button class="refresh-button" (click)="loadContacts()" title="Rafraîchir la liste des contacts">
+            <i class="fa fa-refresh"></i>
+          </button>
+          <button class="add-contact-button" title="Ajouter un contact">
+            <i class="fa fa-user-plus"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Liste des contacts -->
+      <div class="contacts-container">
+        <ul class="contacts-list">
+          <li *ngFor="let contact of filteredContacts"
+              (click)="selectContact(contact)"
+              [class.active]="contact.id_user.toString() === recipientId"
+              class="contact-item">
+            <div class="contact-avatar">
+              <div class="avatar-placeholder" [style.background-color]="contact.id_user % 2 === 0 ? '#4a7bff' : '#ff7a4a'">
+                {{ getUserInitials(contact) }}
+              </div>
+              <span class="status green" title="En ligne"></span>
+            </div>
+            <div class="contact-info">
+              <h2 class="contact-name">{{ contact.prenom }} {{ contact.nom }}</h2>
+              <div class="contact-details">
+                <span *ngIf="contact.role" class="contact-role">{{ contact.role }}</span>
+                <span *ngIf="!contact.role" class="contact-status">
+                  <i class="fa fa-circle online-indicator"></i> En ligne
+                </span>
+              </div>
+            </div>
+            <div class="contact-actions">
+              <span class="last-seen">Aujourd'hui</span>
+            </div>
+          </li>
+
+          <!-- Message si aucun contact n'est trouvé avec la recherche -->
+          <li *ngIf="filteredContacts.length === 0 && searchTerm" class="no-results">
+            <div class="no-results-message">
+              <i class="fa fa-search"></i>
+              <p>Aucun contact trouvé pour "{{ searchTerm }}"</p>
+              <button class="clear-search" (click)="searchTerm = ''; filterContacts()">
+                Effacer la recherche
+              </button>
+            </div>
+          </li>
+
+          <!-- Message si aucun contact n'est disponible -->
+          <li *ngIf="filteredContacts.length === 0 && !searchTerm" class="no-results">
+            <div class="no-results-message">
+              <i class="fa fa-users"></i>
+              <p>Aucun contact disponible</p>
+              <button class="refresh-button-large" (click)="loadContacts()">
+                <i class="fa fa-refresh"></i> Rafraîchir
+              </button>
+            </div>
+          </li>
+        </ul>
+      </div>
     </aside>
     <main>
       <header>
-        <!-- <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg" alt="User"> -->
-        <div>
-          <h2>Chat with recipientId={{ recipientId }}</h2>
+        <div class="contact-avatar">
+          <div class="avatar-placeholder" [style.background-color]="'#4a7bff'">
+            {{ getUserInitials(recipientId) }}
+          </div>
+          <span class="status green"></span>
+        </div>
+        <div class="contact-info">
+          <h2>{{ getUserFullName(recipientId) }}</h2>
+          <h3>
+            <span>
+              <i class="fa fa-circle online-indicator"></i> En ligne
+            </span>
+          </h3>
+        </div>
+        <div class="header-actions">
+          <button class="icon-button" title="Appeler">
+            <i class="fa fa-phone"></i>
+          </button>
+          <button class="icon-button" title="Appel vidéo">
+            <i class="fa fa-video-camera"></i>
+          </button>
+          <button class="icon-button" title="Informations">
+            <i class="fa fa-info-circle"></i>
+          </button>
         </div>
       </header>
-      <ul id="chat">
-        <li *ngFor="let message of messages" [class.you]="message.sender !== sender" [class.me]="message.sender === sender">
-          <div class="entete">
-            <!-- <span class="status green"></span> -->
-            <!-- <h2>senderId:{{ message.sender }}</h2> -->
-            <!-- <h3>Just now</h3> -->
-          </div>
-          <div class="triangle"></div>
-          <div class="message">
-            {{ message.content }}
-          </div>
-        </li>
-      </ul>
+      <div class="chat-container" #chatContainer>
+        <div class="date-divider" *ngIf="messages.length > 0">
+          <span>{{ getMessageDate(messages[0]?.timestamp) }}</span>
+        </div>
+        <ul id="chat">
+          <li *ngFor="let message of messages; let i = index"
+              [class.you]="message.sender !== sender"
+              [class.me]="message.sender === sender"
+              [class.new-sender]="i > 0 && messages[i-1].sender !== message.sender">
+
+            <!-- Afficher le nom de l'expéditeur pour les messages reçus -->
+            <div class="sender-name" *ngIf="message.sender !== sender && (i === 0 || messages[i-1].sender !== message.sender)">
+              {{ getUserFullName(message.sender) }}
+            </div>
+
+            <div class="message-container">
+              <!-- Avatar pour les messages reçus -->
+              <div class="message-avatar" *ngIf="message.sender !== sender && (i === 0 || messages[i-1].sender !== message.sender)">
+                <div class="avatar-placeholder small" [style.background-color]="message.sender === recipientId ? '#4a7bff' : '#ff7a4a'">
+                  {{ getUserInitials(message.sender) }}
+                </div>
+              </div>
+
+              <div class="message">
+                {{ message.content }}
+              </div>
+
+              <div class="message-time">
+                {{ message.timestamp ? formatMessageTime(message.timestamp) : getMessageTime() }}
+              </div>
+
+              <div class="message-status" *ngIf="message.sender === sender">
+                <i class="fa fa-check-circle"></i>
+              </div>
+            </div>
+          </li>
+
+          <!-- Message si aucun message n'est disponible -->
+          <li *ngIf="messages.length === 0" class="no-messages">
+            <div class="no-messages-container">
+              <i class="fa fa-comments-o"></i>
+              <p>Aucun message</p>
+              <p class="no-messages-hint">Commencez la conversation en envoyant un message</p>
+            </div>
+          </li>
+        </ul>
+        <div class="typing-indicator" *ngIf="isTyping">
+          <span>{{ getCurrentContact()?.prenom }} est en train d'écrire...</span>
+        </div>
+      </div>
       <footer>
-        <textarea [(ngModel)]="newMessage" placeholder="Type your message"></textarea>
-        <button (click)="sendMessage()">Send</button>
+        <div *ngIf="wsError" class="connection-error">
+          <i class="fa fa-exclamation-triangle"></i> {{ wsErrorMessage }}
+          <button class="reconnect-button" (click)="testWebSocketConnection()">
+            <i class="fa fa-refresh"></i> Reconnecter
+          </button>
+          <button class="test-button" (click)="testDirectWebSocket()">
+            <i class="fa fa-bug"></i> Test direct
+          </button>
+        </div>
+        <div *ngIf="!wsConnected && !wsError" class="connection-status">
+          <i class="fa fa-circle-o-notch fa-spin"></i> Connexion au serveur...
+          <button class="reconnect-button" (click)="testWebSocketConnection()">
+            <i class="fa fa-refresh"></i> Réessayer
+          </button>
+          <button class="test-button" (click)="testDirectWebSocket()">
+            <i class="fa fa-bug"></i> Test direct
+          </button>
+        </div>
+        <div *ngIf="wsConnected" class="connection-success">
+          <i class="fa fa-check-circle"></i> Connecté au serveur
+        </div>
+        <div *ngIf="directWsConnected" class="connection-success">
+          <i class="fa fa-check-circle"></i> Connexion directe établie
+        </div>
+        <div class="message-input-container">
+          <button class="attachment-button">
+            <i class="fa fa-paperclip"></i>
+          </button>
+          <textarea
+            [(ngModel)]="newMessage"
+            placeholder="Écrivez votre message..."
+            (keydown.enter)="$event.preventDefault(); sendMessage();"
+            (input)="onTyping()"
+          ></textarea>
+          <div class="message-actions">
+            <button class="emoji-button">
+              <i class="fa fa-smile-o"></i>
+            </button>
+            <button class="send-button" (click)="sendMessage()" [disabled]="!newMessage.trim()">
+              <i class="fa fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
       </footer>
     </main>
   </div>
-  

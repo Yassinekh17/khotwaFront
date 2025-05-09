@@ -20,6 +20,7 @@ import { IndexComponent } from "./views/index/index.component";
 import { LandingComponent } from "./views/landing/landing.component";
 import { ProfileComponent } from "./views/profile/profile.component";
 import { ChatComponent } from "./components/chat/chat.component";
+import { WebsocketTestComponent } from "./components/websocket-test/websocket-test.component";
 
 const routes: Routes = [
   // admin views
@@ -46,6 +47,7 @@ const routes: Routes = [
   },
   // no layout views
   { path: "chat", component: ChatComponent },
+  { path: "websocket-test", component: WebsocketTestComponent },
   { path: "profile", component: ProfileComponent },
   { path: "landing", component: LandingComponent },
   { path: "", component: IndexComponent },

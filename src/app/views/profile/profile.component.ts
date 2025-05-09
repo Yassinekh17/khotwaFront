@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Message } from "src/app/core/models/Message";
+
 import { MessageService } from "src/app/core/service/message.service";
 import { SummaryService } from "src/app/services/summary.service";
 
@@ -11,7 +12,10 @@ import { SummaryService } from "src/app/services/summary.service";
 export class ProfileComponent implements OnInit {
   messages: Message[] = [];
   MessageForm: FormGroup;
-  
+  commentFormVisible: { [key: number]: boolean } = {};
+  newComments: { [key: number]: string } = {};
+  commentsVisible: { [key: number]: boolean } = {};
+
   constructor(private service: MessageService, private fb: FormBuilder, private summaryService: SummaryService) {}
 
   ngOnInit(): void {
@@ -25,9 +29,32 @@ export class ProfileComponent implements OnInit {
     this.service.getMessages().subscribe({
       next: (data) => {
         this.messages = data;
+        this.messages.forEach((message) => {
+          this.service.countLikes(message.id_message!).subscribe({
+            next: (count) => {
+              message.likeCount = count;
+            },
+            error: (err) => {
+              console.error(`Erreur lors du comptage des likes pour le message ${message.id_message}`, err);
+
+              message.likeCount = 0;
+            }
+          });
+
+          // Vérifie si l'utilisateur a liké ce message
+          this.service.hasUserLiked(message.id_message!, 2).subscribe({
+            next: (liked) => message.likedByUser = liked,
+            error: () => message.likedByUser = false,
+          });
+          this.service.countComments(message.id_message!).subscribe({
+            next: (count) => message.commentCount = count,
+            error: () => message.commentCount = 0,
+          });
+          
+        });
       },
       error: (error) => {
-        console.error("Error fetching messages:", error);
+        console.error("Erreur lors du chargement des messages :", error);
       },
     });
   }
@@ -49,7 +76,7 @@ export class ProfileComponent implements OnInit {
     const message: Message = {
       contenu: this.MessageForm.value.contenu,
       dateEnvoi: new Date().toISOString(), // Format ISO 8601 comme Swagger
-      expediteurId: 2, // ID statique temporaire
+      expediteurId: 2,
     };
 
     this.service.addMessage(message).subscribe({
@@ -63,7 +90,25 @@ export class ProfileComponent implements OnInit {
       },
     });
   }
-
+  toggleComments(messageId: number): void {
+    const message = this.messages.find(m => m.id_message === messageId);
+    if (!message) return;
+  
+    const isVisible = this.commentsVisible[messageId];
+    this.commentsVisible[messageId] = !isVisible;
+  
+    if (!isVisible && !message.commentaires) {
+      this.service.getSortCommentsForMessage(messageId).subscribe({
+        next: (comments) => {
+          message.commentaires = comments;
+        },
+        error: (err) => {
+          console.error('Erreur lors du chargement des commentaires :', err);
+        }
+      });
+    }
+  }
+  
   isFieldInvalid(fieldName: string): boolean {
     const field = this.MessageForm.get(fieldName);
     return field ? field.invalid && field.touched : false;
@@ -73,23 +118,24 @@ export class ProfileComponent implements OnInit {
     return this.MessageForm.get(controlName)?.hasError('required')
       ? 'Ce champ est obligatoire'
       : '';
-  } // Texte saisi par l'utilisateur
-  summary: string = '';   // Résumé généré par l'API
-  errorMessage: string = ''; // Message d'erreur
+  }
+
+  // Résumé
+  summary: string = '';
+  errorMessage: string = '';
+
   showSummary(inputText: String) {
-   
     if (inputText.trim() === '') {
       this.errorMessage = 'Veuillez saisir un texte à résumer.';
       return;
     }
 
-    this.errorMessage = ''; // Réinitialiser le message d'erreur
+    this.errorMessage = '';
 
-    // Appeler le service pour obtenir le résumé
     this.summaryService.getSummary(inputText).subscribe(
-      (response: any) => {  // Now, we assume the response is an object with the "summary" property
+      (response: any) => {
         if (response && response.summary) {
-          alert(response.summary);  // Show only the summary text
+          alert(response.summary);
         } else {
           this.errorMessage = 'No summary available.';
         }
@@ -99,6 +145,66 @@ export class ProfileComponent implements OnInit {
         console.error(error);
       }
     );
-  
   }
+  toggleCommentForm(messageId: number): void {
+    this.commentFormVisible[messageId] = !this.commentFormVisible[messageId];
+  }
+  
+  publishComment(messageId: number): void {
+    const contenu = this.newComments[messageId]?.trim();
+    if (!contenu) return;
+  
+    const userId = 2; // Remplacer par l'ID réel de l'utilisateur
+  
+    this.service.addComment(messageId, userId, contenu).subscribe({
+      next: () => {
+        this.newComments[messageId] = '';
+        this.commentFormVisible[messageId] = false;
+  
+        // Mettre à jour le compteur
+        const message = this.messages.find(m => m.id_message === messageId);
+        if (message) {
+          this.service.countComments(messageId).subscribe({
+            next: (count) => message.commentCount = count
+          });
+        }
+      },
+      error: (err) => {
+        console.error('Erreur lors de l\'ajout du commentaire :', err);
+      }
+    });
+  }
+  
+
+  // Méthode pour gérer le Like
+  likeMessage(messageId: number) {
+    const userId = 2; // Replace with the authenticated user's ID
+  
+    // Find the message that was clicked
+    const message = this.messages.find(m => m.id_message === messageId);
+    if (!message) return;
+  
+    // Toggle the like state
+    const isLike = !message.likedByUser;
+  
+    // Optimistically update the local UI state
+    message.likedByUser = isLike;  // Toggle like/unlike
+    message.likeCount = isLike ? message.likeCount + 1 : message.likeCount - 1; // Adjust like count
+  
+    // Call the backend to update the like/unlike status
+    this.service.likeMessage(messageId, userId, isLike).subscribe({
+      next: () => {
+        // Success - the UI is already updated optimistically
+        console.log('Successfully updated like status');
+      },
+      error: (err) => {
+        // Error - revert the UI to the previous state if the like/unlike action failed
+        console.error('Error while liking/unliking message:', err);
+        message.likedByUser = !isLike;  // Revert to the previous state
+        message.likeCount = isLike ? message.likeCount - 1 : message.likeCount + 1; // Revert the like count
+      }
+    });
+  }
+  
+ 
 }
