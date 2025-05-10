@@ -6,6 +6,7 @@ import { Quizz, Question, Reponse } from 'src/app/core/models/Cours';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { UserService } from 'src/app/core/service/user.service';
 @Component({
   selector: 'app-quiz',
   templateUrl: './quiz.component.html',
@@ -33,6 +34,8 @@ import { FormsModule } from '@angular/forms';
   imports: [CommonModule, FormsModule]
 })
 export class QuizComponent implements OnInit {
+  userEmail!: string ;
+  idUser!:number; 
   quizId!: number;
   quiz!: Quizz;
   questions: Question[] = [];
@@ -50,12 +53,28 @@ export class QuizComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     public router: Router,
-    private quizzService: QuizzService
+    private quizzService: QuizzService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
     this.quizId = +this.route.snapshot.params['id'];
     this.loadQuizData();
+     const token = localStorage.getItem('token');
+    if (token) {
+      const decoded = this.decodeToken(token);
+      if (decoded) {
+        this.userEmail = decoded.email || decoded.sub || null;
+      }
+    }
+   this.userService.getUserByEmail(this.userEmail).subscribe({
+      next: (user) => {
+        this.idUser = user.id_user;
+      },
+      error: (err) => {
+        console.error('Error getting user:', err);
+      },
+    });
   }
 
   loadQuizData(): void {
@@ -160,7 +179,8 @@ export class QuizComponent implements OnInit {
       this.quizzService.generateCertificate(
         this.quizId,
         this.score,
-        this.questions.length
+        this.questions.length, 
+        this.idUser
       ).subscribe({
         next: (pdfBlob: Blob) => {
           const downloadURL = window.URL.createObjectURL(pdfBlob);
@@ -176,4 +196,13 @@ export class QuizComponent implements OnInit {
     }
   }
   
+  decodeToken(token: string): any {
+    try {
+      return JSON.parse(atob(token.split('.')[1]));
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+
 }

@@ -5,6 +5,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { CommentaireService, CommentaireEvenement } from '../../../services/commentaire.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InscriptionService } from '../../../services/inscription.service';
+import { UserService } from 'src/app/core/service/user.service';
 
 @Component({
   selector: 'app-detailevent',
@@ -33,7 +34,7 @@ export class DetaileventComponent implements OnInit {
   inscriptionError: string | null = null;
 
   // ID utilisateur statique
-  readonly userId: number = 1;
+  private userId!: number ;
 
   constructor(
     private route: ActivatedRoute,
@@ -41,7 +42,8 @@ export class DetaileventComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private commentaireService: CommentaireService,
     private inscriptionService: InscriptionService,
-    private fb: FormBuilder
+    private fb: FormBuilder, 
+    private userService: UserService
   ) {
     this.commentaireForm = this.fb.group({
       texte: ['', [Validators.required, Validators.minLength(3)]],
@@ -54,7 +56,7 @@ export class DetaileventComponent implements OnInit {
       telephone: ['', [Validators.required, Validators.pattern(/^[0-9]{8,}$/)]]
     });
   }
-
+private userEmail!: string;
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       const eventId = +params['id'];
@@ -66,6 +68,30 @@ export class DetaileventComponent implements OnInit {
         this.loading = false;
       }
     });
+     const token = localStorage.getItem('token');
+    if (token) {
+      const decoded = this.decodeToken(token);
+      if (decoded) {
+        this.userEmail = decoded.email || decoded.sub || null;
+      }
+    }
+    this.userService.getUserByEmail(this.userEmail).subscribe({
+      next: (user) => {
+        this.userId = user.id_user;
+      },
+      error: (err) => {
+        console.error('Error getting user:', err);
+      },
+    });
+  }
+
+  decodeToken(token: string): any {
+    try {
+      return JSON.parse(atob(token.split('.')[1]));
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
   }
 
   loadEventDetails(eventId: number): void {
@@ -138,7 +164,7 @@ export class DetaileventComponent implements OnInit {
           return;
         }
 
-        this.inscriptionService.joinEvent(this.event!.eventId, inscriptionData).subscribe({
+        this.inscriptionService.joinEvent(this.event!.eventId, inscriptionData, this.userId).subscribe({
           next: () => {
             this.inscriptionSuccess = true;
             this.inscriptionLoading = false;
@@ -244,6 +270,7 @@ export class DetaileventComponent implements OnInit {
       next: (data) => {
         this.commentaires = data;
         this.commentairesLoading = false;
+        console.log("load commentaire data:", data)
       },
       error: (err) => {
         console.error('Erreur lors du chargement des commentaires', err);

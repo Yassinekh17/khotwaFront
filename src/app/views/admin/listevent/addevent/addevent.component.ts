@@ -23,6 +23,7 @@ export enum Status_evenement {
   styleUrls: ['./addevent.component.css']
 })
 export class AddeventComponent implements OnInit {
+  userEmail!: string;
   eventForm: FormGroup;
   isEditMode = false;
   eventId: number | null = null;
@@ -70,6 +71,15 @@ export class AddeventComponent implements OnInit {
       this.eventId = +id;
       this.loadEventData();
     }
+     const token = localStorage.getItem('token');
+    if (token) {
+      const decoded = this.decodeToken(token);
+      if (decoded) {
+        this.userEmail = decoded.email || decoded.sub || null;
+      }
+    }
+
+
   }
 
   loadEventData(): void {
@@ -181,7 +191,7 @@ export class AddeventComponent implements OnInit {
         }
       });
     } else {
-      this.eventService.createEvent(eventData).subscribe({
+      this.eventService.createEvent(eventData, this.userEmail).subscribe({
         next: () => {
           this.loading = false;
           this.navigateToList('Événement créé avec succès');
@@ -245,4 +255,15 @@ export class AddeventComponent implements OnInit {
       });
     }
   }
+
+  
+  decodeToken(token: string): any {
+    try {
+      return JSON.parse(atob(token.split('.')[1]));
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+
 }

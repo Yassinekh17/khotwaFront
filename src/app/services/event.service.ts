@@ -3,7 +3,6 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
-// Define interfaces based on your backend model
 export interface Evenement {
   eventId?: number;
   title: string;
@@ -12,10 +11,10 @@ export interface Evenement {
   location: string;
   type: string;
   status?: Status_evenement;
-  imageUrl?: string; // Added imageUrl property
-  capacite: number; // Ajout du champ capacité
-  maxParticipants: number; // Ajout du champ max participants
-  currentParticipants?: number; // Ajout du champ participants actuels
+  imageUrl?: string;
+  capacite: number;
+  maxParticipants: number;
+  currentParticipants?: number;
 }
 
 export enum Status_evenement {
@@ -28,37 +27,53 @@ export enum Status_evenement {
   providedIn: 'root'
 })
 export class EventService {
-  private apiUrl = `${environment.apiUrl}/evenements`; // Using environment configuration
+  private apiUrl = `${environment.apiUrl}/evenements`;
 
   constructor(private http: HttpClient) { }
 
-  // Get all events
-  getAllEvents(): Observable<Evenement[]> {
-    return this.http.get<Evenement[]>(`${this.apiUrl}/all`);
-  }
-  sendEmailOnCompletion(event: Evenement): Observable<string> {
-    return this.http.post<string>(`${this.apiUrl}/send-email-completion`, event);
-  }
-  // Get event by ID
-  getEventById(eventId: number): Observable<Evenement> {
-    return this.http.get<Evenement>(`${this.apiUrl}/${eventId}`);
+  private getAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
   }
 
-  // Create a new event
-  createEvent(event: Evenement): Observable<Evenement> {
-    return this.http.post<Evenement>(`${this.apiUrl}/create`, event);
+  getAllEvents(): Observable<Evenement[]> {
+    return this.http.get<Evenement[]>(`${this.apiUrl}/all`, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+  sendEmailOnCompletion(event: Evenement): Observable<string> {
+    return this.http.post<string>(`${this.apiUrl}/send-email-completion`, event, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+  getEventById(eventId: number): Observable<Evenement> {
+    return this.http.get<Evenement>(`${this.apiUrl}/${eventId}`, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+  createEvent(event: Evenement, email: string): Observable<Evenement> {
+    return this.http.post<Evenement>(`${this.apiUrl}/create/${email}`, event, {
+      headers: this.getAuthHeaders()
+    });
   }
 
   updateEvent(eventId: number, event: Evenement): Observable<Evenement> {
-    return this.http.put<Evenement>(`${this.apiUrl}/update/${eventId}`, event);
+    return this.http.put<Evenement>(`${this.apiUrl}/update/${eventId}`, event, {
+      headers: this.getAuthHeaders()
+    });
   }
 
-  // Delete an event
   deleteEvent(eventId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/delete/${eventId}`);
+    return this.http.delete<void>(`${this.apiUrl}/delete/${eventId}`, {
+      headers: this.getAuthHeaders()
+    });
   }
 
-  // Generate QR code for an event
   generateQRCode(eventId: number, width: number = 200, height: number = 200): Observable<Blob> {
     const params = new HttpParams()
       .set('width', width.toString())
@@ -66,22 +81,23 @@ export class EventService {
 
     return this.http.get(`${this.apiUrl}/${eventId}/qrcode`, {
       params,
-      responseType: 'blob'
+      responseType: 'blob',
+      headers: this.getAuthHeaders()
     });
   }
 
-  // Export all events to CSV
   exportEventsToCSV(): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/export/csv`, {
       responseType: 'blob',
-      headers: new HttpHeaders().append('Content-Type', 'application/octet-stream')
+      headers: this.getAuthHeaders().set('Content-Type', 'application/octet-stream')
     });
   }
 
-
-  // Search events by status
   findEventsByStatus(status: Status_evenement): Observable<Evenement[]> {
     const params = new HttpParams().set('status', status);
-    return this.http.get<Evenement[]>(`${this.apiUrl}/search/by-status`, { params });
+    return this.http.get<Evenement[]>(`${this.apiUrl}/search/by-status`, {
+      params,
+      headers: this.getAuthHeaders()
+    });
   }
 }

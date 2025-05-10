@@ -28,6 +28,7 @@ export class ListeventComponent implements OnInit {
     this.eventService.getAllEvents().subscribe({
       next: (data) => {
         this.events = data;
+        console.log(data)
         this.loading = false;
       },
       error: (err) => {

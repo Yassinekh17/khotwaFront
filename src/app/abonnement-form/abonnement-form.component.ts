@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AbonnementService } from '../services/abonnement.service';
 import { PlanAbonnement, Abonnement } from '../models/abonnement.model';
+import { UserService } from '../core/service/user.service';
 
 @Component({
   selector: 'app-abonnement-form',
@@ -10,6 +11,8 @@ import { PlanAbonnement, Abonnement } from '../models/abonnement.model';
   styleUrls: ['./abonnement-form.component.css']
 })
 export class AbonnementFormComponent implements OnInit {
+  id_user!: number;
+  userEmail!: string;
   abonnementForm!: FormGroup;
   abonnement!: Abonnement;
   plans = Object.values(PlanAbonnement);
@@ -22,7 +25,8 @@ export class AbonnementFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private abonnementService: AbonnementService,
-    private router: Router
+    private router: Router, 
+    private userService : UserService
   ) {}
 
   ngOnInit(): void {
@@ -36,6 +40,30 @@ export class AbonnementFormComponent implements OnInit {
     this.abonnementForm.valueChanges.subscribe(() => {
       this.calculerPrix();
     });
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decoded = this.decodeToken(token);
+      if (decoded) {
+        this.userEmail = decoded.email || decoded.sub || null;
+      }
+    }
+    this.userService.getUserByEmail(this.userEmail).subscribe({
+      next: (user) => {
+        this.id_user = user.id_user;
+      },
+      error: (err) => {
+        console.error('Error getting user:', err);
+      },
+    });
+  }
+
+  decodeToken(token: string): any {
+    try {
+      return JSON.parse(atob(token.split('.')[1]));
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
   }
 
   calculerPrix(): void {
@@ -73,7 +101,7 @@ export class AbonnementFormComponent implements OnInit {
     console.log("Données envoyées :", this.abonnement); // Afficher les données dans la console
   
     // Envoyer l'objet Abonnement au backend
-    this.abonnementService.addAbonnement(this.abonnement).subscribe(
+    this.abonnementService.addAbonnement(this.abonnement, this.id_user).subscribe(
       res => {
         this.abonnement = res;
         this.router.navigate(['/admin/payer']); // Rediriger après l'ajout

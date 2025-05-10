@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -20,47 +20,65 @@ export class CommentaireService {
 
   constructor(private http: HttpClient) { }
 
-  // Récupérer tous les commentaires
+  private getAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token'); // or sessionStorage
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+  }
+
   getAllCommentaires(): Observable<CommentaireEvenement[]> {
-    return this.http.get<CommentaireEvenement[]>(`${this.apiUrl}/all`);
+    return this.http.get<CommentaireEvenement[]>(`${this.apiUrl}/all`, {
+      headers: this.getAuthHeaders()
+    });
   }
 
-  // Récupérer un commentaire par ID
   getCommentaireById(id: number): Observable<CommentaireEvenement> {
-    return this.http.get<CommentaireEvenement>(`${this.apiUrl}/${id}`);
+    return this.http.get<CommentaireEvenement>(`${this.apiUrl}/${id}`, {
+      headers: this.getAuthHeaders()
+    });
   }
 
-  // Ajouter un nouveau commentaire
   addCommentaire(commentaire: CommentaireEvenement): Observable<CommentaireEvenement> {
-    return this.http.post<CommentaireEvenement>(`${this.apiUrl}/add`, commentaire);
+    return this.http.post<CommentaireEvenement>(`${this.apiUrl}/add`, commentaire, {
+      headers: this.getAuthHeaders()
+    });
   }
 
-  // Mettre à jour un commentaire
   updateCommentaire(id: number, commentaire: CommentaireEvenement): Observable<CommentaireEvenement> {
-    return this.http.put<CommentaireEvenement>(`${this.apiUrl}/update/${id}`, commentaire);
+    return this.http.put<CommentaireEvenement>(`${this.apiUrl}/update/${id}`, commentaire, {
+      headers: this.getAuthHeaders()
+    });
   }
 
-  // Supprimer un commentaire
   deleteCommentaire(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/delete/${id}`, {
+      headers: this.getAuthHeaders()
+    });
   }
 
-  // Récupérer les commentaires d'un événement spécifique
   getCommentairesByEventId(eventId: number): Observable<CommentaireEvenement[]> {
-    return this.http.get<CommentaireEvenement[]>(`${this.apiUrl}/event/${eventId}`);
+    return this.http.get<CommentaireEvenement[]>(`${this.apiUrl}/event/${eventId}`, {
+      headers: this.getAuthHeaders()
+    });
   }
 
-  // Récupérer les commentaires d'un utilisateur spécifique
   getCommentairesByUserId(userId: number): Observable<CommentaireEvenement[]> {
-    return this.http.get<CommentaireEvenement[]>(`${this.apiUrl}/user/${userId}`);
+    return this.http.get<CommentaireEvenement[]>(`${this.apiUrl}/user/${userId}`, {
+      headers: this.getAuthHeaders()
+    });
   }
 
-  // Récupérer les commentaires d'un événement pour un utilisateur spécifique
   getCommentairesByEventAndUserId(eventId: number, userId: number): Observable<CommentaireEvenement[]> {
-    return this.http.get<CommentaireEvenement[]>(`${this.apiUrl}/event/${eventId}/user/${userId}`);
-  }
-  ajouterCommentaire(eventId: number, userId: number, commentaire: { texte: string; note: number }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/add/${eventId}/${userId}`, commentaire);
+    return this.http.get<CommentaireEvenement[]>(`${this.apiUrl}/event/${eventId}/user/${userId}`, {
+      headers: this.getAuthHeaders()
+    });
   }
 
+  ajouterCommentaire(eventId: number, userId: number, commentaire: { texte: string; note: number }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/add/${eventId}/${userId}`, commentaire, {
+      headers: this.getAuthHeaders(),
+      responseType: 'text' as 'json'
+    });
+  }
 }

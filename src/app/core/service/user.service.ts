@@ -18,7 +18,7 @@ import { Useryass } from '../models/Useryass';
 })
 export class UserService {
   private apiUrl = 'http://localhost:8090/user';
-    private backendUrl = 'http://localhost:8089';
+    private backendUrl = 'http://localhost:8090';
   private modelApiUrl = 'http://localhost:5000';
 
   private keycloakLogoutUrl =

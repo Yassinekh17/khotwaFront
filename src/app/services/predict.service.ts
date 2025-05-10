@@ -63,8 +63,7 @@ export interface UserPreferences {
   providedIn: 'root'
 })
 export class PredictService {
-  // Essayer d'abord le port 5000, puis 8080, puis 8090
-  private apiPorts = [5000, 8080, 8090];
+  private apiPorts = [5000, 8080, 8090]; // Essayer d'abord le port 5000, puis 8080, puis 8090
   private apiUrl = 'http://localhost:8090/api'; // URL par défaut
   private portIndex = 0;
 

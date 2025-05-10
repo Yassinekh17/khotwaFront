@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient , HttpHeaders} from '@angular/common/http';
 
 interface ChatMessage {
   text: string;
@@ -41,8 +41,11 @@ export class ChatBotComponent implements AfterViewChecked {
     this.messages.push({ text: userMessage, isUser: true, time: new Date() });
     this.isLoading = true;
     this.userInput = '';
-
-    this.http.post<{ message: string }>('http://localhost:8089/api/chat', { message: userMessage })
+const token = localStorage.getItem('token');
+const headers = new HttpHeaders({
+  'Authorization': `Bearer ${token}`
+});
+    this.http.post<{ message: string }>('http://localhost:8090/cours/api/chat', { message: userMessage }, { headers })
       .subscribe(response => {
         this.addBotMessage(response.message);
       }, error => {
