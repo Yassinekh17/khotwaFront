@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class SummaryService {
-  private apiUrl = 'http://localhost:8089/api/summary'; // URL de votre API Spring Boot
+  private apiUrl = 'http://localhost:8090/messages/api/summary'; // URL de votre API Spring Boot
 
   constructor(private http: HttpClient) { }
 

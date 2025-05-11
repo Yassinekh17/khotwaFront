@@ -91,17 +91,21 @@
               <div class="flex-shrink-0">
                 <img
                   alt="Profile"
-                  [src]="message.profileImage || 'assets/img/team-2-800x800.jpg'"
+                  [src]="message.userImage"
                   class="h-12 w-12 rounded-full border-2 border-red-500 object-cover"
                 />
               </div>
               <div class="ml-4 flex-1">
                 <h3 class="text-xl font-semibold text-gray-800">
-                  {{ message.name || 'Jenna Stones' }}
+                  {{ message.userName || 'Anonymous User' }}
                 </h3>
-                <div class="text-sm text-gray-500">
-                  <i class="fas fa-clock mr-1"></i>
-                  {{ message.dateEnvoi | date: 'dd/MM/yyyy à HH:mm' }}
+                <div class="text-sm text-gray-500 flex items-center">
+                  <span class="mr-2">{{ message.userRole }}</span>
+                  <span *ngIf="message.userCountry">• {{ message.userCountry }}</span>
+                  <span class="ml-2">
+                    <i class="fas fa-clock mr-1"></i>
+                    {{ message.dateEnvoi | date: 'dd/MM/yyyy à HH:mm' }}
+                  </span>
                 </div>
               </div>
               <div class="flex items-center space-x-2">
@@ -213,22 +217,24 @@
               <div *ngIf="message.commentaires?.length > 0; else noComments" class="space-y-4">
                 <div *ngFor="let comment of message.commentaires" class="flex">
                   <div class="flex-shrink-0 mr-3">
-                    <img src="assets/img/team-2-800x800.jpg" class="h-8 w-8 rounded-full" alt="User" />
+                    <img [src]="comment.userImage || 'assets/img/team-2-800x800.jpg'" class="h-8 w-8 rounded-full" alt="User" />
                   </div>
                   <div class="flex-1 bg-gray-100 rounded-lg p-3">
                     <div class="flex items-center justify-between">
-                      <h5 class="text-sm font-medium text-gray-800">Utilisateur</h5>
+                      <h5 class="text-sm font-medium text-gray-800">{{ comment.userName || 'Utilisateur' }}</h5>
                       <span class="text-xs text-gray-500">{{ comment.dateCommentaire | date: 'dd/MM/yyyy' }}</span>
                     </div>
                     <p class="text-sm text-gray-700 mt-1">{{ comment.contenu }}</p>
+                    <div *ngIf="comment.userRole || comment.userCountry" class="text-xs text-gray-500 mt-1">
+                      <span *ngIf="comment.userRole">{{ comment.userRole }}</span>
+                      <span *ngIf="comment.userRole && comment.userCountry"> • </span>
+                      <span *ngIf="comment.userCountry">{{ comment.userCountry }}</span>
+                    </div>
                   </div>
                 </div>
               </div>
               <ng-template #noComments>
-                <div class="text-center py-4 text-gray-500">
-                  <i class="fas fa-comment-slash text-2xl mb-2"></i>
-                  <p>Aucun commentaire pour ce message.</p>
-                </div>
+                <p class="text-sm text-gray-500">Aucun commentaire pour le moment.</p>
               </ng-template>
             </div>
           </div>

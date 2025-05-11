@@ -1,222 +1,294 @@
-<form [formGroup]="updateUserForm" (ngSubmit)="onSubmit()">
-<div
-  class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0"
->
-
-  <div class="rounded-t bg-white mb-0 px-6 py-6">
-    <div class="text-center flex justify-between">
-      <h6 class="text-blueGray-700 text-xl font-bold">User update</h6>
-      <button
-        class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-        type="submit"
-      >
-        Save
-      </button>
-    </div>
+<div class="container mx-auto px-4 py-6">
+  <!-- Breadcrumb navigation -->
+  <div class="flex items-center text-sm text-blueGray-600 mb-4">
+    <a [routerLink]="['/admin/dashboard']" class="hover:text-red-600 transition-colors duration-200">Dashboard</a>
+    <span class="mx-2">/</span>
+    <a [routerLink]="['/admin/tables']" class="hover:text-red-600 transition-colors duration-200">Users</a>
+    <span class="mx-2">/</span>
+    <span class="text-blueGray-800 font-semibold">Edit User</span>
   </div>
-  <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
-    <h6 class="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
-      User Information
-    </h6>
-    <div class="w-full lg:w-6/12 px-4">
-      <div class="relative flex justify-center mt-3">
-        <div class="relative flex justify-center">
-          <img
-            *ngIf="imagePreview"
-            [src]="imagePreview"
-            alt="Uploaded Image"
-            id="uploadedImage"
-            class="shadow-xl rounded-full h-auto border-none max-w-150-px"
-          />
-          <img
-            *ngIf="!imagePreview"
-            src="assets/img/team-2-800x800.jpg"
-            alt="Default Image"
-            id="uploadedImage"
-            class="shadow-xl rounded-full h-auto border-none max-w-150-px"
-          />
-        </div>
-        <label for="imageUpload" class="text-blueGray-600 text-xs font-bold mb-2 cursor-pointer">
-          Upload Image
-        </label>
-        <input
-          id="imageUpload"
-          type="file"
-          class="hidden"
-          accept="image/*"
-          (change)="onImageUpload($event)"
-        />
-      </div>
-    </div>
 
-
-      <div class="flex flex-wrap">
-        <div class="w-full lg:w-6/12 px-4">
-          <div class="relative w-full mb-3">
-            <label
-              class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-              htmlFor="grid-password"
+  <form [formGroup]="updateUserForm" (ngSubmit)="onSubmit()">
+    <div class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-white border-0">
+      <!-- Header -->
+      <div class="rounded-t bg-blueGray-50 mb-0 px-6 py-6 border-b border-blueGray-200">
+        <div class="flex flex-wrap items-center">
+          <div class="relative w-full max-w-full flex-grow flex-1">
+            <h3 class="text-blueGray-700 text-xl font-bold">
+              <i class="fas fa-user-edit mr-2"></i> Edit User
+            </h3>
+            <p class="text-sm text-blueGray-500 mt-1">Update user information and settings</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button
+              type="button"
+              class="bg-blueGray-500 text-white active:bg-blueGray-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
+              [routerLink]="['/admin/tables']"
             >
-              First name
-            </label>
-            <input
-              type="text"
-              class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-              value="lucky.jesse"
-              formControlName="prenom"
-            />
-            <div *ngIf="isFieldInvalid('prenom')">
-              <small>{{ getErrorMessage('prenom') }}</small>
-            </div>
+              <i class="fas fa-arrow-left mr-1"></i> Cancel
+            </button>
+            <button
+              type="submit"
+              class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
+              [disabled]="updateUserForm.invalid"
+              [ngClass]="{'opacity-50 cursor-not-allowed': updateUserForm.invalid}"
+            >
+              <i class="fas fa-save mr-1"></i> Save Changes
+            </button>
           </div>
         </div>
-        <div class="w-full lg:w-6/12 px-4">
-          <div class="relative w-full mb-3">
-            <label
-              class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-              htmlFor="grid-password"
-            >
-              Last Name
-            </label>
-            <input
-              type="text"
-              class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-              value="jesse@example.com"
-              formControlName="nom"
-            />
-            <div *ngIf="isFieldInvalid('nom')">
-              <small>{{ getErrorMessage('nom') }}</small>
-            </div>
-          </div>
-        </div>
-        <div class="w-full lg:w-6/12 px-4">
-          <div class="relative w-full mb-3">
-            <label
-              class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-              htmlFor="grid-password"
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-              value="Lucky"
-              formControlName="mdp"
-            />
-            <div *ngIf="isFieldInvalid('mdp')">
-              <small>{{ getErrorMessage('mdp') }}</small>
-            </div>
-          </div>
-        </div>
-        <div class="w-full lg:w-6/12 px-4">
-          <div class="relative w-full mb-3">
-            <label
-              class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-              htmlFor="grid-password"
-            >
-              Email
-            </label>
-            <input
-              type="text"
-              class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-              value="Jesse"
-              formControlName="email"
-            />
-            <div *ngIf="isFieldInvalid('email')">
-              <small>{{ getErrorMessage('email') }}</small>
-            </div>
-          </div>
-        </div>
-        <div class="w-full lg:w-6/12 px-4">
-          <div class="relative w-full mb-3">
-            <label
-              class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-              for="role"
-            >
-              Role
-            </label>
-            <select
-              class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-              formControlName="role"
-              id="role"
-            >
-              <option value="ADMINISTRATEUR">ADMINISTRATEUR</option>
-              <option value="FORMATEUR">FORMATEUR</option>
-              <option value="ETUDIANT">ETUDIANT</option>
-            </select>
-            <div *ngIf="isFieldInvalid('role')">
-              <small>{{ getErrorMessage('role') }}</small>
-            </div>
-          </div>
-        </div>
-
-        <!-- Age Field -->
-        <div class="w-full lg:w-6/12 px-4">
-          <div class="relative w-full mb-3">
-            <label
-              class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-              for="age"
-            >
-              Age
-            </label>
-            <input
-              type="number"
-              class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-              placeholder="Age"
-              formControlName="age"
-              id="age"
-            />
-          </div>
-        </div>
-
-        <!-- Gender Field -->
-        <div class="w-full lg:w-6/12 px-4">
-          <div class="relative w-full mb-3">
-            <label
-              class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-              for="gender"
-            >
-              Gender
-            </label>
-            <select
-              class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-              formControlName="gender"
-              id="gender"
-            >
-              <option value="">Select Gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Country Field -->
-        <div class="w-full lg:w-6/12 px-4">
-          <div class="relative w-full mb-3">
-            <label
-              class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-              for="country"
-            >
-              Country
-            </label>
-            <select
-              class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-              formControlName="country"
-              id="country"
-            >
-              <option value="">Select Country</option>
-              <option value="USA">USA</option>
-              <option value="Canada">Canada</option>
-              <option value="UK">UK</option>
-              <option value="Germany">Germany</option>
-              <option value="France">France</option>
-            </select>
-          </div>
-        </div>
-
       </div>
 
+      <div class="flex-auto px-6 lg:px-10 py-10">
+        <div class="flex flex-wrap">
+          <!-- Profile Image Section -->
+          <div class="w-full lg:w-4/12 px-4 mb-10 lg:mb-0">
+            <div class="relative flex flex-col min-w-0 break-words bg-blueGray-50 w-full mb-6 shadow-md rounded-lg p-6">
+              <h6 class="text-blueGray-700 text-sm font-bold mb-4 uppercase">
+                <i class="fas fa-camera mr-2"></i> Profile Image
+              </h6>
 
-  </div>
+              <div class="flex flex-col items-center">
+                <div class="relative mb-4">
+                  <div class="w-32 h-32 rounded-full overflow-hidden bg-blueGray-200 border-4 border-white shadow-lg">
+                    <img
+                      *ngIf="imagePreview"
+                      [src]="imagePreview"
+                      alt="User Profile"
+                      class="w-full h-full object-cover"
+                    />
+                    <img
+                      *ngIf="!imagePreview"
+                      src="assets/img/team-2-800x800.jpg"
+                      alt="Default Profile"
+                      class="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div class="absolute bottom-0 right-0">
+                    <label for="imageUpload" class="bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center cursor-pointer shadow-md hover:bg-red-700 transition-colors duration-200">
+                      <i class="fas fa-camera"></i>
+                    </label>
+                    <input
+                      id="imageUpload"
+                      type="file"
+                      class="hidden"
+                      accept="image/*"
+                      (change)="onImageUpload($event)"
+                    />
+                  </div>
+                </div>
+                <p class="text-sm text-blueGray-500 text-center">
+                  Click the camera icon to upload a new profile image
+                </p>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- User Information Section -->
+          <div class="w-full lg:w-8/12 px-4">
+            <div class="relative flex flex-col min-w-0 break-words bg-white w-full shadow-md rounded-lg p-6">
+              <h6 class="text-blueGray-700 text-sm font-bold mb-6 uppercase">
+                <i class="fas fa-user mr-2"></i> User Information
+              </h6>
+
+              <!-- Basic Information -->
+              <div class="mb-8">
+                <h5 class="text-blueGray-600 text-sm font-semibold mb-4">Basic Information</h5>
+                <div class="flex flex-wrap -mx-3">
+                  <!-- First Name -->
+                  <div class="w-full md:w-1/2 px-3 mb-6">
+                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="prenom">
+                      First Name <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-user text-blueGray-400"></i>
+                      </div>
+                      <input
+                        type="text"
+                        id="prenom"
+                        formControlName="prenom"
+                        class="border border-blueGray-300 pl-10 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent w-full ease-linear transition-all duration-150"
+                        placeholder="Enter first name"
+                      />
+                    </div>
+                    <div *ngIf="isFieldInvalid('prenom')" class="text-red-500 text-xs mt-1">
+                      {{ getErrorMessage('prenom') }}
+                    </div>
+                  </div>
+
+                  <!-- Last Name -->
+                  <div class="w-full md:w-1/2 px-3 mb-6">
+                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="nom">
+                      Last Name <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-user text-blueGray-400"></i>
+                      </div>
+                      <input
+                        type="text"
+                        id="nom"
+                        formControlName="nom"
+                        class="border border-blueGray-300 pl-10 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent w-full ease-linear transition-all duration-150"
+                        placeholder="Enter last name"
+                      />
+                    </div>
+                    <div *ngIf="isFieldInvalid('nom')" class="text-red-500 text-xs mt-1">
+                      {{ getErrorMessage('nom') }}
+                    </div>
+                  </div>
+
+                  <!-- Email -->
+                  <div class="w-full md:w-1/2 px-3 mb-6">
+                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="email">
+                      Email Address <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-envelope text-blueGray-400"></i>
+                      </div>
+                      <input
+                        type="email"
+                        id="email"
+                        formControlName="email"
+                        class="border border-blueGray-300 pl-10 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent w-full ease-linear transition-all duration-150"
+                        placeholder="Enter email address"
+                      />
+                    </div>
+                    <div *ngIf="isFieldInvalid('email')" class="text-red-500 text-xs mt-1">
+                      {{ getErrorMessage('email') }}
+                    </div>
+                  </div>
+
+                  <!-- Password -->
+                  <div class="w-full md:w-1/2 px-3 mb-6">
+                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="mdp">
+                      Password <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-lock text-blueGray-400"></i>
+                      </div>
+                      <input
+                        type="password"
+                        id="mdp"
+                        formControlName="mdp"
+                        class="border border-blueGray-300 pl-10 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent w-full ease-linear transition-all duration-150"
+                        placeholder="Enter password"
+                      />
+                    </div>
+                    <div *ngIf="isFieldInvalid('mdp')" class="text-red-500 text-xs mt-1">
+                      {{ getErrorMessage('mdp') }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Additional Information -->
+              <div>
+                <h5 class="text-blueGray-600 text-sm font-semibold mb-4">Additional Information</h5>
+                <div class="flex flex-wrap -mx-3">
+                  <!-- Role -->
+                  <div class="w-full md:w-1/2 px-3 mb-6">
+                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="role">
+                      Role <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-user-tag text-blueGray-400"></i>
+                      </div>
+                      <select
+                        id="role"
+                        formControlName="role"
+                        class="border border-blueGray-300 pl-10 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent w-full ease-linear transition-all duration-150"
+                      >
+                        <option value="" disabled>Select a role</option>
+                        <option value="ADMINISTRATEUR">Administrator</option>
+                        <option value="FORMATEUR">Instructor</option>
+                        <option value="ETUDIANT">Student</option>
+                      </select>
+                    </div>
+                    <div *ngIf="isFieldInvalid('role')" class="text-red-500 text-xs mt-1">
+                      {{ getErrorMessage('role') }}
+                    </div>
+                  </div>
+
+                  <!-- Age -->
+                  <div class="w-full md:w-1/2 px-3 mb-6">
+                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="age">
+                      Age
+                    </label>
+                    <div class="relative">
+                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-birthday-cake text-blueGray-400"></i>
+                      </div>
+                      <input
+                        type="number"
+                        id="age"
+                        formControlName="age"
+                        class="border border-blueGray-300 pl-10 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent w-full ease-linear transition-all duration-150"
+                        placeholder="Enter age"
+                        min="1"
+                        max="120"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- Gender -->
+                  <div class="w-full md:w-1/2 px-3 mb-6">
+                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="gender">
+                      Gender
+                    </label>
+                    <div class="relative">
+                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-venus-mars text-blueGray-400"></i>
+                      </div>
+                      <select
+                        id="gender"
+                        formControlName="gender"
+                        class="border border-blueGray-300 pl-10 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent w-full ease-linear transition-all duration-150"
+                      >
+                        <option value="">Select gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <!-- Country -->
+                  <div class="w-full md:w-1/2 px-3 mb-6">
+                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="country">
+                      Country
+                    </label>
+                    <div class="relative">
+                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-globe text-blueGray-400"></i>
+                      </div>
+                      <select
+                        id="country"
+                        formControlName="country"
+                        class="border border-blueGray-300 pl-10 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent w-full ease-linear transition-all duration-150"
+                      >
+                        <option value="">Select country</option>
+                        <option value="USA">United States</option>
+                        <option value="Canada">Canada</option>
+                        <option value="UK">United Kingdom</option>
+                        <option value="Germany">Germany</option>
+                        <option value="France">France</option>
+                        <option value="Tunisia">Tunisia</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
 </div>
- </form>

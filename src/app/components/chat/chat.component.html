@@ -3,10 +3,11 @@
       <header>
         <div class="user-info">
           <div class="current-user-avatar">
-            <div class="avatar-placeholder">{{ sender === '4' ? 'ME' : 'UN' }}</div>
+            <img *ngIf="currentUserImage" [src]="currentUserImage" class="user-image" alt="{{ currentUserName }}">
+            <div *ngIf="!currentUserImage" class="avatar-placeholder">{{ currentUser ? getUserInitials(currentUser) : 'UN' }}</div>
             <span class="status green"></span>
           </div>
-          <h2 class="current-user-name">Vous</h2>
+          <h2 class="current-user-name">{{ currentUserName }}</h2>
         </div>
         <div class="search-container">
           <i class="fa fa-search search-icon"></i>
@@ -38,7 +39,8 @@
               [class.active]="contact.id_user.toString() === recipientId"
               class="contact-item">
             <div class="contact-avatar">
-              <div class="avatar-placeholder" [style.background-color]="contact.id_user % 2 === 0 ? '#4a7bff' : '#ff7a4a'">
+              <img *ngIf="contact.image" [src]="contact.image" class="user-image" alt="{{ getUserFullName(contact.id_user.toString()) }}">
+              <div *ngIf="!contact.image" class="avatar-placeholder" [style.background-color]="contact.id_user % 2 === 0 ? '#4a7bff' : '#ff7a4a'">
                 {{ getUserInitials(contact) }}
               </div>
               <span class="status green" title="En ligne"></span>
@@ -84,7 +86,8 @@
     <main>
       <header>
         <div class="contact-avatar">
-          <div class="avatar-placeholder" [style.background-color]="'#4a7bff'">
+          <img *ngIf="getCurrentContact()?.image" [src]="getCurrentContact()?.image" class="user-image" alt="{{ getUserFullName(recipientId) }}">
+          <div *ngIf="!getCurrentContact()?.image" class="avatar-placeholder" [style.background-color]="'#4a7bff'">
             {{ getUserInitials(recipientId) }}
           </div>
           <span class="status green"></span>
@@ -127,7 +130,8 @@
             <div class="message-container">
               <!-- Avatar pour les messages reçus -->
               <div class="message-avatar" *ngIf="message.sender !== sender && (i === 0 || messages[i-1].sender !== message.sender)">
-                <div class="avatar-placeholder small" [style.background-color]="message.sender === recipientId ? '#4a7bff' : '#ff7a4a'">
+                <img *ngIf="getUserImage(message.sender)" [src]="getUserImage(message.sender)" class="user-image small" alt="{{ getUserFullName(message.sender) }}">
+                <div *ngIf="!getUserImage(message.sender)" class="avatar-placeholder small" [style.background-color]="message.sender === recipientId ? '#4a7bff' : '#ff7a4a'">
                   {{ getUserInitials(message.sender) }}
                 </div>
               </div>
@@ -166,7 +170,11 @@
             <i class="fa fa-refresh"></i> Reconnecter
           </button>
           <button class="test-button" (click)="testDirectWebSocket()">
-            <i class="fa fa-bug"></i> Test direct
+            <i class="fa fa-bug"></i> Connexion alternative
+          </button>
+          <!-- Show login button if it's an authentication error -->
+          <button *ngIf="wsErrorMessage.includes('authentification')" class="login-button" [routerLink]="['/auth/login']">
+            <i class="fa fa-sign-in"></i> Se connecter
           </button>
         </div>
         <div *ngIf="!wsConnected && !wsError" class="connection-status">
@@ -175,7 +183,7 @@
             <i class="fa fa-refresh"></i> Réessayer
           </button>
           <button class="test-button" (click)="testDirectWebSocket()">
-            <i class="fa fa-bug"></i> Test direct
+            <i class="fa fa-bug"></i> Connexion alternative
           </button>
         </div>
         <div *ngIf="wsConnected" class="connection-success">

@@ -2,32 +2,35 @@
   class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded"
   [ngClass]="color === 'light' ? 'bg-white' : 'bg-red-900 text-white'"
 >
-  <div class="rounded-t mb-0 px-4 py-3 border-0">
+  <div class="rounded-t mb-0 px-6 py-4 border-0">
     <div class="flex flex-wrap items-center">
-      <div class="relative w-full px-4 max-w-full flex-grow flex-1">
+      <div class="relative w-full md:w-6/12 px-4 max-w-full flex-grow flex-1">
         <h3
           class="font-semibold text-lg"
           [ngClass]="color === 'light' ? 'text-blueGray-700' : 'text-white'"
         >
-          User list
+          <i class="fas fa-users mr-2"></i> User List
         </h3>
+        <p class="mt-1 text-sm text-blueGray-400">
+          Total Users: <span class="font-bold">{{ filteredUsers.length }}</span>
+        </p>
+      </div>
 
-          <div class="relative flex w-full flex-wrap items-stretch">
-            <span
-              class="z-10 h-full leading-snug font-normal absolute text-center text-blueGray-300 absolute bg-transparent rounded text-base items-center justify-center w-8 pl-3 py-3"
-            >
-              <i class="fas fa-search"></i>
-            </span>
-            <input
-              type="text"
-              [(ngModel)]="searchQuery"
-              (input)="filterUsers()"
-              placeholder="Search here..."
-              class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:ring w-full pl-10"
-            />
-          </div>
-
-
+      <div class="relative w-full md:w-6/12 px-4 max-w-full flex-grow flex-1">
+        <div class="relative flex w-full flex-wrap items-stretch">
+          <span
+            class="z-10 h-full leading-snug font-normal absolute text-center text-blueGray-300 absolute bg-transparent rounded text-base items-center justify-center w-8 pl-3 py-3"
+          >
+            <i class="fas fa-search"></i>
+          </span>
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            (input)="filterUsers()"
+            placeholder="Search by name..."
+            class="border px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white rounded text-sm shadow outline-none focus:outline-none focus:ring w-full pl-10"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -87,57 +90,168 @@
 
         </tr>
       </thead>
-      <tbody >
-        <tr *ngFor="let user of filteredUsers">
+      <tbody>
+        <tr *ngFor="let user of paginatedUsers" class="hover:bg-blueGray-50">
           <th
             class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center"
           >
-            <img
-            [src]="user.image ? user.image : 'assets/img/team-3-800x800.jpg'"
-              class="h-12 w-12 bg-white rounded-full border"
-              alt="..."
-            />
-            <span
-              class="ml-3 font-bold"
-              [ngClass]="color === 'light' ? 'text-blueGray-600' : 'text-white'"
-            >
-              {{user.nom}}  {{user.prenom}}
-            </span>
+            <div class="relative">
+              <img
+                [src]="user.image ? user.image : 'assets/img/team-3-800x800.jpg'"
+                class="h-12 w-12 bg-white rounded-full border object-cover"
+                alt="User profile"
+              />
+              <span
+                class="absolute bottom-0 right-0 transform translate-x-1/4 w-4 h-4 bg-green-400 border-2 border-white rounded-full"
+                *ngIf="user.status === 'active'"
+                title="Active user"
+              ></span>
+            </div>
+            <div class="ml-3">
+              <span
+                class="font-bold text-sm"
+                [ngClass]="color === 'light' ? 'text-blueGray-600' : 'text-white'"
+              >
+                {{user.nom}} {{user.prenom}}
+              </span>
+              <p class="text-xs text-blueGray-400 mt-1">ID: {{user.id_user}}</p>
+            </div>
           </th>
           <td
             class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
           >
-            {{user.email}}
+            <div class="flex flex-col">
+              <span class="font-semibold">{{user.email}}</span>
+              <span class="text-blueGray-400 text-xs mt-1">Last login: {{user.lastLogin || 'Never'}}</span>
+            </div>
           </td>
           <td
             class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
           >
-            {{user.role}}
+            <span class="px-2 py-1 text-xs rounded-full"
+              [ngClass]="{
+                'bg-blue-100 text-blue-800': user.role === 'ADMIN',
+                'bg-green-100 text-green-800': user.role === 'USER',
+                'bg-purple-100 text-purple-800': user.role === 'INSTRUCTOR',
+                'bg-gray-100 text-gray-800': !user.role
+              }"
+            >
+              {{user.role || 'Unknown'}}
+            </span>
           </td>
           <td
             class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
           >
-          <i class="fas fa-circle text-emerald-500 mr-2"></i> {{ user.satisfactionPrediction.satisfactionScore  || 'Not satisfied...' }} %
+            <div class="flex items-center">
+              <div class="relative w-full">
+                <div class="overflow-hidden h-2 text-xs flex rounded bg-blueGray-200">
+                  <div
+                    [style.width.%]="user.satisfactionPrediction?.satisfactionScore || 0"
+                    [ngClass]="{
+                      'bg-red-500': (user.satisfactionPrediction?.satisfactionScore || 0) < 30,
+                      'bg-orange-500': (user.satisfactionPrediction?.satisfactionScore || 0) >= 30 && (user.satisfactionPrediction?.satisfactionScore || 0) < 70,
+                      'bg-green-500': (user.satisfactionPrediction?.satisfactionScore || 0) >= 70
+                    }"
+                    class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center"
+                  ></div>
+                </div>
+              </div>
+              <span class="ml-2 font-semibold">
+                {{ user.satisfactionPrediction?.satisfactionScore || 0 }}%
+              </span>
+            </div>
           </td>
           <td
-          class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
-        >
-         <button
-            class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-            type="button" [routerLink]="['/admin/user/update',user.id_user]"
+            class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4"
           >
-            Update
-          </button>
-          <button
-          class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-          type="button" (click)="deleteUser(user.id_user)"
-        >
-          Delete
-        </button>
-        </td>
-          </tr>
+            <div class="flex items-center space-x-2">
+              <button
+                class="bg-indigo-500 text-white active:bg-indigo-600 font-bold uppercase text-xs px-3 py-2 rounded-md shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
+                type="button"
+                [routerLink]="['/admin/user/update', user.id_user]"
+                title="Edit user"
+              >
+                <i class="fas fa-edit"></i>
+              </button>
+              <button
+                class="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-3 py-2 rounded-md shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
+                type="button"
+                (click)="deleteUser(user.id_user)"
+                title="Delete user"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+              <button
+                class="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-3 py-2 rounded-md shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
+                type="button"
+                title="View user details"
+              >
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
 
+        <!-- Empty state when no users are found -->
+        <tr *ngIf="filteredUsers.length === 0">
+          <td colspan="5" class="border-t-0 px-6 py-10 text-center">
+            <div class="flex flex-col items-center justify-center">
+              <i class="fas fa-users text-blueGray-300 text-5xl mb-4"></i>
+              <h3 class="text-lg font-semibold text-blueGray-600 mb-1">No users found</h3>
+              <p class="text-blueGray-400 text-sm">Try adjusting your search or filter criteria</p>
+            </div>
+          </td>
+        </tr>
       </tbody>
     </table>
+  </div>
+
+  <!-- Table footer with pagination and export options -->
+  <div class="rounded-b px-6 py-4 border-t border-blueGray-200">
+    <div class="flex flex-wrap items-center">
+      <div class="relative w-full md:w-6/12 px-4 max-w-full flex-grow flex-1">
+        <p class="text-sm text-blueGray-500">
+          Showing <span class="font-semibold">{{ paginatedUsers.length }}</span> of <span class="font-semibold">{{ filteredUsers.length }}</span> users
+          <span *ngIf="filteredUsers.length !== users.length">(filtered from {{ users.length }} total)</span>
+        </p>
+      </div>
+
+      <div class="relative w-full md:w-6/12 px-4 max-w-full flex-grow flex-1 text-right">
+        <!-- Refresh button -->
+        <button
+          class="bg-blueGray-600 text-white active:bg-blueGray-700 text-xs font-bold uppercase px-3 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+          type="button"
+          title="Refresh data"
+          (click)="loadUsers()"
+        >
+          <i class="fas fa-sync-alt mr-1"></i> Refresh
+        </button>
+
+        <!-- Pagination controls -->
+        <div class="inline-flex mt-2">
+          <button
+            class="bg-blueGray-200 text-blueGray-700 active:bg-blueGray-300 text-xs font-bold uppercase px-3 py-2 rounded-l shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
+            type="button"
+            [disabled]="currentPage <= 1"
+            (click)="prevPage()"
+            [ngClass]="{'opacity-50 cursor-not-allowed': currentPage <= 1}"
+          >
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <span class="bg-white text-blueGray-700 text-xs font-bold uppercase px-4 py-2 shadow">
+            {{ currentPage }} / {{ totalPages }}
+          </span>
+          <button
+            class="bg-blueGray-200 text-blueGray-700 active:bg-blueGray-300 text-xs font-bold uppercase px-3 py-2 rounded-r shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
+            type="button"
+            [disabled]="currentPage >= totalPages"
+            (click)="nextPage()"
+            [ngClass]="{'opacity-50 cursor-not-allowed': currentPage >= totalPages}"
+          >
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

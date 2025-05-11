@@ -161,7 +161,7 @@
             Cours
           </a>
         </li>
-      
+
         <!-- Quizz -->
         <li class="items-center">
           <a
@@ -179,8 +179,8 @@
             Quizz
           </a>
         </li>
-        
-       
+
+
 
 
         <li class="items-center">
@@ -209,17 +209,17 @@
             [routerLink]="['/admin/Abonnements']"
             class="text-xs uppercase py-3 font-bold block"
             routerLinkActive
-            #adminTables="routerLinkActive"
+            #adminAbonnements="routerLinkActive"
             [ngClass]="
-              adminTables.isActive
+              adminAbonnements.isActive
                 ? 'text-red-600 hover:text-red-700'
                 : 'text-blueGray-700 hover:text-blueGray-500'
             "
           >
             <i
-              class="fas fa-table mr-2 text-sm"
+              class="fas fa-credit-card mr-2 text-sm"
               [ngClass]="
-                adminTables.isActive ? 'opacity-75' : 'text-blueGray-300'
+                adminAbonnements.isActive ? 'opacity-75' : 'text-blueGray-300'
               "
             ></i>
             Abonnements
@@ -230,17 +230,17 @@
             [routerLink]="['/admin/predict']"
             class="text-xs uppercase py-3 font-bold block"
             routerLinkActive
-            #adminTables="routerLinkActive"
+            #adminPredict="routerLinkActive"
             [ngClass]="
-              adminTables.isActive
+              adminPredict.isActive
                 ? 'text-red-600 hover:text-red-700'
                 : 'text-blueGray-700 hover:text-blueGray-500'
             "
           >
             <i
-              class="fas fa-table mr-2 text-sm"
+              class="fas fa-chart-line mr-2 text-sm"
               [ngClass]="
-                adminTables.isActive ? 'opacity-75' : 'text-blueGray-300'
+                adminPredict.isActive ? 'opacity-75' : 'text-blueGray-300'
               "
             ></i>
             Prediction
@@ -251,17 +251,17 @@
             [routerLink]="['/admin/AjouterAbonnement']"
             class="text-xs uppercase py-3 font-bold block"
             routerLinkActive
-            #adminTables="routerLinkActive"
+            #adminAddAbonnement="routerLinkActive"
             [ngClass]="
-              adminTables.isActive
+              adminAddAbonnement.isActive
                 ? 'text-red-600 hover:text-red-700'
                 : 'text-blueGray-700 hover:text-blueGray-500'
             "
           >
             <i
-              class="fas fa-table mr-2 text-sm"
+              class="fas fa-plus-circle mr-2 text-sm"
               [ngClass]="
-                adminTables.isActive ? 'opacity-75' : 'text-blueGray-300'
+                adminAddAbonnement.isActive ? 'opacity-75' : 'text-blueGray-300'
               "
             ></i>
             Ajouter Abonnement

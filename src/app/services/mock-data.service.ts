@@ -38,7 +38,7 @@ export class MockDataService {
     );
   }
 
-  addMessage(message: ChatMessage): ChatMessage {
+  addMessage(message: ChatMessage, id_user: number): ChatMessage {
     const newMessage = {
       ...message,
       id: this.messages.length + 1,

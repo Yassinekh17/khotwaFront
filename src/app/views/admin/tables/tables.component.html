@@ -1,4 +1,26 @@
 <div class="flex flex-wrap mt-4">
+  <div class="w-full mb-6 px-4">
+    <div class="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 shadow-lg">
+      <div class="px-6 py-6">
+        <div class="flex flex-wrap items-center">
+          <div class="relative w-full max-w-full flex-grow flex-1">
+            <h2 class="text-2xl font-semibold text-blueGray-700">User Management</h2>
+            <p class="text-sm text-blueGray-500 mt-2">Manage all registered users in the system. You can search, update, or delete users.</p>
+          </div>
+          <div class="relative w-full max-w-full flex-grow flex-1 text-right">
+            <button
+              class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+              type="button"
+              [routerLink]="['/admin/user/add']"
+            >
+              <i class="fas fa-user-plus mr-2"></i> Add New User
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="w-full mb-12 px-4">
     <app-card-table></app-card-table>
   </div>

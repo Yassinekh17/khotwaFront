@@ -12,7 +12,7 @@ export class WebsocketTestComponent implements OnInit, OnDestroy {
   connectionClass: string = 'disconnected';
   testMessage: string = '';
   receivedMessages: any[] = [];
-  
+
   private messageSubscription: Subscription;
 
   constructor(private webSocketService: WebSocketService) {}
@@ -21,7 +21,7 @@ export class WebsocketTestComponent implements OnInit, OnDestroy {
     // S'abonner aux messages WebSocket
     this.messageSubscription = this.webSocketService.message$.subscribe((message: any) => {
       if (!message) return;
-      
+
       // Gérer les messages de statut de connexion
       if (message.type === 'CONNECTION_STATUS') {
         switch (message.status) {
@@ -36,6 +36,29 @@ export class WebsocketTestComponent implements OnInit, OnDestroy {
           case 'disconnected':
             this.connectionStatus = 'Déconnecté';
             this.connectionClass = 'disconnected';
+
+            // Log close event details if available
+            if (message.closeEvent) {
+              console.warn('WebSocket close details:', message.closeEvent);
+
+              // Add close details to received messages for debugging
+              this.receivedMessages.unshift({
+                content: `Connexion fermée: Code ${message.closeEvent.code}, Raison: ${message.closeEvent.reason}`,
+                timestamp: new Date().toLocaleTimeString(),
+                error: true
+              });
+            }
+            break;
+          case 'auth_error':
+            this.connectionStatus = 'Erreur d\'authentification';
+            this.connectionClass = 'error';
+
+            // Add auth error to received messages
+            this.receivedMessages.unshift({
+              content: `Erreur d'authentification: ${message.error}`,
+              timestamp: new Date().toLocaleTimeString(),
+              error: true
+            });
             break;
           case 'error':
           case 'connection_error':
@@ -52,7 +75,7 @@ export class WebsocketTestComponent implements OnInit, OnDestroy {
         });
       }
     });
-    
+
     // Tester la connexion WebSocket
     this.testConnection();
   }
@@ -76,16 +99,16 @@ export class WebsocketTestComponent implements OnInit, OnDestroy {
 
   sendTestMessage(): void {
     if (!this.testMessage.trim()) return;
-    
+
     const testMessageObj = {
       content: this.testMessage,
       sender: 'test-user',
       recipientId: 'server',
       timestamp: new Date().toISOString()
     };
-    
+
     const success = this.webSocketService.sendMessage('/app/chat.sendPrivateMessage', testMessageObj);
-    
+
     if (success) {
       this.receivedMessages.unshift({
         content: `Message envoyé: ${this.testMessage}`,

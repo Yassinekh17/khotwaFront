@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked, OnDestroy } from '@angular/core';
 import { ChatMessage, ChatService } from 'src/app/services/chat.service';
-import { User, UserService } from 'src/app/services/user.service';
+
 import { WebSocketService } from 'src/app/services/web-socket.service';
 import { Subscription } from 'rxjs';
+import { User } from 'src/app/core/models/User';
+import { UserService } from 'src/app/core/service/user.service';
 
 @Component({
   selector: 'app-chat',
@@ -14,13 +16,19 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   messages: ChatMessage[] = [];
   newMessage: string = '';
-  sender: string = '5'; // Example sender ID
+  sender: string = ''; // Will be set from current user ID
   recipientId: string = '1'; // Default recipient ID
   contacts: User[] = []; // List of users for contacts
   searchTerm: string = '';
   filteredContacts: User[] = [];
   isTyping: boolean = false;
   typingTimeout: any;
+
+  // Current user information
+  userEmail: string | null = null;
+  currentUser: User | null = null;
+  currentUserName: string = 'Vous';
+  currentUserImage: string | null = null;
 
   // WebSocket connection status
   wsConnected: boolean = false;
@@ -40,8 +48,8 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // Charger d'abord les contacts, puis les messages
-    this.loadContacts();
+    // Charger les informations de l'utilisateur actuel depuis le token
+    this.loadCurrentUserFromToken();
 
     // Configurer les écouteurs WebSocket
     this.setupWebSocketListeners();
@@ -52,10 +60,65 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     }, 30000); // Tester toutes les 30 secondes
   }
 
+  // Décoder le token JWT pour obtenir l'email de l'utilisateur
+  decodeToken(token: string): any {
+    try {
+      return JSON.parse(atob(token.split('.')[1]));
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+
+  // Charger les informations de l'utilisateur actuel depuis le token
+  loadCurrentUserFromToken() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decoded = this.decodeToken(token);
+      if (decoded) {
+        this.userEmail = decoded.email || decoded.sub || null;
+
+        if (this.userEmail) {
+          this.userService.getUserByEmail(this.userEmail).subscribe({
+            next: (user) => {
+              this.currentUser = user;
+              this.currentUserName = `${user.prenom} ${user.nom}`;
+              this.currentUserImage = user.image ? user.image.toString() : null;
+              this.sender = user.id_user.toString();
+
+              console.log('Current user loaded:', this.currentUserName);
+
+              // Maintenant que nous avons l'ID de l'utilisateur, charger les contacts
+              this.loadContacts();
+            },
+            error: (err) => {
+              console.error('Error getting current user:', err);
+              // Fallback to default sender ID if we can't get the current user
+              this.sender = '5';
+              this.loadContacts();
+            }
+          });
+        } else {
+          // Fallback to default sender ID if we can't get the email
+          this.sender = '5';
+          this.loadContacts();
+        }
+      } else {
+        // Fallback to default sender ID if we can't decode the token
+        this.sender = '5';
+        this.loadContacts();
+      }
+    } else {
+      // Fallback to default sender ID if there's no token
+      this.sender = '5';
+      this.loadContacts();
+    }
+  }
+
   // Rafraîchir les contacts sans perturber l'interface utilisateur
   refreshContacts() {
     console.log('Refreshing contacts...');
-    this.userService.getUsers().subscribe({
+    this.userService.getUserList().subscribe({
       next: (users: User[]) => {
         // Filtrer pour exclure l'utilisateur actuel
         const newContacts = users.filter((user: User) => user.id_user.toString() !== this.sender);
@@ -97,9 +160,18 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
   // Test direct WebSocket connection
   testDirectWebSocket() {
     console.log('Testing direct WebSocket connection...');
-    // Use the mock WebSocket service instead
-    this.webSocketService.testConnection();
-    this.directWsConnected = this.webSocketService.isConnected();
+    // Try the alternative connection approach
+    this.webSocketService.tryAlternativeConnection();
+
+    // Check connection status after a short delay
+    setTimeout(() => {
+      this.directWsConnected = this.webSocketService.isConnected();
+      if (this.directWsConnected) {
+        console.log('Alternative WebSocket connection successful');
+      } else {
+        console.log('Alternative WebSocket connection failed');
+      }
+    }, 2000);
   }
 
   ngAfterViewChecked() {
@@ -139,6 +211,17 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
             this.wsConnected = false;
             this.wsError = false;
             this.wsErrorMessage = 'Déconnecté du serveur';
+
+            // If we have close event details, log them
+            if (message.closeEvent) {
+              console.warn('WebSocket close details:', message.closeEvent);
+            }
+            break;
+          case 'auth_error':
+            this.wsConnected = false;
+            this.wsError = true;
+            this.wsErrorMessage = 'Erreur d\'authentification. Veuillez vous reconnecter.';
+            console.error('WebSocket authentication error:', message.error);
             break;
           case 'error':
           case 'connection_error':
@@ -234,7 +317,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
   loadContacts() {
     console.log('Loading contacts...');
     // Use the UserService to get users from the backend
-    this.userService.getUsers().subscribe({
+    this.userService.getUserList().subscribe({
       next: (users: User[]) => {
         console.log('Users received:', users);
         if (!users || users.length === 0) {
@@ -313,7 +396,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
   getUserFullName(userId: string): string {
     // Si c'est l'expéditeur actuel
     if (userId === this.sender) {
-      return 'Vous';
+      return this.currentUserName || 'Vous';
     }
 
     // Si c'est le destinataire actuel
@@ -344,8 +427,9 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
       const userId = user;
 
       // Si c'est l'expéditeur actuel
-      if (userId === this.sender) {
-        return 'VO'; // Vous
+      if (userId === this.sender && this.currentUser) {
+        // Utiliser les initiales du nom et prénom de l'utilisateur actuel
+        return `${this.currentUser.prenom.charAt(0)}${this.currentUser.nom.charAt(0)}`.toUpperCase();
       }
 
       // Si c'est le destinataire actuel
@@ -363,6 +447,22 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
 
     return 'UN'; // Unknown
+  }
+
+  // Obtenir l'image d'un utilisateur par son ID
+  getUserImage(userId: string): string | null {
+    // Si c'est l'expéditeur actuel, retourner l'image de l'utilisateur connecté
+    if (userId === this.sender) {
+      return this.currentUserImage;
+    }
+
+    // Chercher l'utilisateur dans les contacts
+    const user = this.contacts.find(c => c.id_user.toString() === userId);
+    if (user && user.image) {
+      return user.image.toString();
+    }
+
+    return null;
   }
 
   filterContacts() {

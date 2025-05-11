@@ -45,7 +45,7 @@ export class MockWebsocketService {
   }
 
   // Get all users
-  getUsers(): Observable<User[]> {
+  getUserList(): Observable<User[]> {
     console.log('Getting mock users');
     return of(this.mockUsers).pipe(delay(300)); // Simulate network delay
   }
