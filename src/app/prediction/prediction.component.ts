@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PredictionService } from '../services/PredictionService';
 
@@ -10,7 +10,8 @@ interface ChatMessage {
 @Component({
   selector: 'app-prediction',
   templateUrl: './prediction.component.html',
-  styleUrls: ['./prediction.component.css']
+  styleUrls: ['./prediction-fixed.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class PredictionComponent implements OnInit, AfterViewChecked {
   @ViewChild('messagesContainer') private messagesContainer: ElementRef;

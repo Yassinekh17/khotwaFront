@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UserService } from 'src/app/core/service/user.service';
 import { Useryass } from 'src/app/core/models/Useryass';
 import { Router } from '@angular/router';
@@ -6,7 +6,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'predictionresult',
   templateUrl: './predictionresult.component.html',
-  styleUrls: ['./predictionresult.component.css'],
+  styleUrls: ['./predictionresult-fixed.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class predictionresultComponent implements OnInit {
   showResultPopup = false;
