@@ -6,6 +6,7 @@ import { Message } from "src/app/core/models/Message";
 import { MessageService } from "src/app/core/service/message.service";
 import { SummaryService } from "src/app/services/summary.service";
 import { UserService } from "src/app/core/service/user.service";
+import { TokenService } from "src/app/core/service/token.service";
 
 @Component({
   selector: "app-profile",
@@ -20,32 +21,53 @@ export class ProfileComponent implements OnInit {
   newComments: { [key: number]: string } = {};
   commentsVisible: { [key: number]: boolean } = {};
 
-  constructor(private service: MessageService, private fb: FormBuilder, private summaryService: SummaryService, private userService: UserService) {}
+  constructor(
+    private service: MessageService,
+    private fb: FormBuilder,
+    private summaryService: SummaryService,
+    private userService: UserService,
+    private tokenService: TokenService
+  ) {}
 
   ngOnInit(): void {
     this.loadMessages();
     this.MessageForm = this.fb.group({
       contenu: ['', Validators.required], // Contenu du message
     });
-    const token = localStorage.getItem('token');
+
+    // Get token from token service
+    const token = this.tokenService.getAccessToken();
     if (token) {
       const decoded = this.decodeToken(token);
       if (decoded) {
         this.userEmail = decoded.email || decoded.sub || null;
+
+        if (this.userEmail) {
+          // Get user details by email
+          this.userService.getUserByEmail(this.userEmail).subscribe({
+            next: (user) => {
+              this.id_user = user.id_user;
+              console.log('User ID retrieved:', this.id_user);
+              // Reload messages to ensure likes are properly checked
+              this.loadMessages();
+            },
+            error: (err) => {
+              console.error('Error getting user:', err);
+            },
+          });
+        } else {
+          console.error('No email found in token');
+        }
+      } else {
+        console.error('Failed to decode token');
       }
+    } else {
+      console.error('No token available');
     }
-    this.userService.getUserByEmail(this.userEmail).subscribe({
-      next: (user) => {
-        this.id_user = user.id_user;
-      },
-      error: (err) => {
-        console.error('Error getting user:', err);
-      },
-    });
   }
 decodeToken(token: string): any {
     try {
-      return JSON.parse(atob(token.split('.')[1]));
+      return this.tokenService.decodeToken(token);
     } catch (error) {
       console.error('Error decoding token:', error);
       return null;
@@ -73,7 +95,7 @@ decodeToken(token: string): any {
               }
             });
           }
-          
+
           // Existing code for likes and comments
           this.service.countLikes(message.id_message!).subscribe({
             next: (count) => {
@@ -87,15 +109,45 @@ decodeToken(token: string): any {
           });
 
           // Vérifie si l'utilisateur a liké ce message
-          this.service.hasUserLiked(message.id_message!, 2).subscribe({
-            next: (liked) => message.likedByUser = liked,
-            error: () => message.likedByUser = false,
-          });
+          if (this.id_user) {
+            console.log(`Checking if user ${this.id_user} has liked message ${message.id_message}`);
+            this.service.hasUserLiked(message.id_message!, this.id_user).subscribe({
+              next: (liked) => {
+                console.log(`User ${this.id_user} has ${liked ? 'liked' : 'not liked'} message ${message.id_message}`);
+                message.likedByUser = liked;
+              },
+              error: (err) => {
+                console.error(`Error checking if user has liked message ${message.id_message}:`, err);
+                message.likedByUser = false;
+              },
+            });
+          } else {
+            console.log(`User ID not available yet for message ${message.id_message}, setting up watcher`);
+            // If user ID is not available yet, set up a watcher to check again when it becomes available
+            const checkInterval = setInterval(() => {
+              if (this.id_user) {
+                console.log(`User ID now available (${this.id_user}), checking like status for message ${message.id_message}`);
+                this.service.hasUserLiked(message.id_message!, this.id_user).subscribe({
+                  next: (liked) => {
+                    console.log(`User ${this.id_user} has ${liked ? 'liked' : 'not liked'} message ${message.id_message}`);
+                    message.likedByUser = liked;
+                  },
+                  error: (err) => {
+                    console.error(`Error checking if user has liked message ${message.id_message}:`, err);
+                    message.likedByUser = false;
+                  },
+                });
+                clearInterval(checkInterval);
+              }
+            }, 500);
+            // Clear interval after 5 seconds to prevent infinite checking
+            setTimeout(() => clearInterval(checkInterval), 5000);
+          }
           this.service.countComments(message.id_message!).subscribe({
             next: (count) => message.commentCount = count,
             error: () => message.commentCount = 0,
           });
-          
+
         });
       },
       error: (error) => {
@@ -121,7 +173,7 @@ decodeToken(token: string): any {
     const message: Message = {
       contenu: this.MessageForm.value.contenu,
       dateEnvoi: new Date().toISOString(), // Format ISO 8601 comme Swagger
-      expediteurId: 2,
+      expediteurId: this.id_user, // Use the current user's ID
     };
 
     this.service.addMessage(message, this.id_user).subscribe({
@@ -147,7 +199,7 @@ decodeToken(token: string): any {
         next: (comments) => {
           console.log("load comments for message:", comments);
           message.commentaires = comments;
-          
+
           // Fetch user details for each comment
           message.commentaires.forEach(comment => {
             if (comment.auteurId) {
@@ -171,7 +223,7 @@ decodeToken(token: string): any {
       });
     }
   }
-  
+
   isFieldInvalid(fieldName: string): boolean {
     const field = this.MessageForm.get(fieldName);
     return field ? field.invalid && field.touched : false;
@@ -212,18 +264,18 @@ decodeToken(token: string): any {
   toggleCommentForm(messageId: number): void {
     this.commentFormVisible[messageId] = !this.commentFormVisible[messageId];
   }
-  
+
   publishComment(messageId: number): void {
     const contenu = this.newComments[messageId]?.trim();
     if (!contenu) return;
-  
+
      // Remplacer par l'ID réel de l'utilisateur
-  
+
     this.service.addComment(messageId, this.id_user, contenu).subscribe({
       next: () => {
         this.newComments[messageId] = '';
         this.commentFormVisible[messageId] = false;
-  
+
         // Mettre à jour le compteur
         const message = this.messages.find(m => m.id_message === messageId);
         if (message) {
@@ -237,37 +289,62 @@ decodeToken(token: string): any {
       }
     });
   }
-  
+
 
   // Méthode pour gérer le Like
   likeMessage(messageId: number) {
-     // Replace with the authenticated user's ID
-  
+    // Check if user ID is available
+    if (!this.id_user) {
+      console.error('Cannot like message: User ID is not available');
+      return;
+    }
+
     // Find the message that was clicked
     const message = this.messages.find(m => m.id_message === messageId);
-    if (!message) return;
-  
+    if (!message) {
+      console.error(`Cannot like message: Message with ID ${messageId} not found`);
+      return;
+    }
+
     // Toggle the like state
     const isLike = !message.likedByUser;
-  
+    console.log(`User ${this.id_user} is ${isLike ? 'liking' : 'unliking'} message ${messageId}`);
+
     // Optimistically update the local UI state
     message.likedByUser = isLike;  // Toggle like/unlike
-    message.likeCount = isLike ? message.likeCount + 1 : message.likeCount - 1; // Adjust like count
-  
+    message.likeCount = isLike ? (message.likeCount || 0) + 1 : Math.max(0, (message.likeCount || 0) - 1); // Adjust like count
+
     // Call the backend to update the like/unlike status
+    console.log(`Sending ${isLike ? 'POST' : 'DELETE'} request for message ${messageId} by user ${this.id_user}`);
     this.service.likeMessage(messageId, this.id_user, isLike).subscribe({
-      next: () => {
+      next: (response) => {
         // Success - the UI is already updated optimistically
-        console.log('Successfully updated like status');
+        console.log(`Successfully ${isLike ? 'liked' : 'unliked'} message ${messageId}`, response);
+
+        // Verify the like status after the action
+        this.service.hasUserLiked(messageId, this.id_user).subscribe({
+          next: (liked) => {
+            console.log(`After ${isLike ? 'liking' : 'unliking'}, hasUserLiked returns: ${liked}`);
+            if (liked !== isLike) {
+              console.warn(`Like status mismatch: UI shows ${isLike} but server returns ${liked}`);
+              // Update UI to match server state if there's a mismatch
+              message.likedByUser = liked;
+              message.likeCount = liked
+                ? (message.likeCount || 0) + 1
+                : Math.max(0, (message.likeCount || 0) - 1);
+            }
+          },
+          error: (err) => console.error(`Error verifying like status after ${isLike ? 'liking' : 'unliking'}:`, err)
+        });
       },
       error: (err) => {
         // Error - revert the UI to the previous state if the like/unlike action failed
-        console.error('Error while liking/unliking message:', err);
+        console.error(`Error while ${isLike ? 'liking' : 'unliking'} message ${messageId}:`, err);
         message.likedByUser = !isLike;  // Revert to the previous state
-        message.likeCount = isLike ? message.likeCount - 1 : message.likeCount + 1; // Revert the like count
+        message.likeCount = isLike ? Math.max(0, (message.likeCount || 0) - 1) : (message.likeCount || 0) + 1; // Revert the like count
       }
     });
   }
-  
- 
+
+
 }

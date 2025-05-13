@@ -4,64 +4,123 @@
     <div class="flex flex-wrap items-center">
       <div class="relative w-full px-4 max-w-full flex-grow flex-1">
         <h3 class="font-semibold text-lg" [ngClass]="color === 'light' ? 'text-blueGray-700' : 'text-white'">
-          Abonnements
+          Gestion des Abonnements
         </h3>
       </div>
     </div>
   </div>
-  <div class="flex flex-wrap mb-4">
-    <!-- Section pour le filtrage et le tri alignés horizontalement -->
-    <div class="w-full sm:w-6/12 md:w-6/12 px-4 flex items-center justify-between">
-      <div class="relative inline-flex align-middle w-full">
-        <button 
-          class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+
+  <!-- Action Buttons Section -->
+  <div class="px-4 py-3">
+    <div class="button-group">
+      <!-- Dropdown pour filtrer par type d'abonnement -->
+      <div class="relative inline-flex">
+        <button
+          class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150 w-full"
           type="button"
           (click)="toggleDropdown($event)"
           #btnDropdownRef>
-          Filtrer par type d'abonnement
+          <i class="fas fa-filter mr-1"></i> Filtrer par type
         </button>
-        <div *ngIf="dropdownPopoverShow" class="bg-red-600 text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-1 min-w-48" #popoverDropdownRef>
+        <div *ngIf="dropdownPopoverShow" class="bg-red-600 text-base z-50 absolute py-2 list-none text-left rounded shadow-lg mt-1 min-w-48" #popoverDropdownRef>
           <a href="javascript:void(0)" (click)="onSelectPlan('')"
-             class="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white">
+             class="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white hover:bg-red-700">
             Tous
           </a>
           <a href="javascript:void(0)" (click)="onSelectPlan('MENSUEL')"
-             class="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white">
+             class="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white hover:bg-red-700">
             Mensuel
           </a>
           <a href="javascript:void(0)" (click)="onSelectPlan('TRIMESTRIEL')"
-             class="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white">
+             class="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white hover:bg-red-700">
             Trimestriel
           </a>
           <a href="javascript:void(0)" (click)="onSelectPlan('ANNUEL')"
-             class="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white">
+             class="text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-white hover:bg-red-700">
             Annuel
           </a>
         </div>
       </div>
-   
-     <!-- Bouton pour trier par prix -->
-    <button 
-    class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-    type="button"
-    (click)="getSortedAbonnements(sortDirection)">Trier par Prix ({{ sortDirection === 'asc' ? 'Ascendant' : 'Descendant' }})</button>
 
-    <!-- Bouton pour afficher les statistiques -->
-    <button 
-    class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-    type="button"
-    (click)="getStatistics()">Afficher les Statistiques</button>
+      <!-- Bouton pour trier par prix -->
+      <button
+        class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
+        type="button"
+        (click)="getSortedAbonnements(sortDirection)">
+        <i class="fas fa-sort mr-1"></i> {{ sortDirection === 'asc' ? 'Prix ↑' : 'Prix ↓' }}
+      </button>
+
+      <!-- Bouton pour afficher les statistiques -->
+      <button
+        class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
+        type="button"
+        (click)="getStatistics()">
+        <i class="fas fa-chart-pie mr-1"></i> Statistiques
+      </button>
+
       <!-- Bouton pour télécharger en PDF -->
-      <button  class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-      type="button"
-      (click)="downloadPDF()">Télécharger en PDF</button>
+      <button
+        class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
+        type="button"
+        (click)="downloadPDF()">
+        <i class="fas fa-file-pdf mr-1"></i> Exporter PDF
+      </button>
     </div>
-   
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="px-4 py-3">
+    <div class="flex flex-wrap -mx-2">
+      <!-- Total Abonnements -->
+      <div class="w-full md:w-1/3 px-2 mb-4">
+        <div class="stat-card">
+          <div class="flex items-center">
+            <div class="rounded-full p-3 bg-red-100 mr-4">
+              <i class="fas fa-users text-red-600 text-xl"></i>
+            </div>
+            <div>
+              <div class="stat-value">{{ abonnements?.length || 0 }}</div>
+              <div class="stat-label">Total Abonnements</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Revenu Total -->
+      <div class="w-full md:w-1/3 px-2 mb-4">
+        <div class="stat-card">
+          <div class="flex items-center">
+            <div class="rounded-full p-3 bg-blue-100 mr-4">
+              <i class="fas fa-euro-sign text-blue-600 text-xl"></i>
+            </div>
+            <div>
+              <div class="stat-value">{{ getTotalRevenue() | currency:'EUR' }}</div>
+              <div class="stat-label">Revenu Total</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Plan le plus populaire -->
+      <div class="w-full md:w-1/3 px-2 mb-4">
+        <div class="stat-card">
+          <div class="flex items-center">
+            <div class="rounded-full p-3 bg-green-100 mr-4">
+              <i class="fas fa-star text-green-600 text-xl"></i>
+            </div>
+            <div>
+              <div class="stat-value">{{ getMostPopularPlan() }}</div>
+              <div class="stat-label">Plan Populaire</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 
-
-
+  <!-- Table Section -->
   <div class="block w-full overflow-x-auto">
     <table class="items-center w-full bg-transparent border-collapse">
       <thead>
@@ -97,53 +156,80 @@
             {{ abonnement.date_fin | date: 'dd/MM/yyyy' }}
           </td>
           <td class="border-t-0 px-6 py-4 text-xs whitespace-nowrap text-left">
-            {{ abonnement.plan }}
+            <span class="px-2 py-1 rounded text-xs"
+                  [ngClass]="{
+                    'bg-blue-100 text-blue-800': abonnement.plan === 'MENSUEL',
+                    'bg-green-100 text-green-800': abonnement.plan === 'TRIMESTRIEL',
+                    'bg-purple-100 text-purple-800': abonnement.plan === 'ANNUEL'
+                  }">
+              {{ abonnement.plan }}
+            </span>
           </td>
-          <td class="border-t-0 px-6 py-4 text-xs whitespace-nowrap text-left">
+          <td class="border-t-0 px-6 py-4 text-xs whitespace-nowrap text-left font-semibold">
             {{ abonnement.prix | currency: 'EUR' }}
           </td>
           <td class="border-t-0 px-6 py-4 text-xs whitespace-nowrap text-left">
             <button
-              class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+              class="bg-red-600 text-white active:bg-red-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
               (click)="deleteAbonnement(abonnement.id_abonnement)">
-              Supprimer
+              <i class="fas fa-trash mr-1"></i> Supprimer
             </button>
+          </td>
+        </tr>
+        <tr *ngIf="!abonnements || abonnements.length === 0">
+          <td colspan="5" class="border-t-0 px-6 py-10 text-center text-gray-500">
+            Aucun abonnement trouvé
           </td>
         </tr>
       </tbody>
     </table>
   </div>
 
-<!-- Section pour les statistiques -->
-<div class="flex flex-wrap mt-6 statistics-section">
-  <div class="w-full px-4">
-    <div class="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 shadow-lg">
-      <div class="rounded-t mb-0 px-4 py-3 border-0">
-        <div class="flex flex-wrap items-center">
-          <div class="relative w-full px-4 max-w-full flex-grow flex-1">
-            <h3 class="font-semibold text-lg text-blueGray-700">
-              Statistiques des Abonnements
-            </h3>
+  <!-- Statistics Section -->
+  <div class="px-4 py-5 statistics-section" *ngIf="showStatistics">
+    <div class="w-full">
+      <div class="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 shadow-lg">
+        <div class="rounded-t mb-0 px-4 py-3 border-0">
+          <div class="flex flex-wrap items-center">
+            <div class="relative w-full px-4 max-w-full flex-grow flex-1">
+              <h3 class="font-semibold text-lg text-blueGray-700">
+                <i class="fas fa-chart-pie mr-2"></i> Statistiques des Abonnements
+              </h3>
+            </div>
+            <div>
+              <button
+                class="text-blueGray-500 hover:text-blueGray-700"
+                (click)="hideStatistics()">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      <!-- Graphique en secteurs -->
-      <div class="chart-container">
-        <canvas baseChart
-                [data]="pieChartData"
-                [type]="pieChartType"
-                [options]="pieChartOptions">
-        </canvas>
-      </div>
-      <!-- Graphique en barres -->
-      <div class="chart-container">
-        <canvas baseChart
-                [data]="barChartData"
-                [type]="barChartType"
-                [options]="barChartOptions">
-        </canvas>
+
+        <div class="charts-grid">
+          <!-- Graphique en secteurs -->
+          <div class="chart-column">
+            <div class="chart-container">
+              <h4 class="chart-title">Répartition des Abonnements par Plan</h4>
+              <div class="chart-wrapper">
+                <canvas #pieChartCanvas></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Graphique en barres -->
+          <div class="chart-column">
+            <div class="chart-container">
+              <h4 class="chart-title">Prix Moyen par Type d'Abonnement</h4>
+              <div class="chart-wrapper">
+                <canvas #barChartCanvas></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
 <app-chatbot></app-chatbot>

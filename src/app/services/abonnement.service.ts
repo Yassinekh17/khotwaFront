@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Abonnement } from '../models/abonnement.model';
+import { TokenService } from '../core/service/token.service';
 
 @Injectable({
   providedIn: 'root',
@@ -9,13 +10,14 @@ import { Abonnement } from '../models/abonnement.model';
 export class AbonnementService {
   private apiUrl = 'http://localhost:8090/payment/abonnements';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) {}
 
-  // Get token from localStorage
+  // Get token from TokenService
   private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token'); // replace 'token' with your actual key if different
+    const token = this.tokenService.getAccessToken();
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
     });
   }
 

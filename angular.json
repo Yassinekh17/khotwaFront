@@ -114,9 +114,9 @@
       }
     }
   },
-  
+
   "cli": {
-    "analytics": false, 
+    "analytics": false,
     "defaultProject": "notus-angular"
   }
 

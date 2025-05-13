@@ -1,0 +1,114 @@
+/* Subscription Cards Animation */
+.lg\:grid-cols-3 > div {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.lg\:grid-cols-3 > div:hover {
+  transform: translateY(-5px);
+}
+
+/* Recommended Plan Highlight */
+.ring-2.ring-red-600 {
+  position: relative;
+  z-index: 10;
+  transform: scale(1.05);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.ring-2.ring-red-600:hover {
+  transform: translateY(-5px) scale(1.05);
+}
+
+/* Payment Form Styles */
+input.ng-invalid.ng-touched {
+  border-color: #ef4444;
+}
+
+input.ng-valid.ng-touched {
+  border-color: #10b981;
+}
+
+/* Loading Animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.fa-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* FAQ Section Animation */
+.fa-chevron-down {
+  transition: transform 0.2s ease;
+}
+
+dt:hover .fa-chevron-down {
+  transform: rotate(-180deg);
+}
+
+/* Success Animation */
+@keyframes progressAnimation {
+  0% {
+    width: 5%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.progress-bar {
+  animation: progressAnimation 5s linear forwards;
+}
+
+/* Success Message Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bg-white.shadow-lg {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Checkmark Animation */
+@keyframes checkmark {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.fa-check {
+  animation: checkmark 0.5s ease-out 0.2s both;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .lg\:grid-cols-3 > div {
+    margin-bottom: 2rem;
+  }
+
+  .ring-2.ring-red-600 {
+    transform: scale(1);
+  }
+
+  .ring-2.ring-red-600:hover {
+    transform: translateY(-5px);
+  }
+}

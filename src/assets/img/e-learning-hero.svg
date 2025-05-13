@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800px" height="600px" viewBox="0 0 800 600" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>E-Learning Hero</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#F56565" offset="0%"></stop>
+            <stop stop-color="#C53030" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#4299E1" offset="0%"></stop>
+            <stop stop-color="#2B6CB0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-3">
+            <stop stop-color="#48BB78" offset="0%"></stop>
+            <stop stop-color="#2F855A" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="E-Learning-Hero" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Background" fill="#F7FAFC" x="0" y="0" width="800" height="600"></rect>
+        
+        <!-- Abstract Shapes -->
+        <circle id="Circle1" fill="url(#linearGradient-1)" opacity="0.2" cx="650" cy="150" r="100"></circle>
+        <circle id="Circle2" fill="url(#linearGradient-2)" opacity="0.2" cx="700" cy="350" r="80"></circle>
+        <circle id="Circle3" fill="url(#linearGradient-3)" opacity="0.2" cx="600" cy="500" r="60"></circle>
+        
+        <!-- Laptop -->
+        <g id="Laptop" transform="translate(400, 300)">
+            <rect id="Screen" fill="#2D3748" x="0" y="0" width="240" height="160" rx="8"></rect>
+            <rect id="Screen-Inner" fill="#EDF2F7" x="10" y="10" width="220" height="140" rx="4"></rect>
+            <path d="M-20,160 L260,160 C265.523,160 270,164.477 270,170 L270,180 L-30,180 L-30,170 C-30,164.477 -25.523,160 -20,160 Z" id="Base" fill="#4A5568"></path>
+            
+            <!-- Screen Content -->
+            <rect id="Header" fill="#4299E1" x="10" y="10" width="220" height="30" rx="4"></rect>
+            <circle id="Profile" fill="#FFFFFF" cx="30" cy="25" r="8"></circle>
+            <rect id="Menu1" fill="#FFFFFF" x="50" y="20" width="40" height="10" rx="2"></rect>
+            <rect id="Menu2" fill="#FFFFFF" x="100" y="20" width="40" height="10" rx="2"></rect>
+            <rect id="Menu3" fill="#FFFFFF" x="150" y="20" width="40" height="10" rx="2"></rect>
+            
+            <rect id="Content1" fill="#E2E8F0" x="20" y="50" width="100" height="15" rx="2"></rect>
+            <rect id="Content2" fill="#E2E8F0" x="20" y="75" width="200" height="15" rx="2"></rect>
+            <rect id="Content3" fill="#E2E8F0" x="20" y="100" width="150" height="15" rx="2"></rect>
+            <rect id="Content4" fill="#E2E8F0" x="20" y="125" width="180" height="15" rx="2"></rect>
+        </g>
+        
+        <!-- Books -->
+        <g id="Books" transform="translate(250, 350)">
+            <rect id="Book1" fill="#F56565" x="0" y="-80" width="60" height="80" rx="4"></rect>
+            <rect id="Book2" fill="#4299E1" x="10" y="-100" width="60" height="100" rx="4" transform="rotate(15)"></rect>
+            <rect id="Book3" fill="#48BB78" x="-10" y="-90" width="60" height="90" rx="4" transform="rotate(-10)"></rect>
+        </g>
+        
+        <!-- Graduation Cap -->
+        <g id="GraduationCap" transform="translate(150, 200)">
+            <rect id="Base" fill="#2D3748" x="0" y="0" width="100" height="20" rx="4"></rect>
+            <polygon id="Top" fill="#4A5568" points="50,0 100,20 0,20"></polygon>
+            <circle id="Button" fill="#F56565" cx="50" cy="0" r="10"></circle>
+            <rect id="Tassel" fill="#4A5568" x="45" y="0" width="5" height="40"></rect>
+        </g>
+        
+        <!-- Certificate -->
+        <g id="Certificate" transform="translate(550, 200)">
+            <rect id="Paper" fill="#FFFFFF" x="0" y="0" width="120" height="80" rx="4"></rect>
+            <rect id="Border" stroke="#4A5568" stroke-width="2" x="5" y="5" width="110" height="70" rx="2"></rect>
+            <rect id="Line1" fill="#E2E8F0" x="20" y="20" width="80" height="5" rx="2"></rect>
+            <rect id="Line2" fill="#E2E8F0" x="20" y="35" width="80" height="5" rx="2"></rect>
+            <rect id="Line3" fill="#E2E8F0" x="20" y="50" width="40" height="5" rx="2"></rect>
+            <circle id="Seal" fill="#F56565" cx="90" cy="50" r="10"></circle>
+        </g>
+        
+        <!-- Devices -->
+        <g id="Devices" transform="translate(100, 450)">
+            <rect id="Tablet" fill="#4A5568" x="0" y="0" width="80" height="100" rx="8"></rect>
+            <rect id="TabletScreen" fill="#EDF2F7" x="5" y="5" width="70" height="90" rx="4"></rect>
+            <rect id="Phone" fill="#4A5568" x="100" y="20" width="40" height="80" rx="8"></rect>
+            <rect id="PhoneScreen" fill="#EDF2F7" x="105" y="25" width="30" height="70" rx="4"></rect>
+        </g>
+    </g>
+</svg>

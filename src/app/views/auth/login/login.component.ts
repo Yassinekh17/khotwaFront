@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthResponse } from 'src/app/core/models/AuthResponse';
 import { UserActivityService } from 'src/app/core/service/user-activity.service';
 import { UserService } from 'src/app/core/service/user.service';
+import { TokenService } from 'src/app/core/service/token.service';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +15,8 @@ export class LoginComponent implements OnInit {
     private authService: UserService,
     private fb: FormBuilder,
     private router: Router,
-    private userActivityService: UserActivityService
+    private userActivityService: UserActivityService,
+    private tokenService: TokenService
   ) {}
 
   ngOnInit(): void {
@@ -38,10 +39,9 @@ export class LoginComponent implements OnInit {
         next: (data: any) => {
           console.log('Authentication successful:', data);
 
-          // Store the token
-          localStorage.setItem('token', data.access_token);
-          localStorage.setItem('refresh_token', data.refresh_token);
-          
+          // Store tokens using the token service
+          this.tokenService.saveTokens(data);
+
           this.userActivityService.addUserActivity(email, 'LOGIN').subscribe({
             next: () => console.log('User activity logged: LOGIN'),
             error: (err) => console.error('Failed to log user activity:', err),
@@ -64,7 +64,7 @@ export class LoginComponent implements OnInit {
                 this.router.navigate(['/admin/dashboard']);
               } else  {
                 window.location.href = 'http://localhost:4200/';
-              } 
+              }
             },
             error: (error) => {
               console.error('Failed to fetch user by email:', error);
@@ -108,13 +108,13 @@ export class LoginComponent implements OnInit {
     }
     return '';
   }
-  
+
   onCaptchaResolved(token: string) {
     console.log('Captcha resolved with token:', token);
     this.authForm.get('recaptcha')?.setValue(token);
-  
- 
+
+
 
   }
-  
+
 }

@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { UserActivityService } from './user-activity.service';
 import { jwtDecode } from 'jwt-decode';
 import { Useryass } from '../models/Useryass';
+import { TokenService } from './token.service';
 
 
 @Injectable({
@@ -26,7 +27,8 @@ export class UserService {
   constructor(
     private httpservice: HttpClient,
     private router: Router,
-    private userActivityService: UserActivityService
+    private userActivityService: UserActivityService,
+    private tokenService: TokenService
   ) {}
 
   private getAuthHeaders() {
@@ -140,14 +142,26 @@ export class UserService {
   refreshToken(): Observable<any> {
     const refreshToken = localStorage.getItem('refresh_token');
 
-    return this.httpservice.post<any>(
-      'http://localhost:8081/realms/Khotwa/protocol/openid-connect/token',
-      {
-        grant_type: 'refresh_token',
-        client_id: 'khotwa_rest_api',
-        refresh_token: refreshToken,
-      }
-    );
+    if (!refreshToken) {
+      console.error('No refresh token available');
+      // Return an observable that immediately errors out
+      return new Observable(observer => {
+        observer.error(new Error('No refresh token available'));
+      });
+    }
+
+    const url = 'http://localhost:8081/realms/Khotwa/protocol/openid-connect/token';
+
+    const body = new HttpParams()
+      .set('grant_type', 'refresh_token')
+      .set('client_id', 'khotwa-rest-api') // Match the client_id used in authenticate
+      .set('refresh_token', refreshToken);
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded',
+    });
+
+    return this.httpservice.post<any>(url, body.toString(), { headers });
   }
   register(
     nom: string,
@@ -206,13 +220,13 @@ export class UserService {
     console.log('email: from logout : ', email);
     this.userActivityService.addUserActivity(email, 'LOGOUT').subscribe({
       next: () => console.log('User activity logged: LOGOUT'),
-
       error: (err) => console.error('Failed to log user activity:', err),
     });
-    localStorage.removeItem('token');
-    localStorage.removeItem('refresh_token');
-    this.router.navigate(['/auth/login']);
 
+    // Clear all tokens using the token service
+    this.tokenService.clearTokens();
+
+    this.router.navigate(['/auth/login']);
   }
 
 

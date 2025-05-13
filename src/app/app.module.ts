@@ -102,6 +102,7 @@ import { WebSocketService } from "./services/web-socket.service";
 import { MockChatService } from "./services/mock-chat.service";
 import { MockWebsocketService } from "./services/mock-websocket.service";
 import { WebsocketTestComponent } from './components/websocket-test/websocket-test.component';
+import { UserSubscriptionComponent } from './user-subscription/user-subscription.component';
 
 
 @NgModule({
@@ -156,10 +157,10 @@ import { WebsocketTestComponent } from './components/websocket-test/websocket-te
     ProfileComponent,
     CoursComponent,
     QuizzComponent,
-    
+
     CourseStatsComponent,
   predictionresultComponent,
-    
+
     CardTableUpdateComponent,
     ForgotpwComponent,
     RatingpopupComponent,
@@ -183,18 +184,18 @@ import { WebsocketTestComponent } from './components/websocket-test/websocket-te
     ChatComponent,
     SummaryComponent,
     WebsocketTestComponent,
-    
+    UserSubscriptionComponent,
   ],
   imports: [BrowserModule, AppRoutingModule,HttpClientModule,FormsModule, BrowserAnimationsModule,MatIconModule,ReactiveFormsModule,CommonModule,RecaptchaModule,
     MatSnackBarModule,NgChartsModule,QuizComponent,ToastrModule.forRoot()],
   providers: [
-    
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true, // Allow multiple interceptors
-      
-    },PredictionService,ChatService,
+    },
+    PredictionService,
+    ChatService,
     WebSocketService
   ],  bootstrap: [AppComponent],
 })

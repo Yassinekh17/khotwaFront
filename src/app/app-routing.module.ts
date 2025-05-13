@@ -52,6 +52,7 @@ import { UserProfileUpdatePageComponent } from './views/user-profile-update/user
 import { authGuard } from './auth.guard';
 import { ChatComponent } from './components/chat/chat.component';
 import { WebsocketTestComponent } from './components/websocket-test/websocket-test.component';
+import { UserSubscriptionComponent } from './user-subscription/user-subscription.component';
 const routes: Routes = [
   // admin views
   {
@@ -105,8 +106,9 @@ const routes: Routes = [
   { path: "websocket-test", component: WebsocketTestComponent },
   { path: 'profile', component: ProfileComponent }, // original profile page
   { path: 'profile/edit', component: UserProfileUpdatePageComponent, canActivate: [authGuard] }, // new protected profile update page
+  { path: 'subscription', component: UserSubscriptionComponent, canActivate: [authGuard] }, // new subscription page
   { path: 'landing', component: LandingComponent , canActivate: [authGuard]},
-  { path: '', component: IndexComponent , canActivate: [authGuard] },
+  { path: '', component: IndexComponent }, // Making the index page publicly accessible
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 
