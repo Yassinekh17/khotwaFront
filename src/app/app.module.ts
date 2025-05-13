@@ -98,6 +98,7 @@ import { ChatComponent } from './components/chat/chat.component';
 import { SummaryComponent } from './summary/summary.component';
 import { ChatService } from "./services/chat.service";
 import { CardBarChartMessageComponent } from "./components/cards/card-bar-chart-Message/card-bar-chart.component";
+import { CardMessageStatsComponent } from "./components/cards/card-message-stats/card-message-stats.component";
 import { WebSocketService } from "./services/web-socket.service";
 import { MockChatService } from "./services/mock-chat.service";
 import { MockWebsocketService } from "./services/mock-websocket.service";
@@ -111,6 +112,7 @@ import { UserSubscriptionComponent } from './user-subscription/user-subscription
     DashboardUserComponent,
     DashboardComponent,
     CardBarChartMessageComponent,
+    CardMessageStatsComponent,
     CardLineChartComponent,
     IndexDropdownComponent,
     PagesDropdownComponent,
