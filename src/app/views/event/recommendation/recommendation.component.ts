@@ -232,15 +232,23 @@ export class RecommendationComponent implements OnInit {
     if (this.userPreferencesForm.valid) {
       userPreferences = this.userPreferencesForm.value;
 
-      // Vérifier que les coordonnées sont bien définies
-      if (userPreferences.location &&
-        (userPreferences.location.lat === null || userPreferences.location.lng === null ||
-          userPreferences.location.lat === undefined || userPreferences.location.lng === undefined)) {
-        // Utiliser les coordonnées par défaut
-        userPreferences.location = {
-          lat: 36.8070,
-          lng: 10.1825
-        };
+      // Vérifier que userPreferences existe et que les coordonnées sont bien définies
+      if (userPreferences) {
+        if (userPreferences.location &&
+          (userPreferences.location.lat === null || userPreferences.location.lng === null ||
+            userPreferences.location.lat === undefined || userPreferences.location.lng === undefined)) {
+          // Utiliser les coordonnées par défaut
+          userPreferences.location = {
+            lat: 36.8070,
+            lng: 10.1825
+          };
+        } else if (!userPreferences.location) {
+          // Si location n'existe pas du tout, la créer
+          userPreferences.location = {
+            lat: 36.8070,
+            lng: 10.1825
+          };
+        }
       }
 
       console.log('Préférences utilisateur:', userPreferences);
@@ -451,7 +459,7 @@ export class RecommendationComponent implements OnInit {
     }
 
     // Obtenir les lieux pour la catégorie sélectionnée
-    const categoryVenues = venuesByCategory[selectedCategory];
+    const categoryVenues = venuesByCategory[selectedCategory as keyof typeof venuesByCategory];
     console.log(`Nombre de lieux disponibles pour la catégorie ${selectedCategory}: ${categoryVenues.length}`);
 
     // Générer plus d'événements en utilisant chaque lieu plusieurs fois avec des dates différentes
@@ -459,10 +467,10 @@ export class RecommendationComponent implements OnInit {
     const eventsPerVenue = 5; // Augmenté à 5 pour avoir encore plus de choix
 
     // Créer une liste de tous les lieux disponibles (plusieurs fois si nécessaire)
-    let allVenues = [];
+    let allVenues: any[] = [];
 
     // Ajouter chaque lieu plusieurs fois avec un index différent
-    categoryVenues.forEach(venue => {
+    categoryVenues.forEach((venue: any) => {
       for (let j = 0; j < eventsPerVenue; j++) {
         allVenues.push({
           ...venue,
@@ -511,7 +519,7 @@ export class RecommendationComponent implements OnInit {
       let eventCategory = selectedCategory;
 
       // Sélectionner un titre professionnel en fonction de la catégorie
-      const categoryTitles = professionalEventTitles[eventCategory];
+      const categoryTitles = professionalEventTitles[eventCategory as keyof typeof professionalEventTitles];
       const titleIndex = i % categoryTitles.length;
       const eventTitle = categoryTitles[titleIndex];
 
@@ -663,7 +671,7 @@ export class RecommendationComponent implements OnInit {
       // Filtrer strictement par la distance maximale définie par l'utilisateur
       if (userPreferences.max_distance) {
         const inRangeRecommendations = mockRecommendations.filter(rec => {
-          return rec.distance !== undefined && rec.distance <= userPreferences.max_distance;
+          return rec.distance !== undefined && rec.distance <= (userPreferences.max_distance || 10);
         });
 
         console.log(`${inRangeRecommendations.length} événements trouvés dans un rayon de ${userPreferences.max_distance} km`);

@@ -1,0 +1,18 @@
+<div class="course-view-page">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">{{ course?.titre }}</h1>
+      <p *ngIf="course?.description" class="page-description">{{ course?.description }}</p>
+    </div>
+  </div>
+
+  <!-- Course Content Component -->
+  <app-course-content
+    *ngIf="course"
+    [course]="course"
+    [courseId]="courseId"
+    (chapterCompleted)="onChapterCompleted($event)"
+    (quizReady)="onQuizReady()">
+  </app-course-content>
+</div>

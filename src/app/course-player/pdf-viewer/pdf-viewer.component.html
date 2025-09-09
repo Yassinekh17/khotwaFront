@@ -1,0 +1,107 @@
+<!-- Header -->
+<div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+  <div class="container mx-auto px-4 py-6">
+    <button
+      (click)="goBack()"
+      class="mb-4 inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition-all">
+      <i class="fas fa-arrow-left mr-2"></i>Retour aux cours
+    </button>
+
+    <div class="text-center">
+      <h1 class="text-3xl lg:text-4xl font-bold mb-2">
+        <i class="fas fa-file-pdf mr-3"></i>
+        Ressources PDF
+      </h1>
+      <p class="text-blue-100">Téléchargez et consultez vos documents PDF</p>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="container mx-auto px-4 py-8">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex justify-center items-center py-12">
+    <div class="animate-spin rounded-full h-20 w-20 border-t-4 border-b-4 border-blue-600"></div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="bg-red-100 border border-red-400 text-red-700 px-8 py-6 rounded-lg max-w-md mx-auto">
+    <div class="flex items-center mb-4">
+      <i class="fas fa-exclamation-triangle text-red-500 text-2xl mr-3"></i>
+      <h3 class="text-lg font-semibold">Erreur</h3>
+    </div>
+    <p class="mb-4">{{ error }}</p>
+    <button
+      (click)="loadPdfResources()"
+      class="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors">
+      <i class="fas fa-redo mr-2"></i>Réessayer
+    </button>
+  </div>
+
+  <!-- PDF Resources Grid -->
+  <div *ngIf="!loading && !error && pdfResources.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div *ngFor="let pdf of pdfResources" class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+
+      <!-- PDF Header -->
+      <div class="bg-gradient-to-r from-red-500 to-pink-500 p-4 text-white">
+        <div class="flex items-center">
+          <i class="fas fa-file-pdf text-2xl mr-3"></i>
+          <div class="flex-1">
+            <h3 class="font-bold text-lg leading-tight">{{ pdf.title }}</h3>
+            <div class="flex items-center text-sm opacity-90 mt-1">
+              <i class="fas fa-weight-hanging mr-1"></i>
+              <span>{{ formatFileSize(pdf.fileSize!) }}</span>
+              <span class="mx-2">•</span>
+              <i class="fas fa-file-alt mr-1"></i>
+              <span>{{ pdf.pageCount }} pages</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PDF Actions -->
+      <div class="p-4">
+        <div class="flex space-x-3">
+          <button
+            (click)="openPdf(pdf)"
+            class="flex-1 bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
+            <i class="fas fa-external-link-alt mr-2"></i>
+            Ouvrir
+          </button>
+
+          <button
+            (click)="downloadPdf(pdf)"
+            class="flex-1 bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center">
+            <i class="fas fa-download mr-2"></i>
+            Télécharger
+          </button>
+        </div>
+
+        <!-- Completion Status -->
+        <div class="mt-4 p-3 bg-gray-50 rounded-lg">
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-gray-600">Statut:</span>
+            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+              <i class="fas fa-check-circle mr-1"></i>
+              Consulté
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && pdfResources.length === 0" class="text-center py-16">
+    <div class="bg-white rounded-xl shadow-xl p-8 max-w-md mx-auto">
+      <i class="fas fa-file-pdf text-6xl text-gray-300 mb-4"></i>
+      <h3 class="text-2xl font-semibold text-gray-800 mb-4">Aucun PDF disponible</h3>
+      <p class="text-gray-600 mb-6">Il n'y a pas de ressources PDF pour ce cours actuellement.</p>
+      <button
+        (click)="goBack()"
+        class="bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors">
+        <i class="fas fa-arrow-left mr-2"></i>Retour aux cours
+      </button>
+    </div>
+  </div>
+</div>

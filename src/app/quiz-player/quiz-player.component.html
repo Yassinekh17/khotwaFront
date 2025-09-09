@@ -1,0 +1,89 @@
+<!-- Quiz Player Component - Interface Simple et Fonctionnelle -->
+<div class="quiz-player-container" *ngIf="quiz && currentQuestion">
+
+  <!-- Question Header -->
+  <div class="question-header">
+    <div class="question-counter">
+      <span class="question-number">{{ currentQuestionIndex + 1 }}</span>
+      <span class="question-total">/ {{ quiz.questions?.length || 0 }}</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" [style.width.%]="progressPercentage"></div>
+    </div>
+  </div>
+
+  <!-- Question Content -->
+  <div class="question-content">
+    <h2 class="question-text">{{ currentQuestion.question }}</h2>
+  </div>
+
+  <!-- Answer Options -->
+  <div class="options-container" *ngIf="currentQuestion.options && currentQuestion.options.length > 0">
+    <div class="options-grid">
+      <div
+        *ngFor="let option of currentQuestion.options; let i = index"
+        class="option-card"
+        [class.selected]="isAnswerSelected(i)"
+        (click)="selectAnswer(i)">
+
+        <div class="option-content">
+          <div class="option-letter">
+            {{ getOptionLetter(i) }}
+          </div>
+          <div class="option-text">
+            {{ option }}
+          </div>
+          <div class="option-indicator" *ngIf="isAnswerSelected(i)">
+            <i class="fas fa-check"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Options Message -->
+  <div class="no-options" *ngIf="!currentQuestion.options || currentQuestion.options.length === 0">
+    <div class="no-options-content">
+      <i class="fas fa-exclamation-triangle"></i>
+      <p>Aucune option disponible pour cette question</p>
+    </div>
+  </div>
+
+  <!-- Navigation Buttons -->
+  <div class="navigation-buttons">
+    <button
+      class="nav-btn nav-btn-secondary"
+      [disabled]="isFirstQuestion"
+      (click)="onPreviousQuestion()">
+      <i class="fas fa-chevron-left"></i>
+      Précédent
+    </button>
+
+    <div class="nav-spacer"></div>
+
+    <button
+      class="nav-btn nav-btn-primary"
+      *ngIf="!isLastQuestion"
+      (click)="onNextQuestion()">
+      Suivant
+      <i class="fas fa-chevron-right"></i>
+    </button>
+
+    <button
+      class="nav-btn nav-btn-success"
+      *ngIf="isLastQuestion"
+      (click)="onSubmitQuiz()">
+      <i class="fas fa-paper-plane"></i>
+      Terminer le Quiz
+    </button>
+  </div>
+
+</div>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="!quiz">
+  <div class="loading-spinner">
+    <i class="fas fa-spinner fa-spin"></i>
+  </div>
+  <p>Chargement du quiz...</p>
+</div>

@@ -1,358 +1,272 @@
-<nav
-  class="md:left-0 md:block md:fixed md:top-0 md:bottom-0 md:overflow-y-auto md:flex-row md:flex-nowrap md:overflow-hidden shadow-xl bg-white flex flex-wrap items-center justify-between relative md:w-64 z-10 py-4 px-6"
->
-  <div
-    class="md:flex-col md:items-stretch md:min-h-full md:flex-nowrap px-0 flex flex-wrap items-center justify-between w-full mx-auto"
-  >
-    <!-- Toggler -->
-    <button
-      class="cursor-pointer text-black opacity-50 md:hidden px-3 py-1 text-xl leading-none bg-transparent rounded border border-solid border-transparent"
-      type="button"
-      (click)="toggleCollapseShow('bg-white m-2 py-3 px-6')"
-    >
-      <i class="fas fa-bars"></i>
-    </button>
-    <!-- Brand -->
-    <a
-      [routerLink]="['/']"
-      class="md:block text-left md:pb-2 text-blueGray-600 mr-0 inline-block whitespace-nowrap text-sm uppercase font-bold p-4 px-0"
-    >
-      <span class="block sm:hidden"> Tailwind Angular </span>
-      <span class="hidden sm:block"> Notus Angular </span>
-    </a>
-    <!-- User -->
-    <ul class="md:hidden items-center flex flex-wrap list-none">
-      <li class="inline-block relative">
-        <app-notification-dropdown class="block"></app-notification-dropdown>
-      </li>
-      <li class="inline-block relative">
-        <app-user-dropdown class="block"></app-user-dropdown>
-      </li>
-    </ul>
-    <!-- Collapse -->
-    <div
-      class="md:flex md:flex-col md:items-stretch md:opacity-100 md:relative md:mt-4 md:shadow-none shadow absolute top-0 left-0 right-0 z-40 overflow-y-auto overflow-x-hidden h-auto items-center flex-1 rounded"
-      [ngClass]="collapseShow"
-    >
-      <!-- Collapse header -->
-      <div
-        class="md:min-w-full md:hidden block pb-4 mb-4 border-b border-solid border-blueGray-200"
-      >
-        <div class="flex flex-wrap">
-          <div class="w-6/12">
-            <a
-              [routerLink]="['/']"
-              class="md:block text-left md:pb-2 text-blueGray-600 mr-0 inline-block whitespace-nowrap text-sm uppercase font-bold p-4 px-0"
-            >
-              Notus Angular
-            </a>
+<!-- Creative Sidebar for Home Page -->
+<div class="fixed left-0 top-0 h-full w-64 z-50">
+  <!-- Creative Background with Multiple Layers -->
+  <div class="absolute inset-0 bg-gradient-to-br from-black/90 via-red-900/90 to-gray-900/90 backdrop-blur-xl"></div>
+  <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-white/10"></div>
+
+  <!-- Creative Border Effect -->
+  <div class="absolute inset-0 rounded-r-3xl border-r-2 border-gradient-to-b from-red-400/50 via-red-500/50 to-red-600/50"></div>
+
+  <!-- Inner Glow Effect -->
+  <div class="absolute inset-2 bg-gradient-to-br from-red-500/10 via-red-600/10 to-red-700/10 rounded-2xl"></div>
+
+  <div class="relative flex flex-col h-full py-8 px-6">
+    <!-- Logo/Brand with Creative Effects -->
+    <div class="mb-8 text-center">
+      <div class="relative">
+        <div class="w-20 h-20 bg-white rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-2xl transform hover:scale-110 transition-all duration-500 overflow-hidden">
+          <img src="assets/img/logo.jpg" alt="TechEvents Logo" class="w-full h-full object-contain rounded-3xl">
+        </div>
+        <!-- Glowing ring effect -->
+        <div class="absolute inset-0 w-20 h-20 bg-gradient-to-br from-red-400 to-red-600 rounded-3xl mx-auto animate-pulse opacity-30"></div>
+      </div>
+      <h2 class="text-white font-bold text-xl drop-shadow-lg text-center">Khotwa</h2>
+      <div class="w-16 h-1 bg-gradient-to-r from-red-400 to-red-500 rounded-full mx-auto mt-2"></div>
+    </div>
+
+    <!-- Navigation Menu with Creative Design -->
+    <nav class="flex-1">
+      <!-- Evenements Section -->
+      <div class="mb-2">
+        <div class="flex items-center">
+          <div class="flex-1 h-px bg-gradient-to-r from-transparent via-red-400 to-transparent"></div>
+          <div class="px-3">
+            <span class="text-red-300 text-xs font-bold uppercase tracking-wider">Evenements</span>
           </div>
-          <div class="w-6/12 flex justify-end">
-            <button
-              type="button"
-              class="cursor-pointer text-black opacity-50 md:hidden px-3 py-1 text-xl leading-none bg-transparent rounded border border-solid border-transparent"
-              (click)="toggleCollapseShow('hidden')"
-            >
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
+          <div class="flex-1 h-px bg-gradient-to-r from-transparent via-red-400 to-transparent"></div>
         </div>
       </div>
-      <!-- Form -->
-      <form class="mt-6 mb-4 md:hidden">
-        <div class="mb-3 pt-0">
-          <input
-            type="text"
-            placeholder="Search"
-            class="border-0 px-3 py-2 h-12 border border-solid border-blueGray-500 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-base leading-snug shadow-none outline-none focus:outline-none w-full font-normal"
-          />
+
+      <ul class="space-y-2 mb-4">
+        <!-- Découvrir les Evenements -->
+        <li>
+          <a
+            [routerLink]="['/events']"
+            class="group relative flex items-center px-4 py-3 text-white hover:text-blue-100 rounded-xl transition-all duration-300 overflow-hidden"
+          >
+            <!-- Background hover effect -->
+            <div class="absolute inset-0 bg-gradient-to-r from-red-500/20 to-red-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
+            <!-- Border glow effect -->
+            <div class="absolute inset-0 border border-red-400/30 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+            <div class="relative flex items-center w-full">
+              <div class="w-8 h-8 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                <i class="fas fa-search text-white text-sm"></i>
+              </div>
+              <span class="font-semibold text-sm">Découvrir les Evenements</span>
+            </div>
+
+            <!-- Arrow indicator -->
+            <div class="absolute right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <i class="fas fa-chevron-right text-red-300 text-sm"></i>
+            </div>
+          </a>
+        </li>
+
+
+        <!-- Mes evenements -->
+        <li>
+          <a
+            [routerLink]="['/my-events']"
+            class="group relative flex items-center px-4 py-3 text-white hover:text-green-100 rounded-xl transition-all duration-300 overflow-hidden"
+          >
+            <!-- Background hover effect -->
+            <div class="absolute inset-0 bg-gradient-to-r from-red-600/20 to-red-700/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
+            <!-- Border glow effect -->
+            <div class="absolute inset-0 border border-red-500/30 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+            <div class="relative flex items-center w-full">
+              <div class="w-8 h-8 bg-gradient-to-br from-red-600 to-red-700 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                <i class="fas fa-calendar-check text-white text-sm"></i>
+              </div>
+              <span class="font-semibold text-sm">Mes evenements</span>
+            </div>
+
+            <!-- Arrow indicator -->
+            <div class="absolute right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <i class="fas fa-chevron-right text-red-400 text-sm"></i>
+            </div>
+          </a>
+        </li>
+
+        <!-- Recommendation des evenements -->
+        <li>
+          <a
+            [routerLink]="['/recommendations']"
+            class="group relative flex items-center px-4 py-3 text-white hover:text-purple-100 rounded-xl transition-all duration-300 overflow-hidden"
+          >
+            <!-- Background hover effect -->
+            <div class="absolute inset-0 bg-gradient-to-r from-red-700/20 to-red-800/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
+            <!-- Border glow effect -->
+            <div class="absolute inset-0 border border-red-600/30 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+            <div class="relative flex items-center w-full">
+              <div class="w-8 h-8 bg-gradient-to-br from-red-700 to-red-800 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                <i class="fas fa-magic text-white text-sm"></i>
+              </div>
+              <span class="font-semibold text-sm">Recommendation des evenements</span>
+            </div>
+
+            <!-- Arrow indicator -->
+            <div class="absolute right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <i class="fas fa-chevron-right text-red-500 text-sm"></i>
+            </div>
+          </a>
+        </li>
+
+      </ul>
+
+      <!-- Cours Section -->
+      <div class="mb-2">
+        <div class="flex items-center">
+          <div class="flex-1 h-px bg-gradient-to-r from-transparent via-blue-400 to-transparent"></div>
+          <div class="px-3">
+            <span class="text-blue-300 text-xs font-bold uppercase tracking-wider">Cours</span>
+          </div>
+          <div class="flex-1 h-px bg-gradient-to-r from-transparent via-blue-400 to-transparent"></div>
         </div>
-      </form>
+      </div>
 
-      <!-- Divider -->
-      <hr class="my-4 md:min-w-full" />
-      <!-- Heading -->
-      <h6
-        class="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline"
-      >
-        Admin Layout Pages
-      </h6>
-      <!-- Navigation -->
-
-      <ul class="md:flex-col md:min-w-full flex flex-col list-none">
-        <li class="items-center">
+      <ul class="space-y-2 mb-4">
+        <!-- Cours Inscrits -->
+        <li>
           <a
-            [routerLink]="['/admin/dashboard']"
-            class="text-xs uppercase py-3 font-bold block"
-            routerLinkActive
-            #adminDashboard="routerLinkActive"
-            [ngClass]="
-              adminDashboard.isActive
-                ? 'text-red-600 hover:text-red-700'
-                : 'text-blueGray-700 hover:text-blueGray-500'
-            "
+            [routerLink]="['/cours-inscrits']"
+            class="group relative flex items-center px-4 py-3 text-white hover:text-blue-100 rounded-xl transition-all duration-300 overflow-hidden"
           >
-            <i
-              class="fas fa-tv mr-2 text-sm"
-              [ngClass]="
-                adminDashboard.isActive ? 'opacity-75' : 'text-blueGray-300'
-              "
-            ></i>
-            Dashboard
+            <!-- Background hover effect -->
+            <div class="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-blue-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
+            <!-- Border glow effect -->
+            <div class="absolute inset-0 border border-blue-400/30 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+            <div class="relative flex items-center w-full">
+              <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                <i class="fas fa-graduation-cap text-white text-sm"></i>
+              </div>
+              <span class="font-semibold text-sm">Cours Inscrits</span>
+            </div>
+
+            <!-- Arrow indicator -->
+            <div class="absolute right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <i class="fas fa-chevron-right text-blue-400 text-sm"></i>
+            </div>
           </a>
         </li>
 
-        <li class="items-center">
+        <!-- Découvrir les cours -->
+        <li>
           <a
-            [routerLink]="['/admin/settings']"
-            class="text-xs uppercase py-3 font-bold block"
-            routerLinkActive
-            #adminSettings="routerLinkActive"
-            [ngClass]="
-              adminSettings.isActive
-                ? 'text-red-600 hover:text-red-700'
-                : 'text-blueGray-700 hover:text-blueGray-500'
-            "
+            [routerLink]="['/courses']"
+            class="group relative flex items-center px-4 py-3 text-white hover:text-indigo-100 rounded-xl transition-all duration-300 overflow-hidden"
           >
-            <i
-              class="fas fa-tools mr-2 text-sm"
-              [ngClass]="
-                adminSettings.isActive ? 'opacity-75' : 'text-blueGray-300'
-              "
-            ></i>
-            Settings
+            <!-- Background hover effect -->
+            <div class="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
+            <!-- Border glow effect -->
+            <div class="absolute inset-0 border border-purple-400/30 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+            <div class="relative flex items-center w-full">
+              <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                <i class="fas fa-graduation-cap text-white text-sm"></i>
+              </div>
+              <span class="font-semibold text-sm">Découvrir les cours</span>
+            </div>
+
+            <!-- Arrow indicator -->
+            <div class="absolute right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <i class="fas fa-chevron-right text-purple-400 text-sm"></i>
+            </div>
           </a>
         </li>
 
-        <li class="items-center">
+        <!-- Quiz Classifier -->
+        <li>
           <a
-            [routerLink]="['/admin/tables']"
-            class="text-xs uppercase py-3 font-bold block"
-            routerLinkActive
-            #adminTables="routerLinkActive"
-            [ngClass]="
-              adminTables.isActive
-                ? 'text-red-600 hover:text-red-700'
-                : 'text-blueGray-700 hover:text-blueGray-500'
-            "
+            [routerLink]="['/quiz-classifier']"
+            class="group relative flex items-center px-4 py-3 text-white hover:text-yellow-100 rounded-xl transition-all duration-300 overflow-hidden"
           >
-            <i
-              class="fas fa-table mr-2 text-sm"
-              [ngClass]="
-                adminTables.isActive ? 'opacity-75' : 'text-blueGray-300'
-              "
-            ></i>
-            Tables
-          </a>
-        </li>
+            <!-- Background hover effect -->
+            <div class="absolute inset-0 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
+            <!-- Border glow effect -->
+            <div class="absolute inset-0 border border-yellow-400/30 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-        <li class="items-center">
-          <a
-            [routerLink]="['/admin/listevent']"
-            class="text-xs uppercase py-3 font-bold block"
-            routerLinkActive
-            #adminEvents="routerLinkActive"
-            [ngClass]="
-              adminEvents.isActive
-                ? 'text-red-600 hover:text-red-700'
-                : 'text-blueGray-700 hover:text-blueGray-500'
-            "
-          >
-            <i
-              class="fas fa-calendar-alt mr-2 text-sm"
-              [ngClass]="
-                adminEvents.isActive ? 'opacity-75' : 'text-blueGray-300'
-              "
-            ></i>
-            Events
-          </a>
-        </li>
+            <div class="relative flex items-center w-full">
+              <div class="w-8 h-8 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                <i class="fas fa-brain text-white text-sm"></i>
+              </div>
+              <span class="font-semibold text-sm">Quiz Classifier</span>
+            </div>
 
-        <li class="items-center">
-          <a
-            [routerLink]="['/admin/maps']"
-            class="text-xs uppercase py-3 font-bold block"
-            routerLinkActive
-            #adminMaps="routerLinkActive"
-            [ngClass]="
-              adminMaps.isActive
-                ? 'text-red-600 hover:text-red-700'
-                : 'text-blueGray-700 hover:text-blueGray-500'
-            "
-          >
-            <i
-              class="fas fa-map-marked mr-2 text-sm"
-              [ngClass]="
-                adminMaps.isActive ? 'opacity-75' : 'text-blueGray-300'
-              "
-            ></i>
-            Maps
+            <!-- Arrow indicator -->
+            <div class="absolute right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <i class="fas fa-chevron-right text-yellow-400 text-sm"></i>
+            </div>
           </a>
         </li>
       </ul>
 
-      <!-- Divider -->
-      <hr class="my-4 md:min-w-full" />
-      <!-- Heading -->
-      <h6
-        class="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline"
-      >
-        Auth Layout Pages
-      </h6>
-      <!-- Navigation -->
+      <!-- Admin Section Separator -->
+      <div class="my-4">
+        <div class="flex items-center">
+          <div class="flex-1 h-px bg-gradient-to-r from-transparent via-slate-600 to-transparent"></div>
+          <div class="px-3">
+            <span class="text-slate-400 text-xs font-bold uppercase tracking-wider">Côté Admin</span>
+          </div>
+          <div class="flex-1 h-px bg-gradient-to-r from-transparent via-slate-600 to-transparent"></div>
+        </div>
+      </div>
 
-      <ul class="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
-        <li class="items-center">
-          <a
-            [routerLink]="['/auth/login']"
-            class="text-blueGray-700 hover:text-blueGray-500 text-xs uppercase py-3 font-bold block"
-          >
-            <i class="fas fa-fingerprint text-blueGray-300 mr-2 text-sm"></i>
-            Login
-          </a>
-        </li>
+      <!-- Admin Navigation - Only Event Management -->
+      <div class="space-y-2">
+        <div class="mb-4">
+          <ul class="space-y-1">
+            <li>
+              <a
+                [routerLink]="['/admin/listevent']"
+                class="group relative flex items-center px-4 py-3 text-slate-300 hover:text-orange-100 rounded-xl transition-all duration-300 overflow-hidden"
+              >
+                <div class="absolute inset-0 bg-gradient-to-r from-red-800/20 to-red-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
+                <div class="absolute inset-0 border border-red-700/30 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative flex items-center w-full">
+                  <div class="w-10 h-10 bg-gradient-to-br from-red-800 to-red-900 rounded-xl flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                    <i class="fas fa-calendar-alt text-white text-lg"></i>
+                  </div>
+                  <span class="font-semibold text-base">Gestion Événements</span>
+                </div>
+                <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <i class="fas fa-chevron-right text-red-600"></i>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a
+                [routerLink]="['/admin/listcourse']"
+                class="group relative flex items-center px-4 py-3 text-slate-300 hover:text-purple-100 rounded-xl transition-all duration-300 overflow-hidden"
+              >
+                <div class="absolute inset-0 bg-gradient-to-r from-purple-800/20 to-purple-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
+                <div class="absolute inset-0 border border-purple-700/30 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative flex items-center w-full">
+                  <div class="w-10 h-10 bg-gradient-to-br from-purple-800 to-purple-900 rounded-xl flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                    <i class="fas fa-graduation-cap text-white text-lg"></i>
+                  </div>
+                  <span class="font-semibold text-base">Gestion Cours</span>
+                </div>
+                <div class="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <i class="fas fa-chevron-right text-purple-600"></i>
+                </div>
+              </a>
+            </li>
 
-        <li class="items-center">
-          <a
-            [routerLink]="['/auth/register']"
-            class="text-blueGray-700 hover:text-blueGray-500 text-xs uppercase py-3 font-bold block"
-          >
-            <i class="fas fa-clipboard-list text-blueGray-300 mr-2 text-sm"></i>
-            Register
-          </a>
-        </li>
-      </ul>
+          </ul>
+        </div>
+      </div>
+    </nav>
 
-      <!-- Divider -->
-      <hr class="my-4 md:min-w-full" />
-      <!-- Heading -->
-      <h6
-        class="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline"
-      >
-        No Layout Pages
-      </h6>
-      <!-- Navigation -->
-
-      <ul class="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
-        <li class="items-center">
-          <a
-            [routerLink]="['/landing']"
-            class="text-blueGray-700 hover:text-blueGray-500 text-xs uppercase py-3 font-bold block"
-          >
-            <i class="fas fa-newspaper text-blueGray-300 mr-2 text-sm"></i>
-            Landing Page
-          </a>
-        </li>
-
-        <li class="items-center">
-          <a
-            [routerLink]="['/profile']"
-            class="text-blueGray-700 hover:text-blueGray-500 text-xs uppercase py-3 font-bold block"
-          >
-            <i class="fas fa-user-circle text-blueGray-300 mr-2 text-sm"></i>
-            Profile Page
-          </a>
-        </li>
-      </ul>
-
-      <!-- Divider -->
-      <hr class="my-4 md:min-w-full" />
-      <!-- Heading -->
-      <h6
-        class="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline"
-      >
-        Documentation
-      </h6>
-      <!-- Navigation -->
-      <ul class="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
-        <li class="inline-flex">
-          <a
-            href="https://www.creative-tim.com/learning-lab/tailwind/angular/colors/notus"
-            target="_blank"
-            class="text-blueGray-700 hover:text-blueGray-500 text-sm block mb-4 no-underline font-semibold"
-          >
-            <i class="fas fa-paint-brush mr-2 text-blueGray-300 text-base"></i>
-            Styles
-          </a>
-        </li>
-
-        <li class="inline-flex">
-          <a
-            href="https://www.creative-tim.com/learning-lab/tailwind/angular/alerts/notus"
-            target="_blank"
-            class="text-blueGray-700 hover:text-blueGray-500 text-sm block mb-4 no-underline font-semibold"
-          >
-            <i class="fab fa-css3-alt mr-2 text-blueGray-300 text-base"></i>
-            CSS Components
-          </a>
-        </li>
-
-        <li class="inline-flex">
-          <a
-            href="https://www.creative-tim.com/learning-lab/tailwind/angular/overview/notus"
-            target="_blank"
-            class="text-blueGray-700 hover:text-blueGray-500 text-sm block mb-4 no-underline font-semibold"
-          >
-            <i class="fab fa-angular mr-2 text-blueGray-300 text-base"></i>
-            Angular
-          </a>
-        </li>
-
-        <li class="inline-flex">
-          <a
-            href="https://www.creative-tim.com/learning-lab/tailwind/js/overview/notus"
-            target="_blank"
-            class="text-blueGray-700 hover:text-blueGray-500 text-sm block mb-4 no-underline font-semibold"
-          >
-            <i class="fab fa-js-square mr-2 text-blueGray-300 text-base"></i>
-            Javascript
-          </a>
-        </li>
-
-        <li class="inline-flex">
-          <a
-            href="https://www.creative-tim.com/learning-lab/tailwind/nextjs/overview/notus"
-            target="_blank"
-            class="text-blueGray-700 hover:text-blueGray-500 text-sm block mb-4 no-underline font-semibold"
-          >
-            <i class="fab fa-react mr-2 text-blueGray-300 text-base"></i>
-            NextJS
-          </a>
-        </li>
-
-        <li class="inline-flex">
-          <a
-            href="https://www.creative-tim.com/learning-lab/tailwind/react/overview/notus"
-            target="_blank"
-            class="text-blueGray-700 hover:text-blueGray-500 text-sm block mb-4 no-underline font-semibold"
-          >
-            <i class="fab fa-react mr-2 text-blueGray-300 text-base"></i>
-            React
-          </a>
-        </li>
-
-        <li class="inline-flex">
-          <a
-            href="https://www.creative-tim.com/learning-lab/tailwind/svelte/overview/notus"
-            target="_blank"
-            class="text-blueGray-700 hover:text-blueGray-500 text-sm block mb-4 no-underline font-semibold"
-          >
-            <i class="fas fa-link mr-2 text-blueGray-300 text-base"></i>
-            Svelte
-          </a>
-        </li>
-
-        <li class="inline-flex">
-          <a
-            href="https://www.creative-tim.com/learning-lab/tailwind/vue/overview/notus"
-            target="_blank"
-            class="text-blueGray-700 hover:text-blueGray-500 text-sm block mb-4 no-underline font-semibold"
-          >
-            <i class="fab fa-vuejs mr-2 text-blueGray-300 text-base"></i>
-            VueJS
-          </a>
-        </li>
-      </ul>
+    <!-- Creative Footer -->
+    <div class="mt-auto text-center">
+      <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-slate-800/50 to-slate-700/50 rounded-full border border-slate-600/30 backdrop-blur-sm">
+        <i class="fas fa-copyright text-slate-400 mr-2"></i>
+        <p class="text-slate-300 text-sm font-medium">2024 Khotwa</p>
+      </div>
     </div>
   </div>
-</nav>
+</div>

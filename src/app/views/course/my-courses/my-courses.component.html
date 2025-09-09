@@ -1,0 +1,202 @@
+<!-- Hero Section - Nouveau Design Unifié -->
+<div class="hero-section">
+  <!-- Fond avec dégradés animés -->
+  <div class="hero-background"></div>
+
+  <!-- Formes géométriques décoratives -->
+  <div class="hero-shapes">
+    <div class="hero-circle-1"></div>
+    <div class="hero-circle-2"></div>
+    <div class="hero-circle-3"></div>
+    <div class="hero-triangle-1"></div>
+    <div class="hero-triangle-2"></div>
+    <div class="hero-dots"></div>
+  </div>
+
+  <!-- Contenu principal -->
+  <div class="hero-content">
+    <div class="space-y-6">
+      <h1 class="hero-title">
+        <span class="hero-title-gradient">Mes Cours</span>
+      </h1>
+
+      <div class="hero-subtitle">
+        🌟 <strong class="text-white">Suivez votre progression</strong> et
+        <span class="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent font-semibold">maîtrisez vos compétences</span> 🌟
+      </div>
+
+      <!-- Barre décorative animée -->
+      <div class="flex justify-center">
+        <div class="w-32 h-2 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 rounded-full animate-pulse"></div>
+      </div>
+    </div>
+
+    <!-- Call to action subtil -->
+    <div class="mt-12">
+      <p class="text-lg text-blue-200 font-medium">
+        <i class="fas fa-arrow-down animate-bounce mr-2"></i>
+        Découvrez vos cours ci-dessous
+        <i class="fas fa-arrow-down animate-bounce ml-2"></i>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Section avec filtres par catégorie - Nouveau Design -->
+<div class="filter-section">
+  <div class="container mx-auto px-4">
+    <div class="filter-container">
+      <div class="filter-grid">
+        <div class="filter-search">
+          <i class="fas fa-search filter-search-icon"></i>
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            (input)="onSearch()"
+            placeholder="Rechercher un cours par titre..."
+            class="filter-search-input"
+          >
+        </div>
+        <div class="filter-sort">
+          <select
+            [(ngModel)]="selectedSort"
+            (change)="onSortChange()"
+            class="filter-sort-select"
+          >
+            <option *ngFor="let option of sortOptions" [value]="option.value">{{ option.label }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Section avec filtres par technologies IT -->
+<div class="container mx-auto px-4 mt-4">
+  <div class="category-filter-container">
+    <h3 class="category-filter-title">
+      <i class="fas fa-filter text-primary-600"></i>
+      Filtrer par statut et catégorie
+    </h3>
+    <div class="category-filter-grid">
+      <button
+        (click)="selectedStatus = ''; onFilterChange()"
+        class="category-filter-btn category-all"
+        [class.active]="selectedStatus === ''">
+        <i class="fas fa-th-large"></i>
+        Tous les cours
+      </button>
+
+      <!-- Boutons de filtrage par statut -->
+      <button
+        (click)="selectedStatus = 'NOT_STARTED'; onFilterChange()"
+        class="category-filter-btn"
+        [ngClass]="selectedStatus === 'NOT_STARTED' ? 'bg-gradient-to-r from-gray-500 to-gray-600 text-white' : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'">
+        <i class="fas fa-circle text-gray-600"></i>
+        Non commencé
+      </button>
+
+      <button
+        (click)="selectedStatus = 'IN_PROGRESS'; onFilterChange()"
+        class="category-filter-btn"
+        [ngClass]="selectedStatus === 'IN_PROGRESS' ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white' : 'bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200'">
+        <i class="fas fa-play-circle text-blue-600"></i>
+        En cours
+      </button>
+
+      <button
+        (click)="selectedStatus = 'COMPLETED'; onFilterChange()"
+        class="category-filter-btn"
+        [ngClass]="selectedStatus === 'COMPLETED' ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' : 'bg-green-50 text-green-700 hover:bg-green-100 border border-green-200'">
+        <i class="fas fa-check-circle text-green-600"></i>
+        Terminé
+      </button>
+
+      <button
+        (click)="selectedStatus = 'QUIZ_READY'; onFilterChange()"
+        class="category-filter-btn"
+        [ngClass]="selectedStatus === 'QUIZ_READY' ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white' : 'bg-yellow-50 text-yellow-700 hover:bg-yellow-100 border border-yellow-200'">
+        <i class="fas fa-question-circle text-yellow-600"></i>
+        Quiz prêt
+      </button>
+
+      <button
+        (click)="selectedStatus = 'VALIDATED'; onFilterChange()"
+        class="category-filter-btn"
+        [ngClass]="selectedStatus === 'VALIDATED' ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 text-white' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200'">
+        <i class="fas fa-trophy text-emerald-600"></i>
+        Validé
+      </button>
+
+      <!-- Séparateur -->
+      <div class="h-8 w-px bg-gray-300 mx-2"></div>
+
+      <!-- Boutons de filtrage par catégorie -->
+      <button
+        *ngFor="let category of categories"
+        (click)="selectedCategory = category; onFilterChange()"
+        class="category-filter-btn"
+        [ngClass]="selectedCategory === category ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white' : 'bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-200'">
+        <i class="fas fa-tag text-purple-600"></i>
+        {{ category }}
+      </button>
+    </div>
+
+    <!-- Compteur de résultats -->
+    <div class="results-counter">
+      <p class="results-text">
+        <i class="fas fa-list mr-2"></i>
+        <span class="font-semibold text-gray-800 results-highlight">{{ enrolledCourses.length }}</span>
+        cours trouvé{{ enrolledCourses.length > 1 ? 's' : '' }}
+        <span *ngIf="selectedStatus || selectedCategory" class="text-primary-600 font-medium">
+          pour "{{ selectedStatus || selectedCategory }}"
+        </span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Section principale du contenu -->
+<div class="content-section">
+  <div class="content-container">
+    <!-- Section Title -->
+    <div class="text-center mb-10">
+      <h2 class="content-title">Mes cours inscrits</h2>
+      <div class="content-subtitle"></div>
+    </div>
+
+    <!-- Courses Grid -->
+    <div class="lg:w-3/4">
+
+      <!-- Loading State -->
+      <div *ngIf="loading" class="flex justify-center items-center py-20">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="error && !loading" class="bg-red-50 border border-red-200 rounded-lg p-6 mb-6">
+        <div class="flex items-center">
+          <i class="fas fa-exclamation-triangle text-red-500 mr-3"></i>
+          <p class="text-red-700">{{ error }}</p>
+        </div>
+      </div>
+
+      <!-- Courses Grid -->
+      <div *ngIf="!loading && !error" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <app-course-card
+          *ngFor="let course of enrolledCourses"
+          [course]="course"
+          (actionClicked)="handleCourseAction(course, $event)">
+        </app-course-card>
+      </div>
+
+      <!-- No Results -->
+      <div *ngIf="!loading && !error && enrolledCourses.length === 0" class="text-center py-20">
+        <i class="fas fa-book-open text-gray-400 text-6xl mb-4"></i>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Aucun cours trouvé</h3>
+        <p class="text-gray-600">Essayez de modifier vos critères de recherche</p>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,517 @@
+<!-- Hero Section - Nouveau Design Unifié -->
+<div class="hero-section" *ngIf="!isLoading && course">
+  <!-- Fond avec dégradés animés -->
+  <div class="hero-background"></div>
+
+  <!-- Formes géométriques décoratives -->
+  <div class="hero-shapes">
+    <div class="hero-circle-1"></div>
+    <div class="hero-circle-2"></div>
+    <div class="hero-circle-3"></div>
+    <div class="hero-triangle-1"></div>
+    <div class="hero-triangle-2"></div>
+    <div class="hero-dots"></div>
+  </div>
+
+  <!-- Contenu principal -->
+  <div class="hero-content">
+    <div class="space-y-6">
+      <h1 class="hero-title">
+        <span class="hero-title-gradient">{{ course.titre }}</span>
+      </h1>
+
+      <div class="hero-subtitle">
+        🌟 <strong class="text-white">Découvrez le contenu</strong> et
+        <span class="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent font-semibold">maîtrisez vos compétences</span> 🌟
+      </div>
+
+      <!-- Barre décorative animée -->
+      <div class="flex justify-center">
+        <div class="w-32 h-2 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 rounded-full animate-pulse"></div>
+      </div>
+    </div>
+
+    <!-- Informations du cours -->
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+      <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center">
+        <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+          <i class="fas fa-layer-group text-white text-xl"></i>
+        </div>
+        <p class="text-white/80 text-sm uppercase tracking-wide">Niveau</p>
+        <p class="text-white font-semibold">{{ course.niveau }}</p>
+      </div>
+
+      <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center">
+        <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+          <i class="fas fa-tag text-white text-xl"></i>
+        </div>
+        <p class="text-white/80 text-sm uppercase tracking-wide">Catégorie</p>
+        <p class="text-white font-semibold">{{ course.categorie }}</p>
+      </div>
+
+      <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center">
+        <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+          <i class="fas fa-clock text-white text-xl"></i>
+        </div>
+        <p class="text-white/80 text-sm uppercase tracking-wide">Durée</p>
+        <p class="text-white font-semibold">{{ course.duree }}h</p>
+      </div>
+    </div>
+
+    <!-- Progress Section -->
+    <div class="mt-8 bg-white/10 backdrop-blur-sm rounded-xl p-6 max-w-2xl mx-auto">
+      <div class="text-center mb-4">
+        <h3 class="text-white text-xl font-bold">Votre Progression</h3>
+        <p class="text-white/80">{{ getMotivationalMessage() }}</p>
+      </div>
+
+      <div class="flex items-center justify-center space-x-4 mb-4">
+        <span class="text-white/80">Chapitres terminés:</span>
+        <span class="text-white font-bold text-lg">{{ completedChapters.length }}/{{ course.chapters?.length || 0 }}</span>
+      </div>
+
+      <div class="w-full bg-white/20 rounded-full h-4 mb-2 overflow-hidden">
+        <div
+          class="h-4 rounded-full transition-all duration-1000 ease-out bg-gradient-to-r from-blue-400 to-purple-500"
+          [style.width.%]="progressPercentage">
+        </div>
+      </div>
+
+      <div class="text-center">
+        <span class="text-white font-bold text-2xl">{{ progressPercentage }}%</span>
+        <span class="text-white/80 ml-2">terminé</span>
+      </div>
+    </div>
+
+    <!-- Call to action subtil -->
+    <div class="mt-8">
+      <p class="text-lg text-blue-200 font-medium">
+        <i class="fas fa-arrow-down animate-bounce mr-2"></i>
+        Découvrez les chapitres ci-dessous
+        <i class="fas fa-arrow-down animate-bounce ml-2"></i>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Loading State -->
+<div class="min-h-screen flex items-center justify-center" *ngIf="isLoading">
+  <div class="text-center">
+    <div class="animate-spin rounded-full h-20 w-20 border-t-4 border-b-4 border-blue-600 mx-auto mb-4"></div>
+    <p class="text-xl text-gray-600">Chargement du contenu...</p>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="content-section" *ngIf="!isLoading && course">
+  <div class="content-container">
+
+    <!-- Section Title -->
+    <div class="text-center mb-10">
+      <h2 class="content-title">Chapitres du cours</h2>
+      <div class="content-subtitle"></div>
+    </div>
+
+    <!-- Chapters Grid - Nouveau Design -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      <div
+        *ngFor="let chapter of course.chapters; let i = index"
+        class="card-modern group cursor-pointer animate-fade-in"
+        [class.completed]="isChapterCompleted(chapter.id)"
+        [class.selected]="selectedChapter?.id === chapter.id"
+        (click)="selectChapter(chapter)"
+        [attr.data-animation]="animationState">
+
+        <!-- Chapter Header with Number and Status -->
+        <div class="relative">
+          <div class="h-32 bg-gradient-to-br from-blue-500 to-indigo-600 relative overflow-hidden">
+            <div class="absolute inset-0 bg-black bg-opacity-30"></div>
+
+            <!-- Chapter Number Badge -->
+            <div class="absolute top-4 left-4">
+              <div class="w-12 h-12 bg-white/95 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg">
+                <span class="text-gray-800 font-bold text-lg">{{ i + 1 }}</span>
+              </div>
+            </div>
+
+            <!-- Status Badge -->
+            <div class="absolute top-4 right-4">
+              <div class="bg-white/95 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg border border-white/20">
+                <div class="flex items-center">
+                  <i class="fas fa-check-circle text-green-500 mr-2" *ngIf="isChapterCompleted(chapter.id)"></i>
+                  <i class="fas fa-circle text-gray-400 mr-2" *ngIf="!isChapterCompleted(chapter.id)"></i>
+                  <span class="text-gray-800 text-sm font-medium">
+                    {{ isChapterCompleted(chapter.id) ? 'Terminé' : 'À faire' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-6">
+          <!-- Chapter Icon -->
+          <div class="flex items-center justify-center mb-4">
+            <div class="w-16 h-16 rounded-full flex items-center justify-center"
+                 [style.background-color]="getChapterColor(chapter.type) + '20'"
+                 [style.border-color]="getChapterColor(chapter.type)"
+                 style="border: 2px solid;">
+              <i [class]="getChapterIcon(chapter.type)"
+                 [style.color]="getChapterColor(chapter.type)"
+                 class="text-2xl"></i>
+            </div>
+          </div>
+
+          <!-- Chapter Title -->
+          <h3 class="text-lg font-bold text-gray-800 mb-2 text-center leading-tight group-hover:text-primary-600 transition-colors duration-300">
+            {{ chapter.title }}
+          </h3>
+
+          <!-- Chapter Description -->
+          <p class="text-gray-600 mb-4 text-sm line-clamp-2 leading-relaxed text-center">
+            {{ chapter.description }}
+          </p>
+
+          <!-- Chapter Meta -->
+          <div class="flex items-center justify-between mb-4">
+            <span class="px-2 py-1 rounded-full text-xs font-semibold"
+                  [style.background-color]="getChapterColor(chapter.type) + '20'"
+                  [style.color]="getChapterColor(chapter.type)">
+              {{ chapter.type | titlecase }}
+            </span>
+            <span class="text-xs text-gray-500">
+              Ordre {{ chapter.order }}
+            </span>
+          </div>
+
+          <!-- Action Button -->
+          <div class="flex justify-center">
+            <button class="btn-primary w-full flex items-center justify-center group/btn">
+              <span class="mr-2">{{ isChapterCompleted(chapter.id) ? 'Revoir' : 'Commencer' }}</span>
+              <i class="fas fa-arrow-right transition-transform duration-300 group-hover/btn:translate-x-1"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- No chapters message -->
+      <div *ngIf="!course.chapters || course.chapters.length === 0" class="col-span-full text-center py-16">
+        <div class="bg-white rounded-xl shadow-xl p-8">
+          <svg class="mx-auto h-20 w-20 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <h3 class="text-3xl font-semibold text-gray-800 mb-4">Aucun chapitre trouvé</h3>
+          <p class="text-xl text-gray-600">Les chapitres du cours n'ont pas pu être chargés.</p>
+          <button class="btn-primary mt-6" (click)="loadCourseData()">
+            <i class="fas fa-sync-alt mr-2"></i>
+            Recharger
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz Ready Section - Nouveau Design -->
+    <div class="text-center" *ngIf="showQuizButton">
+      <div class="card-modern max-w-2xl mx-auto p-8">
+        <div class="text-center mb-6">
+          <div class="w-20 h-20 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <i class="fas fa-trophy text-white text-3xl"></i>
+          </div>
+          <h3 class="text-2xl font-bold text-gray-800 mb-2">Félicitations ! 🎉</h3>
+          <p class="text-gray-600 mb-6">Vous avez terminé tous les chapitres du cours.</p>
+          <p class="text-gray-600 mb-8">Il est temps de passer au quiz pour valider vos connaissances !</p>
+        </div>
+
+        <button class="btn-primary w-full flex items-center justify-center group/btn" (click)="startQuiz()">
+          <span class="mr-2">Passer au Quiz</span>
+          <i class="fas fa-question-circle transition-transform duration-300 group-hover/btn:translate-x-1"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Content View -->
+    <div class="content-view" *ngIf="currentView === 'content' && selectedChapter">
+      <div class="content-header">
+        <button class="back-btn" (click)="backToChapters()">
+          <i class="fas fa-arrow-left"></i>
+          Retour aux chapitres
+        </button>
+        <div class="content-info">
+          <div class="content-icon">
+            <i [class]="getChapterIcon(selectedChapter.type)" [style.color]="getChapterColor(selectedChapter.type)"></i>
+          </div>
+          <div class="content-details">
+            <h2>{{ selectedChapter.title }}</h2>
+            <p>{{ selectedChapter.description }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-body">
+        <!-- Text Content -->
+        <div class="text-content" *ngIf="selectedChapter.type === 'text'">
+          <div class="text-wrapper" [innerHTML]="selectedChapter.content"></div>
+        </div>
+
+        <!-- PDF Content -->
+        <div class="pdf-content" *ngIf="selectedChapter.type === 'pdf'">
+          <div class="pdf-header">
+            <h3>Document PDF</h3>
+            <button
+              class="download-btn primary"
+              (click)="downloadFile(selectedChapter.content, selectedChapter.title + '.pdf')">
+              <i class="fas fa-download"></i>
+              Télécharger le PDF
+            </button>
+          </div>
+          <div class="pdf-viewer">
+            <iframe
+              [src]="selectedChapter.content"
+              class="pdf-iframe"
+              type="application/pdf">
+            </iframe>
+          </div>
+
+        <!-- Video Content -->
+        <div class="video-content" *ngIf="isVideoType(selectedChapter.type)">
+          <div class="video-header">
+            <h3>Vidéo</h3>
+            <button
+              class="download-btn primary"
+              (click)="downloadFile(selectedChapter.content, selectedChapter.title + '.mp4')">
+              <i class="fas fa-download"></i>
+              Télécharger la vidéo
+            </button>
+          </div>
+          <div class="video-player">
+            <video
+              [src]="selectedChapter.content"
+              controls
+              class="video-element"
+              (ended)="markChapterCompleted(selectedChapter.id)"
+              preload="metadata">
+            </video>
+          </div>
+        </div>
+
+        <!-- PowerPoint Content -->
+        <div class="powerpoint-content" *ngIf="isPowerPointType(selectedChapter.type)">
+          <div class="powerpoint-header">
+            <h3>Présentation PowerPoint</h3>
+            <button
+              class="download-btn primary"
+              (click)="downloadFile(selectedChapter.content, selectedChapter.title + '.pptx')">
+              <i class="fas fa-download"></i>
+              Télécharger la présentation
+            </button>
+          </div>
+          <div class="powerpoint-preview">
+            <div class="powerpoint-icon">
+              <i class="fas fa-file-powerpoint"></i>
+            </div>
+            <p>Cliquez sur le bouton de téléchargement pour ouvrir la présentation PowerPoint.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Completion Section -->
+      <div class="completion-section">
+        <div class="completion-card" [class.completed]="isChapterCompleted(selectedChapter.id)">
+          <div class="completion-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <div class="completion-content">
+            <h3 [class.completed-text]="isChapterCompleted(selectedChapter.id)">
+              {{ isChapterCompleted(selectedChapter.id) ? 'Chapitre terminé !' : 'Marquer comme terminé' }}
+            </h3>
+            <p>
+              {{ isChapterCompleted(selectedChapter.id)
+                ? 'Vous avez terminé ce chapitre avec succès.'
+                : 'Avez-vous terminé ce chapitre ? Marquez-le comme terminé pour continuer votre progression.' }}
+            </p>
+          </div>
+          <button
+            class="completion-btn"
+            [class.completed]="isChapterCompleted(selectedChapter.id)"
+            [disabled]="isChapterCompleted(selectedChapter.id)"
+            (click)="markChapterCompleted(selectedChapter.id)">
+            <i class="fas fa-check"></i>
+            {{ isChapterCompleted(selectedChapter.id) ? 'Terminé' : 'Marquer comme terminé' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz View -->
+    <div class="quiz-view" *ngIf="isQuizView(currentView) && quiz">
+      <div class="quiz-header">
+        <button class="back-btn" (click)="backToChapters()">
+          <i class="fas fa-arrow-left"></i>
+          Retour aux chapitres
+        </button>
+        <div class="quiz-info">
+          <h2>{{ quiz.nomQuizz }}</h2>
+          <p>{{ quiz.cours?.description || 'Testez vos connaissances' }}</p>
+          <div class="quiz-meta">
+            <span class="quiz-duration">
+              <i class="fas fa-clock"></i>
+              30 minutes
+            </span>
+            <span class="quiz-questions">
+              <i class="fas fa-question-circle"></i>
+              {{ quiz.questions?.length || 0 }} questions
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="quiz-content">
+        <div class="quiz-instructions">
+          <h3>Instructions</h3>
+          <ul>
+            <li>Lisez attentivement chaque question</li>
+            <li>Sélectionnez la réponse qui vous semble correcte</li>
+            <li>Vous devez obtenir au moins 70% pour réussir</li>
+            <li>Vous pouvez revenir en arrière pour modifier vos réponses</li>
+          </ul>
+        </div>
+
+        <div class="quiz-actions">
+          <button class="start-quiz-btn" (click)="startActualQuiz()">
+            <i class="fas fa-play"></i>
+            Commencer le Quiz
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz Player Section - Nouveau composant simple et fiable -->
+    <div class="quiz-player-section" *ngIf="isActualQuizView(currentView) && quiz">
+      <div class="quiz-header">
+        <button class="back-btn" (click)="backToChapters()">
+          <i class="fas fa-arrow-left"></i>
+          Retour aux chapitres
+        </button>
+      </div>
+
+      <!-- Utilisation du nouveau composant QuizPlayer -->
+      <app-quiz-player
+        [quiz]="quiz"
+        [currentQuestionIndex]="currentQuestionIndex"
+        [answers]="answers"
+        (answerSelected)="onAnswerSelected($event)"
+        (nextQuestion)="nextQuestion()"
+        (previousQuestion)="previousQuestion()"
+        (submitQuiz)="submitQuiz()">
+      </app-quiz-player>
+    </div>
+
+      <!-- Results Section -->
+      <div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50" *ngIf="showResults && result">
+        <!-- Results Header -->
+        <div class="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 text-white">
+          <div class="container mx-auto px-6 py-12">
+            <div class="max-w-4xl mx-auto text-center">
+              <div class="mb-8">
+                <div class="w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center text-6xl"
+                     [class]="result.passed ? 'bg-green-500' : 'bg-red-500'">
+                  <i class="fas" [class]="result.passed ? 'fa-trophy' : 'fa-times-circle'"></i>
+                </div>
+                <h1 class="text-4xl font-bold mb-4">
+                  {{ result.passed ? '🎉 Félicitations !' : '💪 Continuez vos efforts' }}
+                </h1>
+                <p class="text-xl text-blue-100">
+                  {{ result.passed
+                    ? 'Vous avez brillamment réussi ce quiz !'
+                    : 'Vous n\'avez pas atteint le score minimum requis.' }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Results Content -->
+        <div class="container mx-auto px-6 py-8">
+          <div class="max-w-4xl mx-auto">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div class="bg-white rounded-xl shadow-lg p-6 text-center border-l-4 border-blue-500">
+                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <i class="fas fa-target text-blue-600 text-xl"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-900 mb-1">{{ result.score }}/{{ result.total }}</div>
+                <div class="text-sm text-gray-600">Score obtenu</div>
+              </div>
+
+              <div class="bg-white rounded-xl shadow-lg p-6 text-center border-l-4 border-green-500">
+                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <i class="fas fa-percentage text-green-600 text-xl"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-900 mb-1">{{ result.percentage }}%</div>
+                <div class="text-sm text-gray-600">Pourcentage</div>
+              </div>
+
+              <div class="bg-white rounded-xl shadow-lg p-6 text-center border-l-4"
+                   [class]="result.passed ? 'border-green-500' : 'border-red-500'">
+                <div class="w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4"
+                     [class]="result.passed ? 'bg-green-100' : 'bg-red-100'">
+                  <i class="fas text-xl"
+                     [class]="result.passed ? 'fa-check text-green-600' : 'fa-times text-red-600'"></i>
+                </div>
+                <div class="text-2xl font-bold mb-1"
+                     [class]="result.passed ? 'text-green-600' : 'text-red-600'">
+                  {{ result.passed ? 'Réussi' : 'Échoué' }}
+                </div>
+                <div class="text-sm text-gray-600">Statut</div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                class="group px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                *ngIf="result.passed">
+                <div class="flex items-center space-x-3">
+                  <i class="fas fa-trophy text-xl group-hover:scale-110 transition-transform duration-300"></i>
+                  <span class="font-medium">Certificat disponible</span>
+                </div>
+              </button>
+
+              <button
+                class="group px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
+                *ngIf="!result.passed"
+                (click)="retakeQuiz()">
+                <div class="flex items-center space-x-3">
+                  <i class="fas fa-redo text-xl group-hover:rotate-180 transition-transform duration-300"></i>
+                  <span class="font-medium">Refaire le quiz</span>
+                </div>
+              </button>
+
+              <button
+                class="group px-8 py-4 bg-gray-600 hover:bg-gray-700 text-white rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
+                (click)="backToChapters()">
+                <div class="flex items-center space-x-3">
+                  <i class="fas fa-arrow-left group-hover:-translate-x-1 transition-transform duration-300"></i>
+                  <span class="font-medium">Retour aux cours</span>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-state" *ngIf="!isLoading && !course">
+    <div class="error-icon">
+      <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    <h3>Cours non trouvé</h3>
+    <p>Le cours demandé n'existe pas ou n'est pas disponible.</p>
+    <button class="retry-btn" (click)="loadCourseData()">
+      <i class="fas fa-sync-alt"></i>
+      Réessayer
+    </button>
+  </div>
+</div>

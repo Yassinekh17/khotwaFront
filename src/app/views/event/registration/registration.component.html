@@ -1,0 +1,143 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-2xl mx-auto">
+    <!-- Bouton retour -->
+    <button
+      (click)="goBack()"
+      class="mb-6 bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
+    >
+      <i class="fas fa-arrow-left mr-2"></i> Retour aux détails
+    </button>
+
+    <!-- Chargement -->
+    <div *ngIf="loading" class="text-center py-8">
+      <i class="fas fa-spinner fa-spin text-3xl text-blue-500"></i>
+      <p class="mt-2">Chargement des détails de l'événement...</p>
+    </div>
+
+    <!-- Erreur -->
+    <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative mb-6" role="alert">
+      <strong class="font-bold">Erreur!</strong>
+      <span class="block sm:inline ml-2">{{ error }}</span>
+    </div>
+
+    <!-- Contenu principal -->
+    <div *ngIf="event && !loading" class="bg-white shadow-lg rounded-lg overflow-hidden">
+      <!-- En-tête avec image de l'événement -->
+      <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6">
+        <h1 class="text-3xl font-bold mb-2">Inscription à l'événement</h1>
+        <h2 class="text-xl">{{ event.title }}</h2>
+        <div class="mt-2 text-blue-100">
+          <i class="fas fa-calendar-alt mr-2"></i>
+          {{ event.date | date: 'dd/MM/yyyy à HH:mm' }}
+          <i class="fas fa-map-marker-alt ml-4 mr-2"></i>
+          {{ event.location }}
+        </div>
+      </div>
+
+      <!-- Corps du formulaire -->
+      <div class="p-6">
+        <!-- Message de succès -->
+        <div *ngIf="inscriptionSuccess" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg relative mb-6">
+          <i class="fas fa-check-circle mr-2"></i>
+          <strong>Inscription réussie !</strong>
+          <br>
+          <span class="text-sm">Vos données ont été sauvegardées automatiquement dans la base de données.</span>
+          <br>
+          <span class="text-sm">Vous pouvez voir cet événement dans "Mes Événements".</span>
+          <button (click)="goBack()" class="ml-4 underline hover:no-underline">Retour aux détails</button>
+        </div>
+
+        <!-- Message de chargement -->
+        <div *ngIf="inscriptionLoading && !inscriptionSuccess" class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded-lg relative mb-6">
+          <i class="fas fa-spinner fa-spin mr-2"></i>
+          <strong>Inscription en cours...</strong>
+          <br>
+          <span class="text-sm">Vos données sont en cours de traitement.</span>
+        </div>
+
+        <!-- Message d'erreur -->
+        <div *ngIf="inscriptionError" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative mb-6">
+          <i class="fas fa-exclamation-triangle mr-2"></i> {{ inscriptionError }}
+        </div>
+
+        <!-- Formulaire d'inscription -->
+        <div *ngIf="!inscriptionSuccess">
+          <h3 class="text-2xl font-semibold mb-4 text-gray-800">Formulaire d'inscription</h3>
+
+          <form [formGroup]="inscriptionForm" (ngSubmit)="submitInscription()" class="space-y-6">
+            <!-- Nom complet -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2" for="nom">
+                Nom complet <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="nom"
+                formControlName="nom"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+                placeholder="Entrez votre nom complet"
+              />
+              <div *ngIf="inscriptionForm.get('nom')?.invalid && inscriptionForm.get('nom')?.touched" class="text-red-500 text-sm mt-1">
+                Le nom est obligatoire et doit comporter au moins 2 caractères.
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2" for="email">
+                Adresse email <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="email"
+                id="email"
+                formControlName="email"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+                placeholder="Entrez votre adresse email"
+              />
+              <div *ngIf="inscriptionForm.get('email')?.invalid && inscriptionForm.get('email')?.touched" class="text-red-500 text-sm mt-1">
+                Veuillez entrer une adresse email valide.
+              </div>
+            </div>
+
+            <!-- Téléphone -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2" for="telephone">
+                Numéro de téléphone <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="tel"
+                id="telephone"
+                formControlName="telephone"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+                placeholder="Entrez votre numéro de téléphone"
+              />
+              <div *ngIf="inscriptionForm.get('telephone')?.invalid && inscriptionForm.get('telephone')?.touched" class="text-red-500 text-sm mt-1">
+                Veuillez entrer un numéro de téléphone valide (au moins 8 chiffres).
+              </div>
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="flex space-x-4 pt-6">
+              <button
+                type="button"
+                (click)="goBack()"
+                class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition duration-300"
+              >
+                <i class="fas fa-times mr-2"></i> Annuler
+              </button>
+              <button
+                type="submit"
+                [disabled]="inscriptionForm.invalid || inscriptionLoading"
+                class="flex-1 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white font-bold py-3 px-6 rounded-lg transition duration-300"
+              >
+                <i *ngIf="inscriptionLoading" class="fas fa-spinner fa-spin mr-2"></i>
+                <i *ngIf="!inscriptionLoading" class="fas fa-paper-plane mr-2"></i>
+                {{ inscriptionLoading ? 'Inscription en cours...' : 'S\'inscrire' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

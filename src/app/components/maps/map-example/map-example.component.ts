@@ -11,8 +11,8 @@ export class MapExampleComponent implements OnInit {
 
   ngOnInit(): void {
     let map = document.getElementById("map-canvas");
-    let lat = map.getAttribute("data-lat");
-    let lng = map.getAttribute("data-lng");
+    let lat = map?.getAttribute("data-lat");
+    let lng = map?.getAttribute("data-lng");
 
     const myLatlng = new google.maps.LatLng(lat, lng);
     const mapOptions = {

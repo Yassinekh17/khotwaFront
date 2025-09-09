@@ -1,0 +1,162 @@
+<!-- Header -->
+<div class="bg-gradient-to-r from-red-600 to-pink-600 text-white">
+  <div class="container mx-auto px-4 py-6">
+    <button
+      (click)="goBack()"
+      class="mb-4 inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition-all">
+      <i class="fas fa-arrow-left mr-2"></i>Retour aux cours
+    </button>
+
+    <div class="text-center">
+      <h1 class="text-3xl lg:text-4xl font-bold mb-2">
+        <i class="fas fa-play-circle mr-3"></i>
+        Lecteur Vidéo
+      </h1>
+      <p class="text-red-100">Regardez vos vidéos de cours</p>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="container mx-auto px-4 py-8">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex justify-center items-center py-12">
+    <div class="animate-spin rounded-full h-20 w-20 border-t-4 border-b-4 border-red-600"></div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="bg-red-100 border border-red-400 text-red-700 px-8 py-6 rounded-lg max-w-md mx-auto">
+    <div class="flex items-center mb-4">
+      <i class="fas fa-exclamation-triangle text-red-500 text-2xl mr-3"></i>
+      <h3 class="text-lg font-semibold">Erreur</h3>
+    </div>
+    <p class="mb-4">{{ error }}</p>
+    <button
+      (click)="loadVideoResources()"
+      class="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors">
+      <i class="fas fa-redo mr-2"></i>Réessayer
+    </button>
+  </div>
+
+  <!-- Video Player Section -->
+  <div *ngIf="!loading && !error && currentVideo" class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+    <!-- Video Player -->
+    <div class="lg:col-span-3">
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <!-- Video Title -->
+        <div class="bg-gradient-to-r from-red-500 to-pink-500 p-4 text-white">
+          <h2 class="text-xl font-bold">{{ currentVideo.title }}</h2>
+          <div class="flex items-center text-sm opacity-90 mt-1">
+            <i class="fas fa-clock mr-1"></i>
+            <span>{{ formatDuration(currentVideo.duration!) }}</span>
+            <span class="mx-2">•</span>
+            <i class="fas fa-file-video mr-1"></i>
+            <span>{{ currentVideo.format }}</span>
+          </div>
+        </div>
+
+        <!-- Video Element -->
+        <div class="relative bg-black">
+          <video
+            #videoPlayer
+            [src]="currentVideo.url"
+            controls
+            class="w-full h-auto max-h-96"
+            (ended)="onVideoEnded()"
+            (play)="onVideoPlay()"
+            preload="metadata">
+            Votre navigateur ne supporte pas la lecture vidéo.
+          </video>
+
+          <!-- Video Overlay for Completion -->
+          <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+            <div class="text-white text-center">
+              <i class="fas fa-play-circle text-4xl mb-2"></i>
+              <p class="text-sm">Vidéo en cours de lecture</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Video Controls -->
+        <div class="p-4 bg-gray-50">
+          <div class="flex justify-between items-center">
+            <button
+              (click)="previousVideo()"
+              [disabled]="currentVideoIndex === 0"
+              class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+              <i class="fas fa-chevron-left mr-2"></i>Précédent
+            </button>
+
+            <span class="text-gray-600">
+              {{ currentVideoIndex + 1 }} / {{ videoResources.length }}
+            </span>
+
+            <button
+              (click)="nextVideo()"
+              [disabled]="currentVideoIndex === videoResources.length - 1"
+              class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+              Suivant<i class="fas fa-chevron-right ml-2"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Video Playlist -->
+    <div class="lg:col-span-1">
+      <div class="bg-white rounded-xl shadow-lg p-4">
+        <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+          <i class="fas fa-list mr-2 text-red-600"></i>
+          Playlist
+        </h3>
+
+        <div class="space-y-3 max-h-96 overflow-y-auto">
+          <div
+            *ngFor="let video of videoResources; let i = index"
+            (click)="selectVideo(i)"
+            class="p-3 rounded-lg cursor-pointer transition-all"
+            [class.bg-red-100]="i === currentVideoIndex"
+            [class.hover:bg-gray-100]="i !== currentVideoIndex">
+
+            <div class="flex items-start space-x-3">
+              <!-- Thumbnail -->
+              <div class="w-16 h-12 bg-gray-200 rounded flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-play text-gray-600 text-sm"></i>
+              </div>
+
+              <!-- Video Info -->
+              <div class="flex-1 min-w-0">
+                <h4 class="font-medium text-gray-800 text-sm leading-tight line-clamp-2">
+                  {{ video.title }}
+                </h4>
+                <p class="text-xs text-gray-500 mt-1">
+                  {{ formatDuration(video.duration!) }}
+                </p>
+              </div>
+
+              <!-- Current Playing Indicator -->
+              <div *ngIf="i === currentVideoIndex" class="flex-shrink-0">
+                <i class="fas fa-play-circle text-red-600"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && videoResources.length === 0" class="text-center py-16">
+    <div class="bg-white rounded-xl shadow-xl p-8 max-w-md mx-auto">
+      <i class="fas fa-video text-6xl text-gray-300 mb-4"></i>
+      <h3 class="text-2xl font-semibold text-gray-800 mb-4">Aucune vidéo disponible</h3>
+      <p class="text-gray-600 mb-6">Il n'y a pas de ressources vidéo pour ce cours actuellement.</p>
+      <button
+        (click)="goBack()"
+        class="bg-red-600 text-white py-3 px-6 rounded-lg hover:bg-red-700 transition-colors">
+        <i class="fas fa-arrow-left mr-2"></i>Retour aux cours
+      </button>
+    </div>
+  </div>
+</div>

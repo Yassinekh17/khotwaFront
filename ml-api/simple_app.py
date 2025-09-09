@@ -163,28 +163,77 @@ HOME_PAGE_TEMPLATE = """
 # Créer le dossier models s'il n'existe pas
 os.makedirs('models', exist_ok=True)
 
-# Charger les données de test depuis le fichier JSON
-try:
-    with open('test_data.json', 'r', encoding='utf-8') as f:
-        test_data = json.load(f)
-        sample_events = test_data.get('events', [])
-        locations = test_data.get('locations', {})
-        user_density = test_data.get('user_density', {})
-        print(f"Données de test chargées: {len(sample_events)} événements, {len(locations)} lieux, {len(user_density)} zones")
-except Exception as e:
-    print(f"Erreur lors du chargement des données de test: {e}")
-    # Données fictives de secours
-    sample_events = [
-        {"eventId": 1, "title": "Workshop Python", "date": "2023-05-15T14:00:00", "location": "Salle A", "participants": 25},
-        {"eventId": 2, "title": "Conférence IA", "date": "2023-05-16T10:00:00", "location": "Amphithéâtre", "participants": 120}
-    ]
-    locations = {
-        "Salle A": {"lat": 36.8065, "lng": 10.1815, "capacity": 30},
-        "Amphithéâtre": {"lat": 36.8075, "lng": 10.1830, "capacity": 150}
+# Utiliser directement les données d'événements définies ci-dessous
+# (au lieu de charger depuis test_data.json qui contient d'anciennes données)
+
+# Données fictives pour les inscriptions
+sample_inscriptions = []
+
+# Données des événements (nouvelles données complètes)
+sample_events = [
+    {
+        "eventId": 1,
+        "title": "Formation Angular Avancé",
+        "description": "Maîtrisez les concepts avancés d'Angular avec des projets pratiques",
+        "date": "2025-01-15T10:00:00",
+        "location": "Salle de formation A",
+        "type": "FORMATION",
+        "status": "UPCOMING",
+        "capacite": 30,
+        "maxParticipants": 30,
+        "currentParticipants": 15,
+        "technologie": "Angular",
+        "imageUrl": "assets/img/landing.jpg"
+    },
+    {
+        "eventId": 2,
+        "title": "Workshop React & TypeScript",
+        "description": "Découvrez les meilleures pratiques de développement avec React et TypeScript",
+        "date": "2025-01-20T14:00:00",
+        "location": "Salle de formation B",
+        "type": "WORKSHOP",
+        "status": "UPCOMING",
+        "capacite": 25,
+        "maxParticipants": 25,
+        "currentParticipants": 8,
+        "technologie": "React",
+        "imageUrl": "assets/img/landing.jpg"
+    },
+    {
+        "eventId": 3,
+        "title": "Conférence IA & Machine Learning",
+        "description": "Explorez les dernières avancées en intelligence artificielle",
+        "date": "2025-01-25T09:00:00",
+        "location": "Amphithéâtre",
+        "type": "CONFERENCE",
+        "status": "UPCOMING",
+        "capacite": 100,
+        "maxParticipants": 100,
+        "currentParticipants": 45,
+        "technologie": "Intelligence Artificielle",
+        "imageUrl": "assets/img/landing.jpg"
     }
-    user_density = {
-        "Zone Centre": {"lat": 36.8070, "lng": 10.1825, "density": 0.8}
-    }
+]
+
+locations = {
+    "Salle de formation A": {"lat": 36.8065, "lng": 10.1815, "capacity": 30},
+    "Salle de formation B": {"lat": 36.8068, "lng": 10.1820, "capacity": 25},
+    "Amphithéâtre": {"lat": 36.8075, "lng": 10.1830, "capacity": 100},
+    "Salle A": {"lat": 36.8065, "lng": 10.1815, "capacity": 30},
+    "Salle B": {"lat": 36.8068, "lng": 10.1820, "capacity": 40},
+    "Salle C": {"lat": 36.8070, "lng": 10.1825, "capacity": 25},
+    "Espace Co-working": {"lat": 36.8080, "lng": 10.1835, "capacity": 60}
+}
+
+user_density = {
+    "Zone Centre": {"lat": 36.8070, "lng": 10.1825, "density": 0.8},
+    "Zone Nord": {"lat": 36.8090, "lng": 10.1835, "density": 0.6},
+    "Zone Sud": {"lat": 36.8050, "lng": 10.1815, "density": 0.4},
+    "Zone Est": {"lat": 36.8075, "lng": 10.1850, "density": 0.5},
+    "Zone Ouest": {"lat": 36.8065, "lng": 10.1800, "density": 0.3},
+}
+
+print(f"Données d'événements chargées: {len(sample_events)} événements")
 
 def calculate_location_scores():
     """Calcule un score pour chaque lieu en fonction des données fictives"""
@@ -363,6 +412,68 @@ def predict():
 
     return jsonify({"prediction": prediction})
 
+@app.route('/predict', methods=['POST'])
+def predict_quiz():
+    """Endpoint pour la prédiction du quiz classifier"""
+    try:
+        data = request.json
+        print(f"Données reçues pour le quiz: {data}")
+
+        # Vérifier que toutes les données requises sont présentes
+        required_fields = ['SessionDuration', 'SessionsPerWeek', 'CourseCompletion', 'UserSatisfaction']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({"error": f"Champ manquant: {field}"}), 400
+
+        # Extraire les valeurs
+        session_duration = float(data['SessionDuration'])
+        sessions_per_week = float(data['SessionsPerWeek'])
+        course_completion = float(data['CourseCompletion'])
+        user_satisfaction = float(data['UserSatisfaction'])
+
+        # Logique de prédiction simplifiée pour le quiz
+        # Cette logique peut être remplacée par un vrai modèle ML
+        if course_completion >= 80 and user_satisfaction >= 4:
+            if session_duration <= 30 and sessions_per_week >= 3:
+                prediction = "Étudiant assidu - Haut potentiel"
+            elif session_duration > 60:
+                prediction = "Apprenant approfondi"
+            else:
+                prediction = "Bon élève régulier"
+        elif course_completion >= 60 and user_satisfaction >= 3:
+            prediction = "Étudiant moyen - Peut s'améliorer"
+        elif course_completion < 40 or user_satisfaction < 2:
+            prediction = "Risque d'abandon - Attention requise"
+        else:
+            prediction = "Étudiant irrégulier - Suivi nécessaire"
+
+        # Calculer un score de confiance (fictif)
+        confidence_score = round(random.uniform(0.7, 0.95), 2)
+
+        response = {
+            "prediction": prediction,
+            "confidence": confidence_score,
+            "input_data": {
+                "SessionDuration": session_duration,
+                "SessionsPerWeek": sessions_per_week,
+                "CourseCompletion": course_completion,
+                "UserSatisfaction": user_satisfaction
+            },
+            "recommendations": [
+                "Continuer avec les bonnes pratiques" if "Haut potentiel" in prediction else
+                "Augmenter la fréquence des sessions" if sessions_per_week < 2 else
+                "Se concentrer sur la completion des cours" if course_completion < 70 else
+                "Améliorer l'expérience utilisateur"
+            ]
+        }
+
+        print(f"Prédiction du quiz: {response}")
+        return jsonify(response)
+
+    except Exception as e:
+        print(f"Erreur lors de la prédiction du quiz: {e}")
+        return jsonify({"error": "Erreur interne du serveur", "details": str(e)}), 500
+
 @app.route('/api/recommend', methods=['POST'])
 def recommend():
     """Endpoint pour recommander des dates et lieux optimaux"""
@@ -410,6 +521,290 @@ def get_locations():
             for location, info in location_scores.items()
         ]
     })
+
+# Routes pour les événements
+@app.route('/evenements/all', methods=['GET'])
+def get_all_events():
+    """Récupère tous les événements"""
+    return jsonify(sample_events)
+
+@app.route('/evenements/<int:event_id>', methods=['GET'])
+def get_event_by_id(event_id):
+    """Récupère un événement par son ID"""
+    event = next((e for e in sample_events if e['eventId'] == event_id), None)
+    if event:
+        return jsonify(event)
+    return jsonify({"error": "Événement non trouvé"}), 404
+
+@app.route('/evenements/create', methods=['POST'])
+def create_event():
+    """Crée un nouvel événement"""
+    try:
+        data = request.json
+        print(f"Données reçues pour créer l'événement: {data}")
+
+        # Générer un nouvel ID
+        new_id = max([e['eventId'] for e in sample_events], default=0) + 1
+
+        # Créer l'événement avec tous les champs nécessaires
+        new_event = {
+            "eventId": new_id,
+            "title": data.get('title', ''),
+            "description": data.get('description', ''),
+            "date": data.get('date', ''),
+            "location": data.get('location', ''),
+            "type": data.get('type', 'FORMATION'),
+            "status": data.get('status', 'UPCOMING'),
+            "capacite": data.get('capacite', 0),
+            "maxParticipants": data.get('capacite', 0),  # Utiliser capacite comme maxParticipants
+            "currentParticipants": data.get('currentParticipants', 0),
+            "technologie": data.get('technologie', ''),
+            "imageUrl": data.get('imageUrl', 'assets/img/landing.jpg')
+        }
+
+        # Ajouter l'événement à la liste
+        sample_events.append(new_event)
+
+        print(f"Événement créé avec succès: {new_event}")
+        return jsonify(new_event), 201
+
+    except Exception as e:
+        print(f"Erreur lors de la création de l'événement: {e}")
+        return jsonify({"error": "Erreur interne du serveur", "details": str(e)}), 500
+
+@app.route('/evenements/update/<int:event_id>', methods=['PUT'])
+def update_event(event_id):
+    """Met à jour un événement existant"""
+    try:
+        data = request.json
+        print(f"Données reçues pour mettre à jour l'événement {event_id}: {data}")
+
+        # Trouver l'événement à mettre à jour
+        event = next((e for e in sample_events if e['eventId'] == event_id), None)
+        if not event:
+            return jsonify({"error": "Événement non trouvé"}), 404
+
+        # Mettre à jour les champs
+        event.update({
+            "title": data.get('title', event.get('title')),
+            "description": data.get('description', event.get('description')),
+            "date": data.get('date', event.get('date')),
+            "location": data.get('location', event.get('location')),
+            "type": data.get('type', event.get('type')),
+            "status": data.get('status', event.get('status')),
+            "capacite": data.get('capacite', event.get('capacite')),
+            "maxParticipants": data.get('capacite', event.get('maxParticipants')),
+            "currentParticipants": data.get('currentParticipants', event.get('currentParticipants')),
+            "technologie": data.get('technologie', event.get('technologie')),
+            "imageUrl": data.get('imageUrl', event.get('imageUrl'))
+        })
+
+        print(f"Événement mis à jour avec succès: {event}")
+        return jsonify(event), 200
+
+    except Exception as e:
+        print(f"Erreur lors de la mise à jour de l'événement: {e}")
+        return jsonify({"error": "Erreur interne du serveur", "details": str(e)}), 500
+
+@app.route('/evenements/delete/<int:event_id>', methods=['DELETE'])
+def delete_event(event_id):
+    """Supprime un événement"""
+    try:
+        global sample_events
+        initial_length = len(sample_events)
+        sample_events = [e for e in sample_events if e['eventId'] != event_id]
+
+        if len(sample_events) < initial_length:
+            print(f"Événement {event_id} supprimé avec succès")
+            return jsonify({"message": "Événement supprimé avec succès"}), 200
+        else:
+            return jsonify({"error": "Événement non trouvé"}), 404
+
+    except Exception as e:
+        print(f"Erreur lors de la suppression de l'événement: {e}")
+        return jsonify({"error": "Erreur interne du serveur", "details": str(e)}), 500
+
+# Routes pour les inscriptions
+@app.route('/inscriptions/user/<int:user_id>', methods=['GET'])
+def get_user_inscriptions(user_id):
+    """Récupère les inscriptions d'un utilisateur"""
+    user_inscriptions = [i for i in sample_inscriptions if i.get('user', {}).get('id') == user_id]
+    return jsonify(user_inscriptions)
+
+@app.route('/inscriptions/create/<int:event_id>/<int:user_id>', methods=['POST'])
+def create_inscription(event_id, user_id):
+    """Crée une inscription pour un événement"""
+    try:
+        data = request.json
+        inscription = {
+            "inscriptionId": len(sample_inscriptions) + 1,
+            "nom": data.get('nom', ''),
+            "email": data.get('email', ''),
+            "telephone": data.get('telephone', ''),
+            "evenement": {"eventId": event_id},
+            "user": {"id": user_id},
+            "dateInscription": datetime.now().isoformat()
+        }
+        sample_inscriptions.append(inscription)
+        return jsonify(inscription), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+# Routes pour les commentaires (simplifiées)
+@app.route('/commentaires/event/<int:event_id>', methods=['GET'])
+def get_event_comments(event_id):
+    """Récupère les commentaires d'un événement"""
+    # Retourner des commentaires fictifs pour l'instant
+    comments = [
+        {
+            "id": 1,
+            "eventId": event_id,
+            "user": "Étudiant 1",
+            "comment": "Très bon événement !",
+            "rating": 5,
+            "date": datetime.now().isoformat()
+        }
+    ]
+    return jsonify(comments)
+
+# Routes pour les cours (simplifiées)
+@app.route('/cours/all', methods=['GET'])
+def get_all_courses():
+    """Récupère tous les cours"""
+    courses = [
+        {
+            "idCours": 1,
+            "titre": "Développement Web avec Angular",
+            "description": "Apprenez à créer des applications web modernes",
+            "duree": 40,
+            "prix": 299,
+            "niveau": "Intermédiaire",
+            "categorie": "Développement Web",
+            "nb_etudiantsEnrolled": 125,
+            "rating": 4.5,
+            "format": "En ligne",
+            "image": "assets/img/course-angular.jpg"
+        },
+        {
+            "idCours": 2,
+            "titre": "React & TypeScript Masterclass",
+            "description": "Maîtrisez React avec TypeScript",
+            "duree": 35,
+            "prix": 249,
+            "niveau": "Avancé",
+            "categorie": "Développement Web",
+            "nb_etudiantsEnrolled": 89,
+            "rating": 4.7,
+            "format": "En ligne",
+            "image": "assets/img/course-react.jpg"
+        }
+    ]
+    return jsonify(courses)
+
+@app.route('/cours/<int:course_id>', methods=['GET'])
+def get_course_by_id(course_id):
+    """Récupère un cours par son ID"""
+    courses = [
+        {
+            "idCours": 1,
+            "titre": "Développement Web avec Angular",
+            "description": "Apprenez à créer des applications web modernes",
+            "duree": 40,
+            "prix": 299,
+            "niveau": "Intermédiaire",
+            "categorie": "Développement Web",
+            "nb_etudiantsEnrolled": 125,
+            "rating": 4.5,
+            "format": "En ligne",
+            "image": "assets/img/course-angular.jpg"
+        }
+    ]
+    course = next((c for c in courses if c['idCours'] == course_id), None)
+    if course:
+        return jsonify(course)
+    return jsonify({"error": "Cours non trouvé"}), 404
+
+@app.route('/contenusByCours/<int:course_id>', methods=['GET'])
+def get_course_contents(course_id):
+    """Récupère les contenus d'un cours"""
+    contents = [
+        {
+            "id": 1,
+            "courseId": course_id,
+            "title": "Introduction à Angular",
+            "type": "video",
+            "duration": 30,
+            "order": 1
+        },
+        {
+            "id": 2,
+            "courseId": course_id,
+            "title": "Composants et Templates",
+            "type": "video",
+            "duration": 45,
+            "order": 2
+        }
+    ]
+    return jsonify(contents)
+
+@app.route('/inscription-cours/add', methods=['POST'])
+def create_course_registration():
+    """Crée une inscription à un cours"""
+    try:
+        data = request.json
+        registration = {
+            "id": len(sample_inscriptions) + 1,
+            "nomComplet": data.get('nomComplet', ''),
+            "email": data.get('email', ''),
+            "telephone": data.get('telephone', ''),
+            "niveauExperience": data.get('niveauExperience', ''),
+            "motivationEtObjectifs": data.get('motivationEtObjectifs', ''),
+            "cours": data.get('cours', {}),
+            "dateInscription": datetime.now().isoformat()
+        }
+        return jsonify(registration), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+@app.route('/inscription-cours/cours/<int:course_id>', methods=['GET'])
+def get_course_registrations(course_id):
+    """Récupère les inscriptions d'un cours"""
+    registrations = [
+        {
+            "id": 1,
+            "nomComplet": "Jean Dupont",
+            "email": "jean@example.com",
+            "telephone": "+21612345678",
+            "niveauExperience": "Débutant",
+            "motivationEtObjectifs": "Apprendre Angular",
+            "cours": {"idCours": course_id}
+        }
+    ]
+    return jsonify(registrations)
+
+@app.route('/upload/image', methods=['POST'])
+def upload_image():
+    """Upload d'une image"""
+    try:
+        if 'file' not in request.files:
+            return jsonify({"error": "Aucun fichier fourni"}), 400
+
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({"error": "Aucun fichier sélectionné"}), 400
+
+        # Simuler l'upload en retournant une URL d'image par défaut
+        # Dans un vrai système, vous sauvegarderiez le fichier et retourneriez l'URL réelle
+        image_url = "assets/img/landing.jpg"
+
+        return jsonify({
+            "imageUrl": image_url,
+            "message": "Image uploadée avec succès"
+        }), 200
+
+    except Exception as e:
+        print(f"Erreur lors de l'upload d'image: {e}")
+        return jsonify({"error": "Erreur lors de l'upload", "details": str(e)}), 500
 
 @app.route('/')
 def home():

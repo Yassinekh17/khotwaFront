@@ -1,7 +1,7 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { HttpClientModule } from "@angular/common/http";
-import { ReactiveFormsModule } from "@angular/forms";
+import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";  // Ajout de CommonModule
 
 import { AppRoutingModule } from "./app-routing.module";
@@ -10,6 +10,7 @@ import { AppComponent } from "./app.component";
 // layouts
 import { AdminComponent } from "./layouts/admin/admin.component";
 import { AuthComponent } from "./layouts/auth/auth.component";
+import { MainComponent } from "./layouts/main/main.component";
 
 // admin views
 import { DashboardComponent } from "./views/admin/dashboard/dashboard.component";
@@ -55,12 +56,27 @@ import { AddeventComponent } from './views/admin/listevent/addevent/addevent.com
 import { ListeventComponent as UserListeventComponent } from './views/event/listevent/listevent.component';
 import { DetaileventComponent } from './views/event/detailevent/detailevent.component';
 import { CommentaireComponent } from './views/event/commentaire/commentaire.component';
-import { RecommendationComponent } from './views/event/recommendation/recommendation.component'; // Ajout du composant utilisateur
+import { RecommendationComponent } from './views/event/recommendation/recommendation.component';
+import { RegistrationComponent } from './views/event/registration/registration.component';
+import { MyEventsComponent } from './views/event/my-events/my-events.component';
+import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.component';
+import { ChatbotComponent } from './components/chatbot/chatbot.component';
+import { CourseViewComponent } from './views/course-view/course-view.component';
+import { QuizViewComponent } from './views/quiz-view/quiz-view.component';
+import { DiscoverCoursesComponent } from './views/course/discover-courses/discover-courses.component';
+import { ListcourseComponent } from './views/admin/listcourse/listcourse.component';
+import { AddcourseComponent } from './views/admin/listcourse/addcourse/addcourse.component';
+import { ManageQuizComponent } from './views/admin/manage-quiz/manage-quiz.component';
+import { QuizClassifierComponent } from './views/course/quiz-classifier/quiz-classifier.component';
+import { CourseDetailsComponent } from './views/course-details/course-details.component';
+import { InscriptionComponent } from './views/inscription/inscription.component';
+import { CourseEnrollmentComponent } from './views/course/course-enrollment/course-enrollment.component';
+import { EditcourseComponent } from './views/admin/listcourse/editcourse/editcourse.component';
+import { CoursInscritsComponent } from './views/course/cours-inscrits/cours-inscrits.component';
 
 
 @NgModule({
   declarations: [
-    AppComponent,
     DashboardComponent,
     CardBarChartComponent,
     CardLineChartComponent,
@@ -86,6 +102,7 @@ import { RecommendationComponent } from './views/event/recommendation/recommenda
     IndexNavbarComponent,
     AdminComponent,
     AuthComponent,
+    MainComponent,
     MapsComponent,
     SettingsComponent,
     TablesComponent,
@@ -99,14 +116,29 @@ import { RecommendationComponent } from './views/event/recommendation/recommenda
     UserListeventComponent,
     DetaileventComponent,
     CommentaireComponent,
-    RecommendationComponent,  // Ajout du composant utilisateur
+    RecommendationComponent,
+    RegistrationComponent,
+    MyEventsComponent,
+    ThemeToggleComponent,
+    ChatbotComponent,
+    QuizViewComponent,
+    DiscoverCoursesComponent,
+    ListcourseComponent,
+    AddcourseComponent,
+    ManageQuizComponent,
+    QuizClassifierComponent,
+    CourseDetailsComponent,
+    InscriptionComponent,
+    CourseEnrollmentComponent,
+    EditcourseComponent,
 
   ],
   imports: [
-    BrowserModule, 
-    AppRoutingModule, 
-    HttpClientModule, 
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
     ReactiveFormsModule,
+    FormsModule,
     CommonModule  // Ajout de CommonModule
   ],
   providers: [],

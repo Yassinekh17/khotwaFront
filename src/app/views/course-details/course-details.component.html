@@ -1,0 +1,181 @@
+<!-- Loading Spinner -->
+<div *ngIf="loading" class="flex justify-center items-center min-h-screen">
+  <div class="animate-spin rounded-full h-20 w-20 border-t-4 border-b-4 border-emerald-600"></div>
+</div>
+
+<!-- Error Message -->
+<div *ngIf="error && !loading" class="min-h-screen flex items-center justify-center">
+  <div class="bg-red-100 border border-red-400 text-red-700 px-8 py-6 rounded-lg shadow-lg max-w-md mx-auto">
+    <div class="flex items-center mb-4">
+      <i class="fas fa-exclamation-triangle text-red-500 text-2xl mr-3"></i>
+      <h3 class="text-lg font-semibold">Erreur</h3>
+    </div>
+    <p class="mb-4">{{ error }}</p>
+    <button
+      (click)="goBack()"
+      class="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors">
+      <i class="fas fa-arrow-left mr-2"></i>Retour aux cours
+    </button>
+  </div>
+</div>
+
+<!-- Course Details Content -->
+<div *ngIf="!loading && !error && course" class="min-h-screen bg-gray-50">
+  <!-- Header Section -->
+  <div class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
+    <div class="container mx-auto px-4 py-8">
+      <button
+        (click)="goBack()"
+        class="mb-6 inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition-all">
+        <i class="fas fa-arrow-left mr-2"></i>Retour aux cours
+      </button>
+
+      <div class="text-center">
+        <h1 class="text-4xl lg:text-5xl font-bold mb-4 leading-tight">
+          {{ course.titre }}
+        </h1>
+        <div class="flex flex-wrap justify-center gap-4 text-lg">
+          <span class="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full">
+            <i class="fas fa-tag mr-2"></i>{{ course.categorie }}
+          </span>
+          <span class="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full">
+            <i class="fas fa-graduation-cap mr-2"></i>{{ course.niveau }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container mx-auto px-4 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+      <!-- Left Column - Main Info -->
+      <div class="lg:col-span-2 space-y-8">
+
+        <!-- Description Section -->
+        <div class="bg-white rounded-xl shadow-lg p-8">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <i class="fas fa-book-open text-emerald-600 mr-3"></i>
+            Description du cours
+          </h2>
+          <p class="text-gray-700 leading-relaxed text-lg">{{ course.description }}</p>
+        </div>
+
+        <!-- Key Information Section -->
+        <div class="bg-white rounded-xl shadow-lg p-8">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <i class="fas fa-info-circle text-blue-600 mr-3"></i>
+            Informations clés
+          </h2>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Duration -->
+            <div class="flex items-center p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+              <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mr-4">
+                <i class="fas fa-clock text-emerald-600 text-xl"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-600 font-medium uppercase tracking-wide">Durée</p>
+                <p class="text-xl font-bold text-gray-800">{{ course.duree }} heures</p>
+              </div>
+            </div>
+
+            <!-- Price -->
+            <div class="flex items-center p-4 bg-green-50 rounded-lg border border-green-200">
+              <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mr-4">
+                <i class="fas fa-dollar-sign text-green-600 text-xl"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-600 font-medium uppercase tracking-wide">Prix</p>
+                <p class="text-xl font-bold text-gray-800">{{ course.prix }} DT</p>
+              </div>
+            </div>
+
+            <!-- Publication Date -->
+            <div class="flex items-center p-4 bg-purple-50 rounded-lg border border-purple-200">
+              <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mr-4">
+                <i class="fas fa-calendar text-purple-600 text-xl"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-600 font-medium uppercase tracking-wide">Date de publication</p>
+                <p class="text-lg font-bold text-gray-800">{{ formatDate(course.date_publication!) }}</p>
+              </div>
+            </div>
+
+            <!-- Format -->
+            <div class="flex items-center p-4 bg-orange-50 rounded-lg border border-orange-200">
+              <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center mr-4">
+                <i class="fas fa-file-alt text-orange-600 text-xl"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-600 font-medium uppercase tracking-wide">Format</p>
+                <p class="text-lg font-bold text-gray-800">{{ course.format }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column - Statistics & Actions -->
+      <div class="space-y-8">
+
+        <!-- Statistics Section -->
+        <div class="bg-white rounded-xl shadow-lg p-8">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <i class="fas fa-chart-bar text-indigo-600 mr-3"></i>
+            Statistiques
+          </h2>
+
+          <!-- Rating -->
+          <div class="mb-6">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-lg font-semibold text-gray-700">Note</span>
+              <span class="text-2xl font-bold text-gray-800">{{ course.rating }}/5</span>
+            </div>
+            <div class="flex items-center">
+              <div class="flex mr-3">
+                <span *ngFor="let star of getStars(course.rating)" class="text-xl mr-1">
+                  <i *ngIf="star === 'full'" class="fas fa-star text-yellow-400"></i>
+                  <i *ngIf="star === 'half'" class="fas fa-star-half-alt text-yellow-400"></i>
+                  <i *ngIf="star === 'empty'" class="far fa-star text-gray-300"></i>
+                </span>
+              </div>
+              <span class="text-sm text-gray-600">({{ course.rating }} étoiles)</span>
+            </div>
+          </div>
+
+          <!-- Students Enrolled -->
+          <div class="mb-6">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-lg font-semibold text-gray-700">Étudiants inscrits</span>
+              <span class="text-2xl font-bold text-gray-800">{{ enrollmentCount }}</span>
+            </div>
+            <div class="flex items-center text-gray-600">
+              <i class="fas fa-users mr-2"></i>
+              <span>{{ enrollmentCount }} étudiant{{ enrollmentCount > 1 ? 's' : '' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enroll Button Section -->
+        <div class="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-xl shadow-lg p-8 text-center">
+          <h3 class="text-2xl font-bold text-white mb-4">Prêt à commencer ?</h3>
+          <p class="text-emerald-100 mb-6">Rejoignez ce cours et boostez vos compétences !</p>
+
+          <button
+            (click)="enrollInCourse()"
+            class="w-full bg-white text-emerald-600 py-4 px-8 rounded-lg font-bold text-lg hover:bg-gray-50 transition-all transform hover:scale-105 shadow-lg">
+            <i class="fas fa-plus-circle mr-2"></i>
+            S'inscrire au cours
+          </button>
+
+          <p class="text-emerald-100 text-sm mt-4">
+            <i class="fas fa-info-circle mr-1"></i>
+            Inscription gratuite et instantanée
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

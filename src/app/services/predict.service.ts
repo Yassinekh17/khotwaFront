@@ -236,4 +236,25 @@ export class PredictService {
       })
     );
   }
+
+  /**
+   * Appelle l'API de prédiction pour le quiz classifier
+   * @param data Objet contenant SessionDuration, SessionsPerWeek, CourseCompletion, UserSatisfaction
+   * @returns Observable contenant la prédiction
+   */
+  predictQuiz(data: { SessionDuration: number; SessionsPerWeek: number; CourseCompletion: number; UserSatisfaction: number }): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const quizApiUrl = 'http://localhost:5000/predict'; // URL spécifique pour le quiz
+
+    return this.http.post(quizApiUrl, data, { headers }).pipe(
+      map(response => {
+        console.log('Réponse du quiz classifier:', response);
+        return response;
+      }),
+      catchError(error => {
+        console.error('Erreur lors de la prédiction du quiz:', error);
+        return throwError(() => new Error('Erreur lors de la prédiction. Veuillez réessayer.'));
+      })
+    );
+  }
 }

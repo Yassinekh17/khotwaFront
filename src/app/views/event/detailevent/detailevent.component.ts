@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EventService, Evenement } from '../../../services/event.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { CommentaireService, CommentaireEvenement } from '../../../services/commentaire.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InscriptionService } from '../../../services/inscription.service';
+import { LocalInscriptionService } from '../../../services/local-inscription.service';
+import { ImageUploadService } from '../../../services/image-upload.service';
 
 @Component({
   selector: 'app-detailevent',
@@ -32,15 +34,17 @@ export class DetaileventComponent implements OnInit {
   inscriptionSuccess: boolean = false;
   inscriptionError: string | null = null;
 
-  // ID utilisateur statique
-  readonly userId: number = 1;
+  // Plus d'ID utilisateur - inscription simplifiée
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private eventService: EventService,
     private sanitizer: DomSanitizer,
     private commentaireService: CommentaireService,
     private inscriptionService: InscriptionService,
+    private localInscriptionService: LocalInscriptionService,
+    private imageUploadService: ImageUploadService,
     private fb: FormBuilder
   ) {
     this.commentaireForm = this.fb.group({
@@ -108,7 +112,7 @@ export class DetaileventComponent implements OnInit {
       this.inscriptionError = "Impossible de rejoindre cet événement.";
       return;
     }
-    this.toggleInscriptionForm();
+    this.router.navigate(['/events', this.event.eventId, 'register']);
   }
 
   toggleInscriptionForm(): void {
@@ -125,53 +129,50 @@ export class DetaileventComponent implements OnInit {
 
     const inscriptionData = this.inscriptionForm.value;
 
-    this.inscriptionService.getUserInscriptions(this.userId).subscribe({
-      next: (userInscriptions) => {
-        const alreadyRegistered = userInscriptions.some(
-          insc => insc.evenement && insc.evenement.eventId === this.event!.eventId
-        );
+    // Vérifier si l'utilisateur est déjà inscrit localement (simplifié)
+    const localInscriptions = this.localInscriptionService.getAllInscriptions();
+    const alreadyRegistered = localInscriptions.some(
+      (insc: any) => insc.eventId === this.event!.eventId
+    );
 
-        if (alreadyRegistered) {
-          this.inscriptionSuccess = true;
-          this.inscriptionLoading = false;
-          this.showInscriptionForm = false;
-          return;
-        }
+    if (alreadyRegistered) {
+      this.inscriptionSuccess = true;
+      this.inscriptionLoading = false;
+      this.showInscriptionForm = false;
+      console.log('ℹ️ [DetailEvent] Utilisateur déjà inscrit à cet événement localement');
+      return;
+    }
 
-        this.inscriptionService.joinEvent(this.event!.eventId, inscriptionData).subscribe({
-          next: () => {
-            this.inscriptionSuccess = true;
-            this.inscriptionLoading = false;
-            this.showInscriptionForm = false;
-            this.inscriptionForm.reset();
+    // Procéder à l'inscription
+    this.inscriptionService.joinEvent(this.event!.eventId!, inscriptionData).subscribe({
+      next: () => {
+        console.log('✅ [DetailEvent] Inscription réussie');
+        this.inscriptionSuccess = true;
+        this.inscriptionLoading = false;
+        this.showInscriptionForm = false;
+        this.inscriptionForm.reset();
 
-            if (this.event) {
-              const updatedEvent = {
-                ...this.event,
-                capacite: this.event.capacite - 1,
-                currentParticipants: (this.event.currentParticipants || 0) + 1
-              };
+        if (this.event) {
+          const updatedEvent = {
+            ...this.event,
+            capacite: this.event.capacite - 1,
+            currentParticipants: (this.event.currentParticipants || 0) + 1
+          };
 
-              // ✅ Envoyer directement updatedEvent sans FormData
-              this.eventService.updateEvent(this.event.eventId!, updatedEvent).subscribe({
-                next: (updatedEventData) => {
-                  this.event = updatedEventData;
-                },
-                error: (err) => {
-                  console.error('Erreur lors de la mise à jour de l\'événement après inscription', err);
-                }
-              });
+          // ✅ Envoyer directement updatedEvent sans FormData
+          this.eventService.updateEvent(this.event.eventId!, updatedEvent).subscribe({
+            next: (updatedEventData) => {
+              this.event = updatedEventData;
+            },
+            error: (err) => {
+              console.error('Erreur lors de la mise à jour de l\'événement après inscription', err);
             }
-          },
-          error: (err) => {
-            console.error('Erreur lors de l\'inscription', err);
-            this.checkIfInscriptionCreated(); // Tu peux garder ce fallback
-          }
-        });
+          });
+        }
       },
       error: (err) => {
-        console.error('Erreur lors de la vérification des inscriptions', err);
-        this.inscriptionError = "Impossible de vérifier vos inscriptions existantes";
+        console.error('❌ [DetailEvent] Erreur lors de l\'inscription:', err);
+        this.inscriptionError = "Erreur lors de l'inscription. Veuillez réessayer.";
         this.inscriptionLoading = false;
       }
     });
@@ -188,46 +189,41 @@ export class DetaileventComponent implements OnInit {
     this.inscriptionLoading = true;
 
     setTimeout(() => {
-      this.inscriptionService.getUserInscriptions(this.userId).subscribe({
-        next: (inscriptions) => {
-          const isRegistered = inscriptions.some(
-            insc => insc.evenement && insc.evenement.eventId === this.event!.eventId
-          );
+      // Vérifier dans le stockage local si l'inscription a été créée
+      const localInscriptions = this.localInscriptionService.getAllInscriptions();
+      const isRegistered = localInscriptions.some(
+        (insc: any) => insc.eventId === this.event!.eventId
+      );
 
-          if (isRegistered) {
-            this.inscriptionSuccess = true;
-            this.inscriptionError = null;
-            this.showInscriptionForm = false;
+      if (isRegistered) {
+        console.log('✅ [DetailEvent] Inscription confirmée dans le stockage local');
+        this.inscriptionSuccess = true;
+        this.inscriptionError = null;
+        this.showInscriptionForm = false;
 
-            if (this.event) {
-              const updatedEvent = {
-                ...this.event,
-                capacite: this.event.capacite - 1,
-                currentParticipants: (this.event.currentParticipants || 0) + 1
-              };
+        if (this.event) {
+          const updatedEvent = {
+            ...this.event,
+            capacite: this.event.capacite - 1,
+            currentParticipants: (this.event.currentParticipants || 0) + 1
+          };
 
-              // ✅ Envoyer directement updatedEvent (PAS FormData)
-              this.eventService.updateEvent(this.event.eventId!, updatedEvent).subscribe({
-                next: (updatedEventData) => {
-                  this.event = updatedEventData;
-                },
-                error: (err) => {
-                  console.error('Erreur lors de la mise à jour de l\'événement après inscription', err);
-                }
-              });
+          // ✅ Envoyer directement updatedEvent (PAS FormData)
+          this.eventService.updateEvent(this.event.eventId!, updatedEvent).subscribe({
+            next: (updatedEventData) => {
+              this.event = updatedEventData;
+            },
+            error: (err) => {
+              console.error('Erreur lors de la mise à jour de l\'événement après inscription', err);
             }
-          } else {
-            this.inscriptionError = "L'inscription n'a pas pu être finalisée. Veuillez réessayer.";
-          }
-
-          this.inscriptionLoading = false;
-        },
-        error: (err) => {
-          console.error('Erreur lors de la vérification de l\'inscription', err);
-          this.inscriptionError = "Impossible de vérifier votre inscription";
-          this.inscriptionLoading = false;
+          });
         }
-      });
+      } else {
+        console.log('❌ [DetailEvent] Inscription non trouvée dans le stockage local');
+        this.inscriptionError = "L'inscription n'a pas pu être finalisée. Veuillez réessayer.";
+      }
+
+      this.inscriptionLoading = false;
     }, 1000);
   }
 
@@ -254,11 +250,12 @@ export class DetaileventComponent implements OnInit {
   }
 
   fixCommentUserID(comment: CommentaireEvenement): void {
-    const fixedComment = { ...comment, user: { id: this.userId } };
+    const defaultUserId = 1; // ID utilisateur par défaut
+    const fixedComment = { ...comment, user: { id: defaultUserId } };
 
     this.commentaireService.updateCommentaire(comment.id!, fixedComment).subscribe({
       next: (updatedComment) => {
-        console.log(`Commentaire ID ${comment.id} mis à jour avec user_id = ${this.userId}`);
+        console.log(`Commentaire ID ${comment.id} mis à jour avec user_id = ${defaultUserId}`);
         const index = this.commentaires.findIndex(c => c.id === comment.id);
         if (index !== -1) {
           this.commentaires[index] = updatedComment;
@@ -284,14 +281,15 @@ export class DetaileventComponent implements OnInit {
     const commentaireData = this.commentaireForm.value;
     this.commentSubmitting = true;
 
-    this.commentaireService.ajouterCommentaire(this.event.eventId, this.userId, {
+    const defaultUserId = 1; // ID utilisateur par défaut pour les commentaires
+    this.commentaireService.ajouterCommentaire(this.event.eventId, defaultUserId, {
       texte: commentaireData.texte,
       note: commentaireData.note
     }).subscribe({
       next: (response) => {
         console.log('Commentaire ajouté !', response);
         this.commentaireForm.reset({ texte: '', note: 5 }); // Réinitialise le formulaire
-        this.loadAllCommentaires(this.event!.eventId); // Recharge les commentaires
+        this.loadAllCommentaires(this.event!.eventId!); // Recharge les commentaires
         this.commentSubmitting = false;
       },
       error: (error) => {
@@ -303,6 +301,22 @@ export class DetaileventComponent implements OnInit {
 
   getStarsArray(note: number): number[] {
     return Array(note).fill(0);
+  }
+
+
+  // Method to get the correct image source (handles stored images)
+  getEventImageUrl(): string {
+    console.log('📋 [DÉTAILS] getEventImageUrl appelée pour événement:', this.event?.title);
+    console.log('🔗 [DÉTAILS] URL de l\'image dans l\'événement:', this.event?.imageUrl);
+
+    if (!this.event?.imageUrl) {
+      console.log('⚠️ [DÉTAILS] Aucune URL d\'image dans l\'événement, utilisation de l\'image par défaut');
+      return 'assets/img/landing.jpg';
+    }
+
+    const result = this.imageUploadService.getImageSource(this.event.imageUrl);
+    console.log('🎯 [DÉTAILS] URL finale retournée:', result);
+    return result;
   }
 
 }

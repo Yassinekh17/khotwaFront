@@ -1,0 +1,113 @@
+<div class="card-modern group cursor-pointer animate-fade-in">
+  <!-- Image de l'événement avec overlay et effet de vignette -->
+  <div class="relative h-48 overflow-hidden group-hover:shadow-2xl transition-all duration-500">
+    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10"></div>
+    <img
+      [src]="course.image || 'https://via.placeholder.com/400x200/0ea5e9/ffffff?text=' + course.titre"
+      [alt]="course.titre"
+      class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700"
+      loading="lazy">
+
+    <!-- Technology badges -->
+    <div class="absolute top-4 left-4 z-20 flex flex-wrap gap-1">
+      <span class="badge-tech">
+        <i class="fas fa-graduation-cap mr-1"></i>{{ course.categorie }}
+      </span>
+    </div>
+
+    <!-- Status Badge -->
+    <div class="absolute top-4 right-4 z-20">
+      <div class="bg-white/95 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg border border-white/20">
+        <div class="flex items-center">
+          <i class="fas fa-circle text-xs mr-2" [ngClass]="getStatusColorClass()"></i>
+          <span class="text-gray-800 text-sm font-medium">{{ getStatusLabel() }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress Badge -->
+    <div class="absolute bottom-4 left-4 z-20">
+      <div class="bg-white/95 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg border border-white/20">
+        <div class="flex items-center">
+          <i class="fas fa-chart-line text-primary-600 mr-2"></i>
+          <span class="text-gray-800 text-sm font-medium">{{ getProgressPercentage() }}%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="p-8 relative">
+    <h4 class="text-xl font-bold text-gray-800 mb-3 leading-tight group-hover:text-primary-600 transition-colors duration-300">
+      {{ course.titre }}
+    </h4>
+
+    <div class="mb-4 space-y-3">
+      <div class="flex items-center group/item hover:bg-gray-50 p-2 rounded-lg transition-all duration-200">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center mr-3 shadow-md">
+          <i class="fas fa-graduation-cap text-white text-sm"></i>
+        </div>
+        <div>
+          <p class="text-gray-600 text-xs font-medium uppercase tracking-wide">Niveau</p>
+          <p class="text-gray-800 text-sm font-medium">{{ course.niveau }}</p>
+        </div>
+      </div>
+
+      <div class="flex items-center group/item hover:bg-gray-50 p-2 rounded-lg transition-all duration-200">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-green-600 flex items-center justify-center mr-3 shadow-md">
+          <i class="fas fa-chart-line text-white text-sm"></i>
+        </div>
+        <div>
+          <p class="text-gray-600 text-xs font-medium uppercase tracking-wide">Progression</p>
+          <p class="text-gray-800 text-sm font-medium">{{ getProgressPercentage() }}% ({{ course.progress.completedChapters }}/{{ course.progress.totalChapters }})</p>
+        </div>
+      </div>
+
+      <div class="flex items-center group/item hover:bg-gray-50 p-2 rounded-lg transition-all duration-200">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-purple-400 to-purple-600 flex items-center justify-center mr-3 shadow-md">
+          <i class="fas fa-calendar-alt text-white text-sm"></i>
+        </div>
+        <div>
+          <p class="text-gray-600 text-xs font-medium uppercase tracking-wide">Inscrit le</p>
+          <p class="text-gray-800 text-sm font-medium">{{ formatDate(course.enrollmentDate) }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Course description -->
+    <p class="text-gray-600 mb-6 text-sm line-clamp-2 leading-relaxed">{{ course.description }}</p>
+
+    <!-- Skills tags -->
+    <div class="mb-4 flex flex-wrap gap-2">
+      <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium">
+        <i class="fas fa-lightbulb mr-1"></i>Apprentissage
+      </span>
+      <span class="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full font-medium">
+        <i class="fas fa-certificate mr-1"></i>Certification
+      </span>
+      <span *ngIf="course.progress.quizScore !== undefined"
+            class="px-2 py-1 text-xs rounded-full font-medium"
+            [ngClass]="course.progress.quizScore >= 60 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+        <i class="fas fa-question-circle mr-1"></i>Quiz: {{ course.progress.quizScore }}%
+      </span>
+    </div>
+
+    <!-- Action button -->
+    <div class="flex justify-center">
+      <button
+        *ngIf="!getActionButton().route"
+        (click)="onActionClick()"
+        class="btn-primary w-full flex items-center justify-center group/btn">
+        <span class="mr-2">{{ getActionButton().text }}</span>
+        <i [class]="getActionButton().icon + ' transition-transform duration-300 group-hover/btn:translate-x-1'"></i>
+      </button>
+
+      <a
+        *ngIf="getActionButton().route"
+        [routerLink]="getActionButton().route"
+        class="btn-primary w-full flex items-center justify-center group/btn no-underline">
+        <span class="mr-2">{{ getActionButton().text }}</span>
+        <i [class]="getActionButton().icon + ' transition-transform duration-300 group-hover/btn:translate-x-1'"></i>
+      </a>
+    </div>
+  </div>
+</div>

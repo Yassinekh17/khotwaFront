@@ -1,0 +1,198 @@
+<!-- Loading State -->
+<div *ngIf="loading" class="min-h-screen flex items-center justify-center bg-gray-50">
+  <div class="text-center">
+    <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-emerald-600 mx-auto mb-4"></div>
+    <p class="text-gray-600">Chargement du cours...</p>
+  </div>
+</div>
+
+<!-- Error State -->
+<div *ngIf="error && !loading" class="min-h-screen flex items-center justify-center bg-gray-50">
+  <div class="bg-red-100 border border-red-400 text-red-700 px-8 py-6 rounded-lg shadow-lg max-w-md mx-auto">
+    <div class="flex items-center mb-4">
+      <i class="fas fa-exclamation-triangle text-red-500 text-3xl mr-3"></i>
+      <h3 class="text-lg font-semibold">Erreur</h3>
+    </div>
+    <p class="mb-4">{{ error }}</p>
+    <button
+      (click)="goBack()"
+      class="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors">
+      <i class="fas fa-arrow-left mr-2"></i>Retour
+    </button>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div *ngIf="!loading && !error && course" class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <div class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-12">
+    <div class="container mx-auto px-4">
+      <button
+        (click)="goBack()"
+        class="mb-6 inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition-all">
+        <i class="fas fa-arrow-left mr-2"></i>Retour au cours
+      </button>
+
+      <div class="text-center">
+        <h1 class="text-3xl lg:text-4xl font-bold mb-4">
+          S'inscrire au cours
+        </h1>
+        <div class="bg-white/20 backdrop-blur-sm rounded-lg p-6 max-w-2xl mx-auto">
+          <h2 class="text-2xl font-semibold mb-2">{{ course.titre }}</h2>
+          <div class="flex flex-wrap justify-center gap-4 text-sm">
+            <span class="inline-flex items-center px-3 py-1 bg-white/20 rounded-full">
+              <i class="fas fa-tag mr-2"></i>{{ course.categorie }}
+            </span>
+            <span class="inline-flex items-center px-3 py-1 bg-white/20 rounded-full">
+              <i class="fas fa-graduation-cap mr-2"></i>{{ course.niveau }}
+            </span>
+            <span class="inline-flex items-center px-3 py-1 bg-white/20 rounded-full">
+              <i class="fas fa-clock mr-2"></i>{{ course.duree }} heures
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Message -->
+  <div *ngIf="success" class="container mx-auto px-4 mt-6">
+    <div class="bg-green-100 border border-green-400 text-green-700 px-6 py-4 rounded-lg shadow-lg max-w-2xl mx-auto">
+      <div class="flex items-center">
+        <i class="fas fa-check-circle text-green-500 text-2xl mr-3"></i>
+        <div>
+          <h3 class="font-semibold">Inscription réussie !</h3>
+          <p>{{ success }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Registration Form -->
+  <div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+      <div class="bg-white rounded-xl shadow-lg p-8">
+
+        <!-- Form Header -->
+        <div class="text-center mb-8">
+          <h2 class="text-2xl font-bold text-gray-800 mb-2">Formulaire d'inscription</h2>
+          <p class="text-gray-600">Remplissez vos informations pour vous inscrire à ce cours</p>
+        </div>
+
+        <form [formGroup]="inscriptionForm" (ngSubmit)="onSubmit()" class="space-y-6">
+
+          <!-- Full Name -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              <i class="fas fa-user mr-2 text-emerald-600"></i>Nom complet *
+            </label>
+            <input
+              type="text"
+              formControlName="nomComplet"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+              placeholder="Votre nom complet"
+              [class.border-red-500]="getFieldError('nomComplet')"
+            />
+            <p *ngIf="getFieldError('nomComplet')" class="mt-1 text-sm text-red-600">
+              {{ getFieldError('nomComplet') }}
+            </p>
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              <i class="fas fa-envelope mr-2 text-blue-600"></i>Email *
+            </label>
+            <input
+              type="email"
+              formControlName="email"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+              placeholder="votre.email@example.com"
+              [class.border-red-500]="getFieldError('email')"
+            />
+            <p *ngIf="getFieldError('email')" class="mt-1 text-sm text-red-600">
+              {{ getFieldError('email') }}
+            </p>
+          </div>
+
+          <!-- Phone -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              <i class="fas fa-phone mr-2 text-purple-600"></i>Téléphone *
+            </label>
+            <input
+              type="tel"
+              formControlName="telephone"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+              placeholder="+21612345678 ou 012345678"
+              [class.border-red-500]="getFieldError('telephone')"
+            />
+            <p *ngIf="getFieldError('telephone')" class="mt-1 text-sm text-red-600">
+              {{ getFieldError('telephone') }}
+            </p>
+          </div>
+
+          <!-- Experience Level -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              <i class="fas fa-star mr-2 text-yellow-600"></i>Niveau d'expérience *
+            </label>
+            <select
+              formControlName="niveauExperience"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+            >
+              <option *ngFor="let level of experienceLevels" [value]="level">
+                {{ level }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Motivation and Objectives -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              <i class="fas fa-bullseye mr-2 text-orange-600"></i>Motivation et objectifs *
+            </label>
+            <textarea
+              formControlName="motivationEtObjectifs"
+              rows="4"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all resize-none"
+              placeholder="Décrivez votre motivation et vos objectifs pour ce cours..."
+              [class.border-red-500]="getFieldError('motivationEtObjectifs')"
+            ></textarea>
+            <p *ngIf="getFieldError('motivationEtObjectifs')" class="mt-1 text-sm text-red-600">
+              {{ getFieldError('motivationEtObjectifs') }}
+            </p>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="pt-6">
+            <button
+              type="submit"
+              [disabled]="submitting || inscriptionForm.invalid"
+              class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white py-4 px-6 rounded-lg font-semibold text-lg hover:from-emerald-600 hover:to-teal-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg"
+            >
+              <i *ngIf="submitting" class="fas fa-spinner fa-spin mr-2"></i>
+              <i *ngIf="!submitting" class="fas fa-paper-plane mr-2"></i>
+              {{ submitting ? 'Inscription en cours...' : 'Confirmer l\'inscription' }}
+            </button>
+          </div>
+        </form>
+
+        <!-- Course Info Reminder -->
+        <div class="mt-8 p-4 bg-gray-50 rounded-lg">
+          <h3 class="font-semibold text-gray-800 mb-2">Rappel du cours</h3>
+          <div class="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <span class="text-gray-600">Prix:</span>
+              <span class="font-semibold text-gray-800 ml-2">{{ course.prix }} DT</span>
+            </div>
+            <div>
+              <span class="text-gray-600">Format:</span>
+              <span class="font-semibold text-gray-800 ml-2">{{ course.format }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

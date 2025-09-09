@@ -7,9 +7,9 @@ import { createPopper } from "@popperjs/core";
 })
 export class NotificationDropdownComponent implements AfterViewInit {
   dropdownPopoverShow = false;
-  @ViewChild("btnDropdownRef", { static: false }) btnDropdownRef: ElementRef;
+  @ViewChild("btnDropdownRef", { static: false }) btnDropdownRef!: ElementRef;
   @ViewChild("popoverDropdownRef", { static: false })
-  popoverDropdownRef: ElementRef;
+  popoverDropdownRef!: ElementRef;
   ngAfterViewInit() {
     createPopper(
       this.btnDropdownRef.nativeElement,
@@ -19,7 +19,7 @@ export class NotificationDropdownComponent implements AfterViewInit {
       }
     );
   }
-  toggleDropdown(event) {
+  toggleDropdown(event: Event) {
     event.preventDefault();
     if (this.dropdownPopoverShow) {
       this.dropdownPopoverShow = false;

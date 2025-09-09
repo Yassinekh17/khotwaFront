@@ -1,0 +1,190 @@
+<div class="course-content-container">
+  <!-- Chapter List Sidebar -->
+  <div class="chapters-sidebar" *ngIf="viewMode === 'list'">
+    <div class="sidebar-header">
+      <h3 class="sidebar-title">Contenu du cours</h3>
+      <div class="progress-summary">
+        <span class="progress-text">{{ getCompletedChaptersCount() }}/{{ getTotalChaptersCount() }} chapitres</span>
+        <div class="mini-progress-bar">
+          <div class="mini-progress-fill" [style.width.%]="getProgressPercentage()"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chapters-list">
+      <div
+        *ngFor="let chapter of course?.chapters; let i = index"
+        (click)="selectChapter(chapter)"
+        class="chapter-item"
+        [class.completed]="isChapterCompleted(chapter.id)"
+        [class.selected]="selectedChapter?.id === chapter.id">
+
+        <div class="chapter-icon">
+          <i [class]="getChapterIcon(chapter.type)" [ngClass]="getChapterTypeColor(chapter.type)"></i>
+        </div>
+
+        <div class="chapter-info">
+          <div class="chapter-number">Chapitre {{ i + 1 }}</div>
+          <h4 class="chapter-title" [class.completed-text]="isChapterCompleted(chapter.id)">
+            {{ chapter.title }}
+          </h4>
+          <div class="chapter-status">
+            <span class="status-badge" [class.completed-badge]="isChapterCompleted(chapter.id)">
+              <i class="fas fa-check" *ngIf="isChapterCompleted(chapter.id)"></i>
+              {{ isChapterCompleted(chapter.id) ? 'Terminé' : 'À faire' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="chapter-arrow">
+          <i class="fas fa-chevron-right"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz Ready Button -->
+    <div class="quiz-section" *ngIf="isAllChaptersCompleted()">
+      <div class="quiz-ready-card">
+        <div class="quiz-icon">
+          <i class="fas fa-trophy"></i>
+        </div>
+        <h4 class="quiz-title">Félicitations !</h4>
+        <p class="quiz-message">Tous les chapitres sont terminés</p>
+        <button
+          class="quiz-button"
+          [routerLink]="['/courses', courseId, 'quiz']">
+          <i class="fas fa-question-circle"></i>
+          Passer au Quizz
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="content-main" *ngIf="viewMode === 'content' && selectedChapter">
+    <!-- Content Header -->
+    <div class="content-header">
+      <button class="back-button" (click)="backToChapterList()">
+        <i class="fas fa-arrow-left"></i>
+        Retour aux chapitres
+      </button>
+
+      <div class="content-info">
+        <div class="content-icon">
+          <i [class]="getChapterIcon(selectedChapter.type)" [ngClass]="getChapterTypeColor(selectedChapter.type)"></i>
+        </div>
+        <div class="content-details">
+          <h2 class="content-title">{{ selectedChapter.title }}</h2>
+          <p class="content-description" *ngIf="selectedChapter.description">{{ selectedChapter.description }}</p>
+          <span class="content-type">{{ selectedChapter.type | titlecase }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Display -->
+    <div class="content-display">
+      <!-- PDF Content -->
+      <div *ngIf="selectedChapter.type === 'pdf'" class="content-pdf">
+        <div class="pdf-header">
+          <h3>Document PDF</h3>
+          <button class="download-btn" (click)="downloadFile(selectedChapter.content, selectedChapter.title + '.pdf')">
+            <i class="fas fa-download"></i>
+            Télécharger
+          </button>
+        </div>
+        <div class="pdf-viewer">
+          <iframe
+            [src]="selectedChapter.content"
+            class="pdf-iframe"
+            type="application/pdf">
+            <div class="pdf-fallback">
+              <p>Votre navigateur ne prend pas en charge l'affichage des PDF.</p>
+              <button class="download-link" (click)="downloadFile(selectedChapter.content, selectedChapter.title + '.pdf')">
+                Télécharger le PDF
+              </button>
+            </div>
+          </iframe>
+        </div>
+      </div>
+
+      <!-- Video Content -->
+      <div *ngIf="selectedChapter.type === 'video'" class="content-video">
+        <div class="video-header">
+          <h3>Vidéo</h3>
+          <button class="download-btn" (click)="downloadFile(selectedChapter.content, selectedChapter.title + '.mp4')">
+            <i class="fas fa-download"></i>
+            Télécharger
+          </button>
+        </div>
+        <div class="video-player-container">
+          <video
+            [src]="selectedChapter.content"
+            controls
+            class="video-player"
+            (ended)="markChapterCompleted(selectedChapter.id)"
+            preload="metadata">
+            <div class="video-fallback">
+              <p>Votre navigateur ne prend pas en charge la lecture de vidéos.</p>
+              <button class="download-link" (click)="downloadFile(selectedChapter.content, selectedChapter.title + '.mp4')">
+                Télécharger la vidéo
+              </button>
+            </div>
+          </video>
+        </div>
+      </div>
+
+      <!-- PowerPoint Content -->
+      <div *ngIf="selectedChapter.type === 'powerpoint'" class="content-powerpoint">
+        <div class="powerpoint-header">
+          <h3>Présentation PowerPoint</h3>
+          <button class="download-btn" (click)="downloadFile(selectedChapter.content, selectedChapter.title + '.pptx')">
+            <i class="fas fa-download"></i>
+            Télécharger
+          </button>
+        </div>
+        <div class="powerpoint-preview">
+          <div class="powerpoint-icon">
+            <i class="fas fa-file-powerpoint fa-4x text-orange-500"></i>
+          </div>
+          <p class="powerpoint-message">
+            Cliquez sur le bouton de téléchargement pour ouvrir la présentation PowerPoint.
+          </p>
+        </div>
+      </div>
+
+      <!-- Text Content -->
+      <div *ngIf="selectedChapter.type === 'text'" class="content-text">
+        <div class="text-content-wrapper">
+          <div [innerHTML]="selectedChapter.content"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Completion Section -->
+    <div class="completion-section">
+      <div class="completion-card">
+        <div class="completion-icon">
+          <i class="fas fa-check-circle" [class.completed]="isChapterCompleted(selectedChapter.id)"></i>
+        </div>
+        <div class="completion-info">
+          <h4 class="completion-title">
+            {{ isChapterCompleted(selectedChapter.id) ? 'Chapitre terminé' : 'Marquer comme terminé' }}
+          </h4>
+          <p class="completion-message">
+            {{ isChapterCompleted(selectedChapter.id)
+              ? 'Vous avez terminé ce chapitre avec succès.'
+              : 'Avez-vous terminé ce chapitre ? Marquez-le comme terminé pour continuer votre progression.' }}
+          </p>
+        </div>
+        <button
+          class="completion-button"
+          [class.completed]="isChapterCompleted(selectedChapter.id)"
+          [disabled]="isChapterCompleted(selectedChapter.id)"
+          (click)="markChapterCompleted(selectedChapter.id)">
+          <i class="fas fa-check"></i>
+          {{ isChapterCompleted(selectedChapter.id) ? 'Terminé' : 'Marquer comme terminé' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

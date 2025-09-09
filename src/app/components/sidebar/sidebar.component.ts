@@ -9,7 +9,7 @@ export class SidebarComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {}
-  toggleCollapseShow(classes) {
+  toggleCollapseShow(classes: string) {
     this.collapseShow = classes;
   }
 }

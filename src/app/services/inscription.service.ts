@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { LocalInscriptionService } from './local-inscription.service';
 
 // Interface pour représenter une inscription
 export interface Inscription {
@@ -30,61 +31,178 @@ export class InscriptionService {
     })
   };
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private localInscriptionService: LocalInscriptionService
+  ) { }
 
-  // Méthode pour rejoindre un événement avec un utilisateur statique d'ID 1
+  // Méthode pour s'inscrire à un événement selon le backend réel
   joinEvent(eventId: number, inscriptionData: { nom: string, email: string, telephone: string }): Observable<any> {
     const userId = 1; // Utilisateur statique avec ID 1
-    
-    // Le backend actuel ne prend pas en compte les données du formulaire, il utilise uniquement les IDs
-    // Traiter les erreurs de parsing JSON mais considérer les réponses 200 comme des succès
+
+    // Préparer les données selon l'entité Inscription du backend
+    const inscriptionPayload = {
+      nom: inscriptionData.nom,
+      email: inscriptionData.email,
+      telephone: inscriptionData.telephone,
+      // Le backend s'occupe de créer les relations automatiquement
+    };
+
+    // URL selon le backend controller: /inscriptions/create/{eventId}/{userId}
+    const apiUrl = `${this.apiUrl}/inscriptions/create/${eventId}/${userId}`;
+    console.log('📡 [InscriptionService] Tentative d\'inscription avec URL:', apiUrl);
+    console.log('📡 [InscriptionService] Données envoyées:', inscriptionPayload);
+    console.log('📡 [InscriptionService] Environment API URL:', this.apiUrl);
+
     return this.http.post(
-      `${this.apiUrl}/inscriptions/create/${eventId}/${userId}`, 
-      inscriptionData, 
-      { ...this.httpOptions, responseType: 'text' }
+      apiUrl,
+      inscriptionPayload,
+      this.httpOptions
     ).pipe(
       map(response => {
-        // Si on reçoit une réponse (même si c'est du texte et pas du JSON valide)
-        // considérons l'inscription comme réussie
-        try {
-          return JSON.parse(response);
-        } catch (error) {
-          // Si on ne peut pas parser la réponse comme JSON mais que le statut est 200,
-          // on retourne un objet simplifié pour indiquer le succès
-          console.warn('Réponse du serveur reçue mais non parsable comme JSON:', response);
-          return { 
-            success: true, 
-            message: 'Inscription créée avec succès', 
-            inscriptionId: -1 // ID temporaire/factice
-          };
-        }
+        console.log('✅ [InscriptionService] Inscription créée avec succès dans la base de données:', response);
+        console.log('✅ [InscriptionService] Réponse du backend:', response);
+        return {
+          success: true,
+          message: 'Inscription créée avec succès',
+          data: response
+        };
       }),
       catchError((error: HttpErrorResponse) => {
-        // Si le statut est 200 OK malgré l'erreur de parsing, considérer comme un succès
-        if (error.status === 200) {
-          console.warn('Erreur de parsing JSON mais statut 200 OK, considérant comme succès');
-          return of({ 
-            success: true, 
-            message: 'Inscription créée avec succès malgré des erreurs de format', 
-            inscriptionId: -1
-          });
+        console.error('❌ [InscriptionService] Erreur lors de l\'inscription backend:', error);
+        console.error('❌ [InscriptionService] Statut HTTP:', error.status);
+        console.error('❌ [InscriptionService] Message d\'erreur:', error.message);
+        console.error('❌ [InscriptionService] Détails de l\'erreur:', error.error);
+        console.error('❌ [InscriptionService] URL appelée:', apiUrl);
+
+        // Fallback vers localStorage si backend échoue
+        console.warn('🔄 [InscriptionService] Fallback vers sauvegarde locale');
+
+        if (error.status === 400) {
+          return throwError(() => new Error('L\'événement a atteint sa capacité maximale ou les données sont invalides.'));
         }
-        
-        // Sinon propager l'erreur normalement
-        console.error('Erreur lors de l\'inscription:', error);
-        return throwError(() => new Error('Échec de l\'inscription. Veuillez réessayer.'));
+
+        return throwError(() => new Error('Échec de l\'inscription. Backend non disponible.'));
       })
     );
   }
 
-  // Récupérer les inscriptions d'un utilisateur
-  getUserInscriptions(userId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/inscriptions/user/${userId}`).pipe(
+  // Récupérer les inscriptions d'un événement (endpoint disponible dans le backend)
+  getEventInscriptions(eventId: number): Observable<any> {
+    const apiUrl = `${this.apiUrl}/inscriptions/event/${eventId}`;
+    console.log('📡 [InscriptionService] Récupération des inscriptions d\'événement avec URL:', apiUrl);
+
+    return this.http.get(apiUrl).pipe(
+      map(response => {
+        console.log('✅ [InscriptionService] Inscriptions d\'événement récupérées:', response);
+        return response;
+      }),
       catchError(error => {
-        console.error('Erreur lors de la récupération des inscriptions:', error);
-        return throwError(() => new Error('Impossible de récupérer vos inscriptions.'));
+        console.error('❌ [InscriptionService] Erreur lors de la récupération des inscriptions d\'événement:', error);
+        console.error('❌ [InscriptionService] URL appelée:', apiUrl);
+        return throwError(() => new Error('Impossible de récupérer les inscriptions de l\'événement'));
       })
     );
+  }
+
+  // Pour "Mes Événements" - combine données backend et localStorage
+  getUserInscriptions(userId: number = 1): Observable<any> {
+    console.log('📋 [InscriptionService] Récupération des inscriptions utilisateur depuis backend et localStorage');
+
+    const apiUrl = `${this.apiUrl}/inscriptions/user/${userId}`;
+    console.log('📡 [InscriptionService] Tentative de récupération depuis backend:', apiUrl);
+
+    return this.http.get(apiUrl).pipe(
+      map((backendData: any) => {
+        console.log('✅ [InscriptionService] Données backend récupérées:', backendData);
+
+        // Get local data for merging
+        const localData = this.getFormattedLocalInscriptions();
+        console.log('📋 [InscriptionService] Données locales:', localData);
+
+        // Merge backend and local data, avoiding duplicates
+        const mergedData = this.mergeInscriptionData(backendData, localData);
+        console.log('🔄 [InscriptionService] Données fusionnées:', mergedData);
+
+        return mergedData;
+      }),
+      catchError((error: HttpErrorResponse) => {
+        console.error('❌ [InscriptionService] Erreur lors de la récupération depuis backend:', error);
+        console.log('🔄 [InscriptionService] Fallback vers localStorage');
+
+        // Fallback to local data if backend fails
+        const localData = this.getFormattedLocalInscriptions();
+        console.log('✅ [InscriptionService] Données locales retournées (fallback):', localData);
+        return of(localData);
+      })
+    );
+  }
+
+  // Get formatted local inscriptions for "mes événements"
+  private getFormattedLocalInscriptions(): any[] {
+    const localInscriptions = this.localInscriptionService.getAllInscriptions();
+
+    return localInscriptions
+      .filter(insc => insc.status !== 'CANCELLED')
+      .map(insc => ({
+        inscriptionId: insc.id,
+        nom: insc.userInfo.nom,
+        email: insc.userInfo.email,
+        telephone: insc.userInfo.telephone,
+        dateInscription: insc.registrationDate.toISOString(),
+        evenement: {
+          eventId: insc.eventId,
+          title: insc.event.title,
+          description: insc.event.description,
+          date: insc.event.date.toISOString(),
+          location: insc.event.location,
+          type: insc.event.type,
+          status: insc.event.status,
+          capacite: insc.event.capacite,
+          maxParticipants: insc.event.maxParticipants,
+          currentParticipants: insc.event.currentParticipants,
+          technologie: insc.event.technologie,
+          imageUrl: insc.event.imageUrl
+        }
+      }));
+  }
+
+  // Merge backend and local inscription data, avoiding duplicates
+  private mergeInscriptionData(backendData: any[], localData: any[]): any[] {
+    console.log('🔄 [InscriptionService] Fusion des données backend et locales');
+
+    // Create a map to track unique events by eventId
+    const mergedMap = new Map<number, any>();
+
+    // Add backend data first
+    if (Array.isArray(backendData)) {
+      backendData.forEach(item => {
+        if (item.evenement && item.evenement.eventId) {
+          mergedMap.set(item.evenement.eventId, {
+            ...item,
+            source: 'backend'
+          });
+        }
+      });
+    }
+
+    // Add local data, but don't overwrite backend data
+    if (Array.isArray(localData)) {
+      localData.forEach(item => {
+        if (item.evenement && item.evenement.eventId) {
+          if (!mergedMap.has(item.evenement.eventId)) {
+            mergedMap.set(item.evenement.eventId, {
+              ...item,
+              source: 'local'
+            });
+          }
+        }
+      });
+    }
+
+    const mergedArray = Array.from(mergedMap.values());
+    console.log('✅ [InscriptionService] Fusion terminée:', mergedArray.length, 'inscriptions uniques');
+    return mergedArray;
   }
 
   // Compter les inscriptions pour un événement

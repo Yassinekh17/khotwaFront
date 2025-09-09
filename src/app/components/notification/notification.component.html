@@ -1,0 +1,43 @@
+<!-- Notification Container - Positioned at top-right -->
+<div class="notification-container">
+  <div
+    *ngFor="let notification of notifications"
+    class="notification-item"
+    [ngClass]="getNotificationClass(notification.type)"
+    [@slideInOut]>
+
+    <!-- Notification Icon -->
+    <div class="notification-icon">
+      <i [class]="getNotificationIcon(notification.type)"></i>
+    </div>
+
+    <!-- Notification Content -->
+    <div class="notification-content">
+      <div class="notification-title">{{ notification.title }}</div>
+      <div class="notification-message">{{ notification.message }}</div>
+
+      <!-- Action Button (if present) -->
+      <button
+        *ngIf="notification.action"
+        class="notification-action-btn"
+        (click)="onActionClick(notification)">
+        {{ notification.action.label }}
+      </button>
+    </div>
+
+    <!-- Close Button -->
+    <button
+      class="notification-close-btn"
+      (click)="removeNotification(notification.id)"
+      aria-label="Fermer la notification">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <!-- Progress Bar for auto-dismiss -->
+    <div
+      *ngIf="notification.duration"
+      class="notification-progress"
+      [style.animation-duration.ms]="notification.duration">
+    </div>
+  </div>
+</div>

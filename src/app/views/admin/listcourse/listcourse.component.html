@@ -1,0 +1,187 @@
+<div class="w-full px-4">
+  <div class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-white">
+    <div class="rounded-t mb-0 px-4 py-3 border-0">
+      <div class="flex flex-wrap items-center">
+        <div class="relative w-full px-4 max-w-full flex-grow flex-1">
+          <h3 class="font-semibold text-lg text-blueGray-700">Gestion des cours</h3>
+        </div>
+        <div class="relative w-full px-4 max-w-full flex-grow flex-1 text-right">
+          <button
+            class="bg-emerald-500 text-white active:bg-emerald-600 text-xs font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+            type="button"
+            (click)="addCourse()"
+          >
+            <i class="fas fa-plus mr-2"></i> Nouveau cours
+          </button>
+          <button
+            class="bg-blue-500 text-white active:bg-blue-600 text-xs font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+            type="button"
+            (click)="refreshCourses()"
+          >
+            <i class="fas fa-sync-alt mr-2"></i> Actualiser
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="px-4 py-3 border-b border-gray-200">
+      <div class="flex flex-wrap items-center">
+        <div class="w-full lg:w-6/12 px-2">
+          <div class="relative">
+            <input
+              type="text"
+              placeholder="Rechercher par titre..."
+              [(ngModel)]="searchTerm"
+              (input)="onSearchChange()"
+              class="px-3 py-2 placeholder-gray-400 text-gray-700 relative bg-white rounded text-sm border border-gray-300 outline-none focus:outline-none focus:ring w-full pl-10"
+            />
+            <span class="z-10 h-full leading-snug font-normal absolute text-center text-gray-400 bg-transparent rounded text-base items-center justify-center w-8 pl-3 py-2">
+              <i class="fas fa-search"></i>
+            </span>
+          </div>
+        </div>
+        <div class="w-full lg:w-4/12 px-2 mt-2 lg:mt-0">
+          <select
+            [(ngModel)]="selectedCategory"
+            (change)="onCategoryChange()"
+            class="px-3 py-2 placeholder-gray-400 text-gray-700 relative bg-white rounded text-sm border border-gray-300 outline-none focus:outline-none focus:ring w-full">
+            <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+          </select>
+        </div>
+        <div class="w-full lg:w-2/12 px-2 mt-2 lg:mt-0">
+          <div class="text-sm text-gray-600">
+            <i class="fas fa-book mr-1"></i>
+            {{ filteredCourses.length }} cours
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="block w-full overflow-x-auto">
+      <!-- Alert for errors -->
+      <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 mx-4" role="alert">
+        <span class="block sm:inline">{{ error }}</span>
+        <span class="absolute top-0 bottom-0 right-0 px-4 py-3" (click)="clearError()">
+          <i class="fas fa-times"></i>
+        </span>
+      </div>
+
+      <!-- Loading spinner -->
+      <div *ngIf="loading" class="flex justify-center items-center py-6">
+        <svg class="animate-spin h-8 w-8 text-emerald-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      </div>
+
+      <!-- Courses table -->
+      <table class="items-center w-full bg-transparent border-collapse" *ngIf="!loading">
+        <thead>
+          <tr>
+            <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100">
+              Image
+            </th>
+            <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100">
+              Titre
+            </th>
+            <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100">
+              Catégorie
+            </th>
+            <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100">
+              Niveau
+            </th>
+            <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100">
+              Prix
+            </th>
+            <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100">
+              Étudiants
+            </th>
+            <th class="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100">
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let course of filteredCourses">
+            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+              <div class="flex items-center">
+                <img
+                  [src]="course.image || '../../../../assets/img/course-default.jpg'"
+                  alt="{{ course.titre || 'Course Image' }}"
+                  class="h-12 w-12 rounded-full object-cover border-2 border-blueGray-50 shadow"
+                  (error)="course.image = '../../../../assets/img/course-default.jpg'"
+                >
+              </div>
+            </td>
+            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+              <div>
+                <div class="font-semibold text-blueGray-700">{{ course.titre }}</div>
+                <div class="text-gray-500 text-xs mt-1 line-clamp-2">{{ course.description }}</div>
+              </div>
+            </td>
+            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+              <span class="px-2 py-1 text-xs font-semibold rounded-full"
+                    [ngClass]="getCategoryClass(course.categorie)">
+                {{ course.categorie }}
+              </span>
+            </td>
+            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+              <span class="px-2 py-1 text-xs font-semibold rounded-full"
+                    [ngClass]="getLevelClass(course.niveau)">
+                {{ course.niveau }}
+              </span>
+            </td>
+            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+              <div class="font-semibold text-green-600">
+                {{ course.prix }} DT
+              </div>
+            </td>
+            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+              <div class="flex items-center">
+                <i class="fas fa-users text-blue-500 mr-2"></i>
+                {{ course.nb_etudiantsEnrolled || 0 }}
+              </div>
+            </td>
+            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+              <div class="flex items-center space-x-2">
+                <button
+                  class="bg-blue-500 text-white active:bg-blue-600 text-xs font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
+                  type="button"
+                  (click)="editCourse(course)"
+                  title="Modifier"
+                >
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button
+                  class="bg-purple-500 text-white active:bg-purple-600 text-xs font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
+                  type="button"
+                  (click)="manageQuiz(course)"
+                  title="Gérer le quiz"
+                >
+                  <i class="fas fa-question-circle"></i>
+                </button>
+                <button
+                  class="bg-red-500 text-white active:bg-red-600 text-xs font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none ease-linear transition-all duration-150"
+                  type="button"
+                  (click)="deleteCourse(course)"
+                  title="Supprimer"
+                >
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="filteredCourses.length === 0">
+            <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center" colspan="7">
+              <div class="py-8">
+                <i class="fas fa-book text-gray-400 text-4xl mb-4"></i>
+                <p class="text-gray-500">Aucun cours trouvé</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

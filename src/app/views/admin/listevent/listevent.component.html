@@ -90,7 +90,7 @@
               {{ event.type }}
             </td>
             <td class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-              <span class="px-2 py-1 font-semibold leading-tight text-white rounded-full" [ngClass]="getStatusClass(event.status)">
+              <span class="px-2 py-1 font-semibold leading-tight text-white rounded-full" [ngClass]="event.status ? getStatusClass(event.status) : ''">
                 {{ event.status }}
               </span>
             </td>
@@ -106,7 +106,7 @@
                 <button
                   class="bg-red-500 text-white active:bg-red-600 text-xs font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                   type="button"
-                  (click)="deleteEvent(event.eventId)"
+                  (click)="event.eventId && deleteEvent(event.eventId)"
                 >
                   <i class="fas fa-trash"></i>
                 </button>

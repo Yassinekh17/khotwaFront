@@ -1,0 +1,20 @@
+<div class="progress-container">
+  <div *ngIf="showLabel" class="flex justify-between items-center mb-2">
+    <span class="text-sm font-medium text-gray-700">{{ label }}</span>
+    <span *ngIf="showPercentage" class="text-sm font-semibold text-gray-900">
+      {{ getProgressPercentage() }}%
+    </span>
+  </div>
+
+  <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden shadow-inner">
+    <div
+      class="progress-fill"
+      [ngClass]="getProgressBarClass()"
+      [style.width.%]="getProgressPercentage()">
+    </div>
+  </div>
+
+  <div *ngIf="showLabel && total > 0" class="text-xs text-gray-500 mt-1 text-center">
+    {{ progress }} / {{ total }}
+  </div>
+</div>

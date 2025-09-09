@@ -1,0 +1,250 @@
+<!-- Simple Hero Section - Clean Design -->
+<div class="bg-white py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center">
+      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+        Mes événements
+      </h1>
+      <p class="text-xl text-gray-600 mb-8">
+        Suivez vos événements académiques et téléchargez vos certificats
+      </p>
+
+      <!-- Simple Search Bar -->
+      <div class="max-w-md mx-auto">
+        <div class="relative">
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            (input)="onSearch()"
+            placeholder="Rechercher un événement..."
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+          <button class="absolute right-3 top-3 text-gray-400 hover:text-gray-600">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <div class="flex flex-col lg:flex-row gap-8">
+
+    <!-- Filters Sidebar -->
+    <div class="lg:w-1/4">
+      <div class="bg-white rounded-xl shadow-lg p-6 sticky top-6">
+
+        <!-- Clear Filters -->
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-lg font-semibold text-gray-900">Filtres</h3>
+          <button
+            (click)="clearFilters()"
+            class="text-sm text-indigo-600 hover:text-indigo-800 font-medium"
+          >
+            Effacer tout
+          </button>
+        </div>
+
+        <!-- Status Filter -->
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Statut</label>
+          <select
+            [(ngModel)]="selectedStatus"
+            (change)="onFilterChange()"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <option value="">Tous les statuts</option>
+            <option value="COMPLETED">Terminé</option>
+            <option value="ONGOING">En cours</option>
+            <option value="UPCOMING">À venir</option>
+          </select>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Catégorie</label>
+          <select
+            [(ngModel)]="selectedCategory"
+            (change)="onFilterChange()"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <option value="">Toutes les catégories</option>
+            <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+          </select>
+        </div>
+
+        <!-- Location Filter -->
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Lieu</label>
+          <select
+            [(ngModel)]="selectedLocation"
+            (change)="onFilterChange()"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <option value="">Tous les lieux</option>
+            <option *ngFor="let location of locations" [value]="location">{{ location }}</option>
+          </select>
+        </div>
+
+        <!-- Date Range -->
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+          <input
+            type="date"
+            [(ngModel)]="selectedDate"
+            (change)="onFilterChange()"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+        </div>
+
+        <!-- Sort Options -->
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Trier par</label>
+          <select
+            [(ngModel)]="selectedSort"
+            (change)="onSortChange()"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <option *ngFor="let option of sortOptions" [value]="option.value">{{ option.label }}</option>
+          </select>
+        </div>
+
+        <!-- Results Count -->
+        <div class="pt-4 border-t border-gray-200">
+          <p class="text-sm text-gray-600">
+            <span class="font-semibold text-gray-900">{{ filteredEvents.length }}</span> événements trouvés
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Events Grid -->
+    <div class="lg:w-3/4">
+
+      <!-- Loading State -->
+      <div *ngIf="loading" class="flex justify-center items-center py-20">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="error && !loading" class="bg-red-50 border border-red-200 rounded-lg p-6 mb-6">
+        <div class="flex items-center">
+          <i class="fas fa-exclamation-triangle text-red-500 mr-3"></i>
+          <p class="text-red-700">{{ error }}</p>
+        </div>
+      </div>
+
+      <!-- Simple Events Grid -->
+      <div *ngIf="!loading && !error" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+
+        <div *ngFor="let event of getCurrentPageEvents()" class="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
+
+          <!-- Event Image -->
+          <div class="relative h-48 bg-gray-100">
+            <img
+              [src]="event.image || 'https://via.placeholder.com/400x200/gray/white?text=' + event.title"
+              [alt]="event.title"
+              class="w-full h-full object-cover"
+            >
+            <div class="absolute top-3 right-3">
+              <span class="bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium">
+                {{ getEventStatusLabel(event) }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Event Content -->
+          <div class="p-6">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                {{ event.technologie || event.type || 'Général' }}
+              </span>
+              <div class="flex items-center text-yellow-400">
+                <i *ngFor="let star of getStars(4.5)" class="fas fa-star text-xs"></i>
+                <span class="text-xs text-gray-500 ml-1">(4.5)</span>
+              </div>
+            </div>
+
+            <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{{ event.title }}</h3>
+            <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ event.description }}</p>
+
+            <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+              <div class="flex items-center">
+                <i class="fas fa-calendar mr-1"></i>
+                <span>{{ formatDate(event.date) }}</span>
+              </div>
+              <div class="flex items-center">
+                <i class="fas fa-map-marker-alt mr-1"></i>
+                <span>{{ event.location }}</span>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <div class="text-lg font-semibold text-gray-900">
+                {{ event.date | date:'HH:mm' }}
+              </div>
+              <div class="flex space-x-2">
+                <button
+                  (click)="downloadCertificate(event)"
+                  class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm font-medium transition-colors"
+                >
+                  <i class="fas fa-download mr-1"></i>
+                  Certificat
+                </button>
+                <button
+                  [routerLink]="['/events', event.eventId]"
+                  class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm font-medium transition-colors"
+                >
+                  <i class="fas fa-eye mr-1"></i>
+                  Détails
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- No Results -->
+      <div *ngIf="!loading && !error && filteredEvents.length === 0" class="text-center py-20">
+        <i class="fas fa-search text-gray-400 text-6xl mb-4"></i>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Aucun événement trouvé</h3>
+        <p class="text-gray-600">Essayez de modifier vos critères de recherche</p>
+      </div>
+
+      <!-- Pagination -->
+      <div *ngIf="!loading && !error && filteredEvents.length > 0" class="flex justify-center">
+        <nav class="flex items-center space-x-2">
+          <button
+            (click)="changePage(currentPage - 1)"
+            [disabled]="currentPage === 1"
+            class="px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <i class="fas fa-chevron-left"></i>
+          </button>
+
+          <button
+            *ngFor="let page of getPagesArray()"
+            (click)="changePage(page)"
+            [class.active]="page === currentPage"
+            class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
+            [class.bg-indigo-600]="page === currentPage"
+            [class.text-white]="page === currentPage"
+            [class.border-indigo-600]="page === currentPage"
+          >
+            {{ page }}
+          </button>
+
+          <button
+            (click)="changePage(currentPage + 1)"
+            [disabled]="currentPage === totalPages"
+            class="px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>

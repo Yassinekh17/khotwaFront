@@ -3,11 +3,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EventService, Evenement } from '../../../../services/event.service';
 import { PredictService } from '../../../../services/predict.service';
+import { ImageUploadService } from '../../../../services/image-upload.service';
+import { HttpEventType, HttpResponse } from '@angular/common/http';
 
 // Define enums to match backend
 export enum Type_evenement {
   UPCOMING = 'UPCOMING',
-  ONGOING = 'ONOGING',
+  ONGOING = 'ONGOING',
   COMPLETED = 'COMPLETED'
 }
 
@@ -41,10 +43,49 @@ export class AddeventComponent implements OnInit {
   selectedImage: File | null = null;
   imagePreview: string | ArrayBuffer | null = null;
 
+  // Technologies IT disponibles
+  technologies: string[] = [
+    'React',
+    'Angular',
+    'Vue.js',
+    'Node.js',
+    'Python',
+    'Java',
+    'JavaScript',
+    'TypeScript',
+    'PHP',
+    'C#',
+    '.NET',
+    'Spring Boot',
+    'Django',
+    'Flask',
+    'Express.js',
+    'MongoDB',
+    'PostgreSQL',
+    'MySQL',
+    'Docker',
+    'Kubernetes',
+    'AWS',
+    'Azure',
+    'DevOps',
+    'Machine Learning',
+    'Data Science',
+    'Cybersecurity',
+    'Blockchain',
+    'Mobile Development',
+    'Web Development',
+    'Backend Development',
+    'Frontend Development',
+    'Full Stack',
+    'Autres'
+  ];
+  createWithoutImage: boolean = false;
+
   constructor(
     private formBuilder: FormBuilder,
     private eventService: EventService,
     private predictService: PredictService,
+    private imageUploadService: ImageUploadService,
     private route: ActivatedRoute,
     private router: Router
   ) {
@@ -58,7 +99,8 @@ export class AddeventComponent implements OnInit {
       imageUrl: [''], // Add imageUrl field to the form
       capacite: [0, [Validators.required, Validators.min(1)]], // Ajout du champ capacité
       maxParticipants: [0, [Validators.required, Validators.min(1)]], // Ajout du nombre max de participants
-      currentParticipants: [0, [Validators.min(0)]] // Ajout du nombre actuel de participants
+      currentParticipants: [0, [Validators.min(0)]], // Ajout du nombre actuel de participants
+      technologie: ['', Validators.required] // Nouveau champ technologie obligatoire
     });
   }
 
@@ -91,7 +133,8 @@ export class AddeventComponent implements OnInit {
             imageUrl: event.imageUrl,
             capacite: event.capacite, // Ajout du champ capacité
             maxParticipants: event.maxParticipants, // Ajout du nombre max de participants
-            currentParticipants: event.currentParticipants // Ajout du nombre actuel de participants
+            currentParticipants: event.currentParticipants, // Ajout du nombre actuel de participants
+            technologie: event.technologie || '' // Nouveau champ technologie
           });
 
           // If there is an image URL, set the preview
@@ -138,10 +181,10 @@ export class AddeventComponent implements OnInit {
       };
       reader.readAsDataURL(this.selectedImage);
 
-      // For testing without actual upload, just set a placeholder URL
-      // In a real app, you would upload the image to a server and get a URL
+      // We'll upload the image when the form is submitted
+      // Just set a temporary URL for preview purposes
       this.eventForm.patchValue({
-        imageUrl: URL.createObjectURL(this.selectedImage)
+        imageUrl: '' // Will be set after upload
       });
     }
   }
@@ -155,11 +198,102 @@ export class AddeventComponent implements OnInit {
 
     this.loading = true;
 
-    // Convertir l'objet Evenement
-    const eventData: Evenement = {
-      ...this.eventForm.value,
-      date: new Date(this.eventForm.value.date)
+    // Handle image upload first if there's a selected image and user doesn't want to create without image
+    if (this.selectedImage && !this.createWithoutImage) {
+      this.uploadImageThenSaveEvent();
+    } else {
+      // Clear image URL if creating without image
+      if (this.createWithoutImage) {
+        this.eventForm.patchValue({
+          imageUrl: ''
+        });
+      }
+      this.saveEvent();
+    }
+  }
+
+  private uploadImageThenSaveEvent(): void {
+    if (!this.selectedImage) {
+      this.saveEvent();
+      return;
+    }
+
+    this.imageUploadService.uploadImage(this.selectedImage).subscribe({
+      next: (event: any) => {
+        if (event.type === HttpEventType.Response) {
+          const response = event.body;
+          // Set the permanent image URL from the server response
+          // Handle different possible response structures
+          let imageUrl = '';
+          if (response.imageUrl) {
+            imageUrl = response.imageUrl;
+          } else if (response.url) {
+            imageUrl = response.url;
+          } else if (response.data && response.data.url) {
+            imageUrl = response.data.url;
+          } else if (typeof response === 'string') {
+            imageUrl = response;
+          }
+
+          this.eventForm.patchValue({
+            imageUrl: imageUrl
+          });
+
+          // Now save the event with the image URL
+          this.saveEvent();
+        }
+      },
+      error: (err) => {
+        console.error('Erreur lors du téléchargement de l\'image:', err);
+        // Option 1: Continuer sans image
+        console.log('Continuer la création d\'événement sans image');
+        this.eventForm.patchValue({
+          imageUrl: '' // Pas d'image
+        });
+        this.saveEvent();
+      }
+    });
+  }
+
+  private saveEvent(): void {
+    // Préparer les données pour le backend
+    const formValue = this.eventForm.value;
+
+    // Convertir la date au format ISO string pour le backend
+    const eventDate = new Date(formValue.date);
+    const isoDateString = eventDate.toISOString();
+
+    // Gérer l'URL de l'image - éviter les data URLs du mock
+    let imageUrl = formValue.imageUrl;
+    if (imageUrl && imageUrl.startsWith('data:')) {
+      // Si c'est une data URL (du mock), on l'ignore côté backend
+      console.log('Data URL détectée, ignorée pour le backend');
+      imageUrl = '';
+    }
+
+    // Créer l'objet de données nettoyé pour le backend
+    const eventData: any = {
+      title: formValue.title,
+      description: formValue.description,
+      date: isoDateString, // Envoyer comme string ISO
+      location: formValue.location,
+      type: formValue.type,
+      status: formValue.status,
+      capacite: formValue.capacite,
+      technologie: formValue.technologie, // Nouveau champ technologie
+      // Ne pas envoyer maxParticipants et currentParticipants si le backend ne les attend pas
+      // maxParticipants: formValue.maxParticipants,
+      // currentParticipants: formValue.currentParticipants || 0
     };
+
+    // Ajouter l'URL de l'image seulement si elle existe et n'est pas vide
+    if (imageUrl && imageUrl.trim() !== '') {
+      eventData.imageUrl = imageUrl;
+    }
+
+    console.log('Données envoyées au backend:', eventData);
+    console.log('Technologie sélectionnée:', formValue.technologie);
+    console.log('Champ technologie dans eventData:', eventData.technologie);
 
     if (this.isEditMode && this.eventId) {
       this.eventService.updateEvent(this.eventId, eventData).subscribe({
@@ -178,18 +312,23 @@ export class AddeventComponent implements OnInit {
         error: (err) => {
           this.error = 'Erreur lors de la mise à jour: ' + err.message;
           this.loading = false;
+          console.error('Erreur détaillée lors de la mise à jour:', err);
         }
       });
     } else {
       this.eventService.createEvent(eventData).subscribe({
-        next: () => {
+        next: (createdEvent) => {
           this.loading = false;
+          console.log('Événement créé avec succès:', createdEvent);
+          console.log('Technologie dans l\'événement créé:', createdEvent.technologie);
+          console.log('Type dans l\'événement créé:', createdEvent.type);
           this.navigateToList('Événement créé avec succès');
         },
         error: (err) => {
           this.error = 'Erreur lors de la création: ' + err.message;
           this.loading = false;
-          console.error('Détails de l\'erreur:', err);
+          console.error('Erreur détaillée lors de la création:', err);
+          console.error('Données qui ont causé l\'erreur:', eventData);
         }
       });
     }
@@ -233,6 +372,7 @@ export class AddeventComponent implements OnInit {
     this.submitted = false;
     this.selectedImage = null;
     this.imagePreview = null;
+    this.createWithoutImage = false;
     if (this.isEditMode) {
       this.loadEventData();
     } else {
@@ -241,7 +381,8 @@ export class AddeventComponent implements OnInit {
         status: Status_evenement.UPCOMING,
         capacite: 0, // Ajout du champ capacité
         maxParticipants: 0, // Ajout du nombre max de participants
-        currentParticipants: 0 // Ajout du nombre actuel de participants
+        currentParticipants: 0, // Ajout du nombre actuel de participants
+        technologie: '' // Nouveau champ technologie
       });
     }
   }

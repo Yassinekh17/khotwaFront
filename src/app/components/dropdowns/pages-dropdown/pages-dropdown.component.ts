@@ -7,11 +7,11 @@ import { createPopper } from "@popperjs/core";
 })
 export class PagesDropdownComponent implements OnInit {
   dropdownPopoverShow = false;
-  @ViewChild("btnDropdownRef", { static: false }) btnDropdownRef: ElementRef;
+  @ViewChild("btnDropdownRef", { static: false }) btnDropdownRef!: ElementRef;
   @ViewChild("popoverDropdownRef", { static: false })
-  popoverDropdownRef: ElementRef;
+  popoverDropdownRef!: ElementRef;
   ngOnInit() {}
-  toggleDropdown(event) {
+  toggleDropdown(event: Event) {
     event.preventDefault();
     if (this.dropdownPopoverShow) {
       this.dropdownPopoverShow = false;
